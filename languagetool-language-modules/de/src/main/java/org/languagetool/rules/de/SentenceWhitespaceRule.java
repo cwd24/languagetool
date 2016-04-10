@@ -20,9 +20,7 @@ package org.languagetool.rules.de;
 
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.rules.Category;
-import org.languagetool.rules.ITSIssueType;
-import org.languagetool.rules.RuleMatch;
+import org.languagetool.rules.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +41,10 @@ public class SentenceWhitespaceRule extends org.languagetool.rules.SentenceWhite
 
   public SentenceWhitespaceRule(ResourceBundle messages) {
     super(messages);
-    super.setCategory(new Category(messages.getString("category_misc")));
+    super.setCategory(Categories.MISC.getCategory(messages));
     setLocQualityIssueType(ITSIssueType.Whitespace);
+    addExamplePair(Example.wrong("Hier steht ein Satz.<marker>Das</marker> ist ein weiterer Satz."),
+                   Example.fixed("Hier steht ein Satz.<marker> Das</marker> ist ein weiterer Satz."));
   }
 
   @Override

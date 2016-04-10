@@ -24,13 +24,24 @@ import org.languagetool.Experimental;
  * Helper to build {@link PatternToken}s.
  * @since 3.1
  */
-@Experimental
 public class PatternTokenBuilder {
 
   private PatternToken token;
-  
+
+  /**
+   * Add a case-insensitive token. 
+   */
   public PatternTokenBuilder token(String token) {
     this.token = new PatternToken(token, false, false, false);
+    return this;
+  }
+
+  /**
+   * Add a case-sensitive token. 
+   * @since 3.3 
+   */
+  public PatternTokenBuilder csToken(String token) {
+    this.token = new PatternToken(token, true, false, false);
     return this;
   }
 
@@ -53,6 +64,12 @@ public class PatternTokenBuilder {
     return this;
   }
 
+  /** @since 3.3 */
+  public PatternTokenBuilder negate() {
+    token.setNegation(true);
+    return this;
+  }
+  
   public PatternToken build() {
     return token;
   }

@@ -62,7 +62,8 @@ public class POSDictionaryBuilderTest extends DictionaryBuilderTestHelper {
   
   private static final String INFO = 
       "fsa.dict.separator=+\n" +
-      "fsa.dict.encoding=cp1251\n";
+      "fsa.dict.encoding=cp1251\n" +
+      "fsa.dict.encoder=SUFFIX";
 
   @Test
   public void testPOSBuilder() throws Exception {
@@ -79,10 +80,9 @@ public class POSDictionaryBuilderTest extends DictionaryBuilderTestHelper {
       
       assertTrue(outFile.toFile().length() >= 40);
     } finally {
-      inputFile.toFile().deleteOnExit();
+      outFile.toFile().deleteOnExit();
       infoFile.toFile().deleteOnExit();
-      // Files.delete(inputFile);
-      // Files.delete(infoFile);
+      inputFile.toFile().deleteOnExit();
     }
   }
 

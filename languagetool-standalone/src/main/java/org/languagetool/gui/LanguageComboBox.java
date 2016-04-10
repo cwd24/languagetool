@@ -53,7 +53,7 @@ public class LanguageComboBox extends JComboBox<Language> {
   }
 
   void selectLanguage(Language language) {
-    for (final Language lang : languages) {
+    for (Language lang : languages) {
       if (lang.toString().equals(language.toString())) {
         setSelectedItem(lang);
       }
@@ -65,10 +65,7 @@ public class LanguageComboBox extends JComboBox<Language> {
       ComponentOrientation.getOrientation(Locale.getDefault()));
     languages.clear();
     for (Language language : Languages.get()) {  // the method returns both built-in and external languages
-      final boolean skip = language.hasVariant();
-      // TODO: "Simple German" would hide "German (Germany)" - find a proper solution
-      final boolean simpleGermanWorkaround = language.getShortNameWithCountryAndVariant().equals("de-DE");
-      if (!skip || simpleGermanWorkaround) {
+      if (!language.isHiddenFromGui()) {
         languages.add(language);
       }
     }
@@ -76,7 +73,7 @@ public class LanguageComboBox extends JComboBox<Language> {
       addItem(externalLanguage);
     }
     Collections.sort(languages, langComparator);
-    for (final Language language : languages) {
+    for (Language language : languages) {
       addItem(language);
     }
   }

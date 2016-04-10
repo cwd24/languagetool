@@ -1,22 +1,147 @@
 # LanguageTool Change Log
 
-## 3.3 (release planned for 2016-03-28)
+## 3.4 (release planned for 2016-06-27)
 
 #### English
-  * added and improved rules, improved categorization of rules
+  * added about 11 confusion pairs like throe/throw, raps/wraps (works only with ngram data,
+    see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
+
+#### French
+  * added 32 confusion pairs like pris/prix, quand/quant (works only with ngram data,
+    see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
 
 #### German
-  * updated Hunspell dictionary to version 2015.12.28
-    (http://extensions.libreoffice.org/extension-center/german-de-de-frami-dictionaries etc.)
+  * added some rules
 
-#### Portuguese
-  * added new rules
-    
-#### Russian
-  * added new rules
+#### Spanish
+  * added 14 confusion pairs like tubo/tuvo, ciento/siento (works only with ngram data,
+    see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
 
 #### Java API
   * some formerly deprecated code has been removed
+  * all rules have now a category ("Misc" if the rule doesn't specify a category)
+  * a new module `languagetool-http-client` has been added with a class
+    `RemoteLanguageTool` that you can use to query a remote LanguageTool server
+    via HTTP or HTTPS
+
+#### Embedded HTTPS server
+  * changed behaviour for OutOfMemory situations: the server
+    process now stops instead of being in an unstable state
+  * missing parameters (like `text`) now cause a `400 Bad Request`
+    response (it used to produce `500 Internal Server Error`)
+
+
+
+## 3.3 (2016-03-28)
+
+#### Breton
+  * small rule improvements
+
+#### Catalan
+  * added and improved rules
+  * added words suggested by users
+  * minor change in the format of the binary dictionary: POS tag and frequency data are no 
+    longer separated by a separator character.
+
+#### Dutch
+  * small rule improvements and URL updates, thanks to Koen Vervloesem
+
+#### English
+  * added and improved rules, improved categorization of rules
+  * added checks on date ranges
+  * added about 215 confusion pairs like best/bets, wand/want (works only with ngram data,
+    see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
+
+#### Esperanto
+  * improved several rules
+
+#### French
+  * added and improved rules
+
+#### German
+  * added and improved rules, improved categorization of rules
+  * updated Hunspell dictionary to version 2015.12.28
+    (http://extensions.libreoffice.org/extension-center/german-de-de-frami-dictionaries etc.)
+  * added Spanish false friends
+  * better suggestions for some errors that involve compounds
+
+#### Greek
+  * new rule for checking correct spell of ordinal numerals
+  * added new XML rules
+
+#### Polish
+  * added and improved a large number of rules, largely improved disambiguation
+  * upgraded the tagging and synthesis dictionaries to Morfologik Polimorf 2.1
+  * improved tokenization of number ranges (such as 1-1234 or 1--10)
+  * added checks on date ranges
+    
+#### Portuguese
+  * added and improved rules, improved categorization of rules 
+    
+#### Russian
+  * added and improved rules, improved categorization of rules
+  * added words suggested by users
+  
+#### Spanish
+  * added German false friends
+
+#### Ukrainian
+  * big dictionary update:
+    * more than 202K lemmas
+    * homonyms have been properly split
+    * vocative case for inanimates has be added
+    * list of barbarism has been updated
+  * improved some rules
+  * improved sentence tokenization
+  * improved dynamic tagging for compounds
+  * some improvements for disambiguation
+
+#### Java API
+  * some formerly deprecated code has been removed
+  * added `acceptPhrases(List<String> phrases)` to `SpellingCheckRule`
+    so you can avoid false alarms on names and technical terms
+    that consist of more than one word.
+
+#### Embedded HTTPS server
+  * Speed up for input with short sentences
+  * Added new parameters `enabledCategories` and `disabledCategories`
+    that take a comma-separated list of categories to enable/disable.
+    Fixes https://github.com/languagetool-org/languagetool/pull/326.
+  * The output now contains a `shortmsg` attribute if available, which
+    is a short version of the `msg` attribute.
+  * The output now contains a `categoryid` attribute if available. It's
+    supposed not to change in future versions (while `category` might
+    change).
+
+#### Command-line
+  * new parameters `--enablecategories` and `--disablecategories`
+    to activate/deactivate all rules in a category
+    (https://github.com/languagetool-org/languagetool/issues/66)
+  * Bugfix: for files >= 64,000 bytes, the position information
+    (`fromx` and `tox`) could be wrong. Also, rules that work
+    across paragraphs like the German word coherency rule wouldn't
+    work. Both bugs have been fixed but with the side-effect that
+    large files will now be loaded into memory completely. If
+    you're using LanguageTool on large files (several MB) you might
+    need to split these files now before you check them.
+    If you need the old behavior, use the `--line-by-line` switch.
+    https://github.com/languagetool-org/languagetool/issues/254
+  
+#### Wikipedia
+  * Indexing: fixed an `IllegalArgumentException` for long sentences
+    (https://github.com/languagetool-org/languagetool/issues/364)
+
+#### Core code
+  * Fixed a bug while sentence and paragraph end tags were removed during 
+    disambiguation.
+  * Fixed a bug with a possible `NullPointerException` for tokens containing
+    soft hyphens that might be disambiguated.
+
+#### Morfologik binary dictionaries
+  * Updated Morfologik library to version 2.1.0. The tools for building 
+    dictionaries (languagetool-tools) have been adapted to the new version. 
+    The format of the dictionaries has not changed, except for a minor 
+    change only in Catalan.
 
 
 
@@ -64,6 +189,9 @@
     where the determiner is indefinite but the adjective fits only for a definite determiner
   * added `de/removed.txt` so incorrect readings of the POS tagger can be avoided without
     rebuilding the binary dictionary
+
+#### Italian
+  * added an agreement rule
 
 #### Portuguese
   * added/improved several rules

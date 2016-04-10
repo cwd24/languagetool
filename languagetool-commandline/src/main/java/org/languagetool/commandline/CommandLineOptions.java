@@ -20,14 +20,18 @@ package org.languagetool.commandline;
 
 import org.jetbrains.annotations.Nullable;
 import org.languagetool.Language;
+import org.languagetool.rules.CategoryId;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Options that can be set via command line arguments.
  */
 public class CommandLineOptions {
+
+  private final Set<CategoryId> enabledCategories = new HashSet<>();
+  private final Set<CategoryId> disabledCategories = new HashSet<>();
 
   private boolean printUsage = false;
   private boolean printVersion = false;
@@ -43,6 +47,7 @@ public class CommandLineOptions {
   private boolean bitext = false;
   private boolean autoDetect = false;
   private boolean xmlFiltering = false;
+  private boolean lineByLine = false;
   @Nullable
   private Language language = null;
   @Nullable
@@ -53,8 +58,8 @@ public class CommandLineOptions {
   private String encoding = null;
   @Nullable
   private String filename = null;
-  private String[] disabledRules = {};
-  private String[] enabledRules = {};
+  private List<String> disabledRules = new ArrayList<>();
+  private List<String> enabledRules = new ArrayList<>();
   private boolean useEnabledOnly = false;
   @Nullable
   private String ruleFile = null;
@@ -85,6 +90,14 @@ public class CommandLineOptions {
 
   public void setVerbose(boolean verbose) {
     this.verbose = verbose;
+  }
+
+  public boolean isLineByLine() {
+    return lineByLine;
+  }
+
+  public void setLineByLine (boolean lineByLine) {
+    this.lineByLine = lineByLine;
   }
 
   public boolean isRecursive() {
@@ -228,20 +241,44 @@ public class CommandLineOptions {
     this.filename = filename;
   }
 
-  public String[] getDisabledRules() {
+  public List<String> getDisabledRules() {
     return disabledRules;
   }
 
-  public void setDisabledRules(String[] disabledRules) {
+  public void setDisabledRules(List<String> disabledRules) {
     this.disabledRules = Objects.requireNonNull(disabledRules);
   }
 
-  public String[] getEnabledRules() {
+  public List<String> getEnabledRules() {
     return enabledRules;
   }
 
-  public void setEnabledRules(String[] enabledRules) {
+  public void setEnabledRules(List<String> enabledRules) {
     this.enabledRules = Objects.requireNonNull(enabledRules);
+  }
+
+  /** @since 3.3 */
+  public void setEnabledCategories(List<String> categoryIds) {
+    for (String categoryId : categoryIds) {
+      enabledCategories.add(new CategoryId(categoryId));
+    }
+  }
+
+  /** @since 3.3 */
+  public Set<CategoryId> getEnabledCategories() {
+    return Collections.unmodifiableSet(enabledCategories);
+  }
+
+  /** @since 3.3 */
+  public void setDisabledCategories(List<String> categoryIds) {
+    for (String categoryId : categoryIds) {
+      disabledCategories.add(new CategoryId(categoryId));
+    }
+  }
+
+  /** @since 3.3 */
+  public Set<CategoryId> getDisabledCategories() {
+    return Collections.unmodifiableSet(disabledCategories);
   }
 
   /** @since 2.9 */
@@ -271,11 +308,11 @@ public class CommandLineOptions {
   }
 
   /**
-   * @param arg False friends filename
+   * @param file False friends filename
    * @since 2.9
    */
-  public void setFalseFriendFile(String arg) {
-    falseFriendFile = arg;
+  public void setFalseFriendFile(String file) {
+    falseFriendFile = file;
   }
 
   /**

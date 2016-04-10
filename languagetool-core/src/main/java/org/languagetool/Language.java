@@ -181,12 +181,12 @@ public abstract class Language {
    * i.e. a path in the classpath.
    */
   public List<String> getRuleFileNames() {
-    final List<String> ruleFiles = new ArrayList<>();
-    final ResourceDataBroker dataBroker = JLanguageTool.getDataBroker();
+    List<String> ruleFiles = new ArrayList<>();
+    ResourceDataBroker dataBroker = JLanguageTool.getDataBroker();
     ruleFiles.add(dataBroker.getRulesDir()
             + "/" + getShortName() + "/" + JLanguageTool.PATTERN_FILE);
     if (getShortNameWithCountryAndVariant().length() > 2) {
-      final String fileName = getShortName() + "/"
+      String fileName = getShortName() + "/"
               + getShortNameWithCountryAndVariant()
               + "/" + JLanguageTool.PATTERN_FILE;
       if (dataBroker.ruleFileExists(fileName)) {
@@ -296,7 +296,7 @@ public abstract class Language {
    * Get the name of the language translated to the current locale,
    * if available. Otherwise, get the untranslated name.
    */
-  public final String getTranslatedName(final ResourceBundle messages) {
+  public final String getTranslatedName(ResourceBundle messages) {
     try {
       return messages.getString(getShortNameWithCountryAndVariant());
     } catch (MissingResourceException e) {
@@ -366,7 +366,7 @@ public abstract class Language {
    */
   public final boolean isVariant() {
     for (Language language : Languages.get()) {
-      final boolean skip = language.getShortNameWithCountryAndVariant().equals(getShortNameWithCountryAndVariant());
+      boolean skip = language.getShortNameWithCountryAndVariant().equals(getShortNameWithCountryAndVariant());
       if (!skip && language.getClass().isAssignableFrom(getClass())) {
         return true;
       }
@@ -380,7 +380,7 @@ public abstract class Language {
    */
   public final boolean hasVariant() {
     for (Language language : Languages.get()) {
-      final boolean skip = language.getShortNameWithCountryAndVariant().equals(getShortNameWithCountryAndVariant());
+      boolean skip = language.getShortNameWithCountryAndVariant().equals(getShortNameWithCountryAndVariant());
       if (!skip && getClass().isAssignableFrom(language.getClass())) {
         return true;
       }
@@ -404,8 +404,8 @@ public abstract class Language {
    */
   public boolean equalsConsiderVariantsIfSpecified(Language otherLanguage) {
     if (getShortName().equals(otherLanguage.getShortName())) {
-      final boolean thisHasCountry = hasCountry();
-      final boolean otherHasCountry = otherLanguage.hasCountry();
+      boolean thisHasCountry = hasCountry();
+      boolean otherHasCountry = otherLanguage.hasCountry();
       return !(thisHasCountry && otherHasCountry) ||
               getShortNameWithCountryAndVariant().equals(otherLanguage.getShortNameWithCountryAndVariant());
     } else {
@@ -432,6 +432,22 @@ public abstract class Language {
    */
   public LanguageMaintainedState getMaintainedState() {
     return LanguageMaintainedState.LookingForNewMaintainer;
+  }
+  
+  /*
+   * True if language should be hidden on GUI (i.e. en, de, pt, 
+   * instead of en-US, de-DE, pt-PT)
+   * @since 3.3
+   */
+  public boolean isHiddenFromGui() {
+    return hasVariant() && !isVariant() && !isTheDefaultVariant();
+  }
+
+  private boolean isTheDefaultVariant() {
+    if (getDefaultLanguageVariant() != null) {
+      return getClass().equals(getDefaultLanguageVariant().getClass());
+    }
+    return false;
   }
 
 }

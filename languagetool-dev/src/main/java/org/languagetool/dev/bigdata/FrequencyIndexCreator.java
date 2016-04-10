@@ -55,7 +55,7 @@ public class FrequencyIndexCreator {
   private static final String NAME_REGEX3 = "([_a-z0-9]{1,2}|other|pos|punctuation|_(ADJ|ADP|ADV|CONJ|DET|NOUN|NUM|PRON|PRT|VERB)_)";  // result of FrequencyIndexCreator with text mode
   private static final int BUFFER_SIZE = 16384;
   private static final String LT_COMPLETE_MARKER = "languagetool_index_complete";
-  private static final boolean IGNORE_POS = false;
+  private static final boolean IGNORE_POS = true;
 
   private enum Mode { PlainText, Lucene }
 
@@ -80,9 +80,17 @@ public class FrequencyIndexCreator {
     // use this to get one index per input file:
     //files.parallelStream().forEach(dir -> index(dir, indexBaseDir, totalBytes, files.size(), null));
     // use this to get one large index for all input files:
-    try (DataWriter dw = new LuceneDataWriter(indexBaseDir)) {
+    DataWriter dw;
+    if (mode == Mode.PlainText) {
+      dw = new TextDataWriter(indexBaseDir);
+    } else {
+      dw = new LuceneDataWriter(indexBaseDir);
+    }
+    try {
       files.parallelStream().forEach(dir -> index(dir, indexBaseDir, totalBytes, files.size(), dw));
       markIndexAsComplete(indexBaseDir);
+    } finally {
+      dw.close();
     }
   }
 
@@ -312,9 +320,13 @@ public class FrequencyIndexCreator {
     private final BufferedWriter writer;
     
     TextDataWriter(File indexDir) throws IOException {
-      boolean mkdir = indexDir.mkdir();
-      if (!mkdir) {
-        throw new RuntimeException("Could not create: " + indexDir);
+      if (indexDir.exists()) {
+        System.out.println("Using existing dir: " + indexDir.getAbsolutePath());
+      } else {
+        boolean mkdir = indexDir.mkdir();
+        if (!mkdir) {
+          throw new RuntimeException("Could not create: " + indexDir.getAbsolutePath());
+        }
       }
       fw = new FileWriter(new File(indexDir, indexDir.getName() + "-output.csv"));
       writer = new BufferedWriter(fw);

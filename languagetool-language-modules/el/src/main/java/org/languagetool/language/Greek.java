@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.languagetool.Language;
+import org.languagetool.LanguageMaintainedState;
 import org.languagetool.rules.*;
 import org.languagetool.rules.el.MorfologikGreekSpellerRule;
+import org.languagetool.rules.el.NumeralStressRule;
 import org.languagetool.synthesis.Synthesizer;
 import org.languagetool.synthesis.el.GreekSynthesizer;
 import org.languagetool.tagging.Tagger;
@@ -83,7 +85,9 @@ public class Greek extends Language {
             new UppercaseSentenceStartRule(messages, this),
             new MultipleWhitespaceRule(messages, this),
             new WordRepeatBeginningRule(messages, this),
-            new WordRepeatRule(messages, this));
+            new WordRepeatRule(messages, this),
+            new NumeralStressRule(messages)
+    );
   }
 
   @Override
@@ -121,5 +125,10 @@ public class Greek extends Language {
       disambiguator = new XmlRuleDisambiguator(new Greek());
     }
     return disambiguator;
+  }
+
+  @Override
+  public LanguageMaintainedState getMaintainedState() {
+    return LanguageMaintainedState.ActivelyMaintained;
   }
 }

@@ -21,9 +21,10 @@ package org.languagetool.tools;
 import org.languagetool.JLanguageTool;
 import org.languagetool.Language;
 import org.languagetool.rules.Category;
+import org.languagetool.rules.CategoryId;
 import org.languagetool.rules.ITSIssueType;
 import org.languagetool.rules.RuleMatch;
-import org.languagetool.rules.patterns.PatternRule;
+import org.languagetool.rules.patterns.AbstractPatternRule;
 
 import java.util.List;
 
@@ -93,8 +94,8 @@ public class RuleMatchAsXmlSerializer {
 
     for (RuleMatch match : ruleMatches) {
       String subId = "";
-      if (match.getRule() instanceof PatternRule) {
-        PatternRule pRule = (PatternRule) match.getRule();
+      if (match.getRule() instanceof AbstractPatternRule) {
+        AbstractPatternRule pRule = (AbstractPatternRule) match.getRule();
         if (pRule.getSubId() != null) {
           subId = " subId=\"" + escapeXMLForAPIOutput(pRule.getSubId()) + "\" ";
         }
@@ -104,9 +105,12 @@ public class RuleMatchAsXmlSerializer {
               .append(" toy=\"").append(match.getEndLine()).append('"')
               .append(" tox=\"").append(match.getEndColumn() - 1).append('"')
               .append(" ruleId=\"").append(match.getRule().getId()).append('"');
-      String msg = match.getMessage().replaceAll("</?suggestion>", "'");
       xml.append(subId);
+      String msg = match.getMessage().replaceAll("</?suggestion>", "'");
       xml.append(" msg=\"").append(escapeXMLForAPIOutput(msg)).append('"');
+      if (!match.getShortMessage().isEmpty()) {
+        xml.append(" shortmsg=\"").append(escapeXMLForAPIOutput(match.getShortMessage())).append('"');
+      }
       String context = contextTools.getContext(match.getFromPos(), match.getToPos(), text);
       xml.append(" replacements=\"").append(escapeXMLForAPIOutput(
               String.join("#", match.getSuggestedReplacements()))).append('"');
@@ -124,6 +128,10 @@ public class RuleMatchAsXmlSerializer {
       Category category = match.getRule().getCategory();
       if (category != null) {
         xml.append(" category=\"").append(escapeXMLForAPIOutput(category.getName())).append('"');
+        CategoryId id = category.getId();
+        if (id != null) {
+          xml.append(" categoryid=\"").append(escapeXMLForAPIOutput(id.toString())).append('"');
+        }
       }
       ITSIssueType type = match.getRule().getLocQualityIssueType();
       if (type != null) {

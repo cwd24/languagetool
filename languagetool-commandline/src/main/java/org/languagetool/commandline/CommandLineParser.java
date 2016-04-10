@@ -20,6 +20,7 @@ package org.languagetool.commandline;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import org.languagetool.Language;
 import org.languagetool.Languages;
@@ -33,7 +34,7 @@ public class CommandLineParser {
     if (args.length < 1 || args.length > 12) {
       throw new WrongParameterNumberException();
     }
-    final CommandLineOptions options = new CommandLineOptions();
+    CommandLineOptions options = new CommandLineOptions();
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals("--version")) {
         options.setPrintVersion(true);
@@ -45,6 +46,8 @@ public class CommandLineParser {
         options.setAutoDetect(true);
       } else if (args[i].equals("-v") || args[i].equals("--verbose")) {
         options.setVerbose(true);
+      } else if (args[i].equals("--line-by-line")) {
+        options.setLineByLine(true);
       } else if (args[i].equals("-t") || args[i].equals("--taggeronly")) {
         options.setTaggerOnly(true);
         if (options.isListUnknown()) {
@@ -58,7 +61,7 @@ public class CommandLineParser {
       } else if (args[i].equals("-b2") || args[i].equals("--bitext")) {
         options.setBitext(true);
       } else if (args[i].equals("-eo") || args[i].equals("--enabledonly")) {
-        if (options.getDisabledRules().length > 0) {
+        if (options.getDisabledRules().size() > 0) {
           throw new IllegalArgumentException("You cannot specify both disabled rules and enabledonly");
         }
         options.setUseEnabledOnly();
@@ -67,12 +70,20 @@ public class CommandLineParser {
           throw new IllegalArgumentException("You cannot specify both disabled rules and enabledonly");
         }
         checkArguments("-d/--disable", i, args);
-        final String rules = args[++i];
-        options.setDisabledRules(rules.split(","));
+        String rules = args[++i];
+        options.setDisabledRules(Arrays.asList(rules.split(",")));
       } else if (args[i].equals("-e") || args[i].equals("--enable")) {
         checkArguments("-e/--enable", i, args);
-        final String rules = args[++i];
-        options.setEnabledRules(rules.split(","));
+        String rules = args[++i];
+        options.setEnabledRules(Arrays.asList(rules.split(",")));
+      } else if (args[i].equals("--enablecategories")) {
+        checkArguments("--enablecategories", i, args);
+        String categories = args[++i];
+        options.setEnabledCategories(Arrays.asList(categories.split(",")));
+      } else if (args[i].equals("--disablecategories")) {
+        checkArguments("--disablecategories", i, args);
+        String categories = args[++i];
+        options.setDisabledCategories(Arrays.asList(categories.split(",")));
       } else if (args[i].equals("-l") || args[i].equals("--language")) {
         checkArguments("-l/--language", i, args);
         options.setLanguage(getLanguage(args[++i]));
@@ -158,6 +169,8 @@ public class CommandLineParser {
             + "  -d, --disable RULES      a comma-separated list of rule ids to be disabled (use no spaces between ids)\n"
             + "  -e, --enable RULES       a comma-separated list of rule ids to be enabled (use no spaces between ids)\n"
             + "  -eo, --enabledonly       disable all rules except those enabled explicitly in -e\n"
+            + "  --enablecategories CAT   a comma-separated list of category ids to be enabled (use no spaces between ids)\n"
+            + "  --disablecategories CAT  a comma-separated list of category ids to be disabled (use no spaces between ids)\n"
             + "  -t, --taggeronly         don't check, but only print text analysis (sentences, part-of-speech tags)\n"
             + "  -u, --list-unknown       also print a summary of words from the input that LanguageTool doesn't know\n"
             + "  -b2, --bitext            check bilingual texts with a tab-separated input file,\n"
@@ -171,9 +184,12 @@ public class CommandLineParser {
             + "                             it is used in addition of standard rules\n"
             + "  --falsefriends FILE      use external false friend file to be used along with the built-in rules\n"
             + "  --bitextrules  FILE      use external bitext XML rule file (useful only in bitext mode)\n"
-            + "  --languagemodel DIR      a directory with '1grams'...'3grams' sub directories with Lucene indexes that\n"
-            + "                           contain ngram occurrence counts; activates the confusion rule if supported\n"
-            + "  --xmlfilter              remove XML/HTML elements from input before checking (this is deprecated)");
+            + "  --languagemodel DIR      a directory with e.g. 'en' sub directory (i.e. a language code) that contains\n"
+            + "                           '1grams'...'3grams' sub directories with Lucene indexes with\n"
+            + "                           ngram occurrence counts; activates the confusion rule if supported\n"
+            + "  --xmlfilter              remove XML/HTML elements from input before checking (this is deprecated)\n"
+            + "  --line-by-line           work on file line by line (for development, e.g. inside an IDE)"
+    );
   }
 
   private void checkArguments(String option, int argParsingPos, String[] args) {

@@ -42,9 +42,9 @@ public final class AnalyzedSentence {
     this.tokens = tokens;
     int whCounter = 0;
     int nonWhCounter = 0;
-    final int[] mapping = new int[tokens.length + 1];
-    final List<AnalyzedTokenReadings> l = new ArrayList<>();
-    for (final AnalyzedTokenReadings token : tokens) {
+    int[] mapping = new int[tokens.length + 1];
+    List<AnalyzedTokenReadings> l = new ArrayList<>();
+    for (AnalyzedTokenReadings token : tokens) {
       if (!token.isWhitespace() || token.isSentenceStart() || token.isSentenceEnd() || token.isParagraphEnd()) {
         l.add(token);
         mapping[nonWhCounter] = whCounter;
@@ -185,7 +185,7 @@ public final class AnalyzedSentence {
   }
 
   private String toString(String readingDelimiter, boolean includeChunks) {
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     for (AnalyzedTokenReadings element : tokens) {
       if (!element.isWhitespace()) {
         sb.append(element.getToken());
@@ -193,8 +193,8 @@ public final class AnalyzedSentence {
       }
       Iterator<AnalyzedToken> iterator = element.iterator();
       while (iterator.hasNext()) {
-        final AnalyzedToken token = iterator.next();
-        final String posTag = token.getPOSTag();
+        AnalyzedToken token = iterator.next();
+        String posTag = token.getPOSTag();
         if (element.isSentenceStart()) {
           sb.append("<S>");
         } else if (JLanguageTool.SENTENCE_END_TAGNAME.equals(posTag)) {
@@ -233,7 +233,7 @@ public final class AnalyzedSentence {
    * Get disambiguator actions log.
    */
   public String getAnnotations() {
-    final StringBuilder sb = new StringBuilder(40);
+    StringBuilder sb = new StringBuilder(40);
     sb.append("Disambiguator log: \n");
     for (AnalyzedTokenReadings element : tokens) {
       if (!element.isWhitespace() &&
@@ -265,33 +265,21 @@ public final class AnalyzedSentence {
 
   @SuppressWarnings("ControlFlowStatementWithoutBraces")
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    final AnalyzedSentence other = (AnalyzedSentence) obj;
-    if (!Arrays.equals(nonBlankTokens, other.nonBlankTokens))
-      return false;
-    if (!Arrays.equals(tokens, other.tokens))
-      return false;
-    if (!Arrays.equals(whPositions, other.whPositions))
-      return false;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null) return false;
+    if (getClass() != o.getClass()) return false;
+    AnalyzedSentence other = (AnalyzedSentence) o;
     // tokenSet and lemmaSet are a subset of tokens and don't need to be included
-    return true;
+    return Arrays.equals(nonBlankTokens, other.nonBlankTokens) 
+        && Arrays.equals(tokens, other.tokens)
+        && Arrays.equals(whPositions, other.whPositions);
   }
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + Arrays.hashCode(nonBlankTokens);
-    result = prime * result + Arrays.hashCode(tokens);
-    result = prime * result + Arrays.hashCode(whPositions);
     // tokenSet and lemmaSet are a subset of tokens and don't need to be included
-    return result;
+    return Objects.hash(nonBlankTokens, tokens, whPositions);
   }
 
 }

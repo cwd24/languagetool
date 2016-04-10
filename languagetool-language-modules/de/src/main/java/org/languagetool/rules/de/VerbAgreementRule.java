@@ -29,10 +29,9 @@ import java.util.Set;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedToken;
 import org.languagetool.AnalyzedTokenReadings;
+import org.languagetool.JLanguageTool;
 import org.languagetool.language.German;
-import org.languagetool.rules.Category;
-import org.languagetool.rules.Example;
-import org.languagetool.rules.RuleMatch;
+import org.languagetool.rules.*;
 import org.languagetool.rules.patterns.PatternToken;
 import org.languagetool.rules.patterns.PatternTokenBuilder;
 import org.languagetool.tagging.disambiguation.rules.DisambiguationPatternRule;
@@ -77,6 +76,52 @@ public class VerbAgreementRule extends GermanRule {
       new PatternTokenBuilder().token("das").build(),
       new PatternTokenBuilder().token("Du").build(),
       new PatternTokenBuilder().tokenRegex("anbieten|anbot").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().token(",").build(),
+      new PatternTokenBuilder().posRegex("VER:MOD:2:.*").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().csToken("Soll").build(),
+      new PatternTokenBuilder().token("ich").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().pos(JLanguageTool.SENTENCE_START_TAGNAME).build(),  // "Bin gleich wieder da"
+      new PatternTokenBuilder().csToken("Bin").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().token(",").build(),  // "..., hast aber keine Ahnung!"
+      new PatternTokenBuilder().tokenRegex("bin|hast").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().token("er").build(),  // "egal, was er sagen wird, ..."
+      new PatternTokenBuilder().posRegex("VER:.*").build(),
+      new PatternTokenBuilder().token("wird").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().tokenRegex("wie|als").build(),  // "Ein Mann wie ich braucht einen Hut"
+      new PatternTokenBuilder().token("ich").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().tokenRegex("ich").build(),  // "Ich weiß, was ich tun werde, falls etwas geschehen sollte."
+      new PatternTokenBuilder().pos("VER:INF:NON").build(),
+      new PatternTokenBuilder().token("werde").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().pos("VER:IMP:SIN:SFT").build(),  // "Kümmere du dich mal nicht darum!"
+      new PatternTokenBuilder().token("du").build(),
+      new PatternTokenBuilder().token("dich").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().token("sei").build(),
+      new PatternTokenBuilder().token("du").build(),
+      new PatternTokenBuilder().token("selbst").build()
+    ),
+    Arrays.asList(
+      new PatternTokenBuilder().token("als").build(),  // "Du bist in dem Moment angekommen, als ich gegangen bin."
+      new PatternTokenBuilder().token("ich").build(),
+      new PatternTokenBuilder().posRegex("PA2:.*").build(),
+      new PatternTokenBuilder().token("bin").build()
     )
   );
 
@@ -127,7 +172,7 @@ public class VerbAgreementRule extends GermanRule {
 
   public VerbAgreementRule(final ResourceBundle messages, German language) {
     this.language = language;
-    super.setCategory(new Category(messages.getString("category_grammar")));
+    super.setCategory(Categories.GRAMMAR.getCategory(messages));
     addExamplePair(Example.wrong("Ich <marker>bist</marker> über die Entwicklung sehr froh."),
                    Example.fixed("Ich <marker>bin</marker> über die Entwicklung sehr froh."));
   }

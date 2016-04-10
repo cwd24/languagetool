@@ -19,11 +19,10 @@
 package org.languagetool.rules.de;
 
 import de.danielnaber.jwordsplitter.GermanWordSplitter;
+
+import org.apache.commons.lang.WordUtils;
 import org.jetbrains.annotations.Nullable;
-import org.languagetool.AnalyzedToken;
-import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.JLanguageTool;
-import org.languagetool.Language;
+import org.languagetool.*;
 import org.languagetool.language.German;
 import org.languagetool.rules.Example;
 import org.languagetool.rules.spelling.hunspell.CompoundAwareHunspellRule;
@@ -115,6 +114,11 @@ public class GermanSpellerRule extends CompoundAwareHunspellRule {
   }
 
   @Override
+  protected boolean isProhibited(String word) {
+    return word.startsWith("Standart-") || super.isProhibited(word);
+  }
+
+  @Override
   protected void addIgnoreWords(String origLine, Set<String> wordsToBeIgnored) {
     String line;
     if (language.getShortNameWithCountryAndVariant().equals("de-CH")) {
@@ -185,12 +189,17 @@ public class GermanSpellerRule extends CompoundAwareHunspellRule {
   @Override
   protected boolean ignoreWord(List<String> words, int idx) throws IOException {
     boolean ignore = super.ignoreWord(words, idx);
-    boolean ignoreByHyphen = !ignore && words.get(idx).endsWith("-") && ignoreByHangingHyphen(words, idx);
-    return ignore || ignoreByHyphen;
+    boolean ignoreUncapitalizedWord = !ignore && idx == 0 && super.ignoreWord(WordUtils.uncapitalize(words.get(0)));
+    boolean ignoreByHyphen = false, ignoreHyphenatedCompound = false;
+    if (!ignore && !ignoreUncapitalizedWord && words.get(idx).contains("-")) {
+      ignoreByHyphen = words.get(idx).endsWith("-") && ignoreByHangingHyphen(words, idx);
+      ignoreHyphenatedCompound = !ignoreByHyphen && ignoreCompoundWithIgnoredWord(words.get(idx));
+    }
+    return ignore || ignoreUncapitalizedWord || ignoreByHyphen || ignoreHyphenatedCompound;
   }
-
+  
   @Override
-  protected List<String> getAdditionalTopSuggestions(List<String> suggestions, String word) {
+  protected List<String> getAdditionalTopSuggestions(List<String> suggestions, String word) throws IOException {
     String w = word.replaceFirst("\\.$", "");
     if ("unzwar".equals(w)) {
       return Collections.singletonList("und zwar");
@@ -234,6 +243,46 @@ public class GermanSpellerRule extends CompoundAwareHunspellRule {
     String participleSuggestion = getParticipleSuggestion(word);
     if (participleSuggestion != null) {
       return Collections.singletonList(participleSuggestion);
+    }
+    // hyphenated compounds words (e.g., "Netflix-Flm")
+    if (suggestions.isEmpty() && word.contains("-")) {
+      String[] words = word.split("-");
+      if (words.length > 1) {
+        List<List<String>> suggestionLists = new ArrayList<>(words.length);
+        int startAt = 0, stopAt = words.length;
+        if (super.ignoreWord(words[0] + "-" + words[1])) { // "Au-pair-Agentr"
+          startAt = 2;
+          suggestionLists.add(Collections.singletonList(words[0] + "-" + words[1]));
+        }
+        if (super.ignoreWord(words[words.length-2] + "-" + words[words.length-1])) { // "Seniren-Au-pair"
+          stopAt = words.length-2;
+        }
+        for (int idx = startAt; idx < stopAt; idx++) {
+          if (super.ignoreWord(words[idx])) {
+            suggestionLists.add(Collections.singletonList(words[idx]));
+          } else if (hunspellDict.misspelled(words[idx])) {
+            List<String> list = sortSuggestionByQuality(words[idx], super.getSuggestions(words[idx]));
+            suggestionLists.add(list);
+          } else {
+            suggestionLists.add(Collections.singletonList(words[idx]));
+          }
+        }
+        if (stopAt < words.length-1) {
+          suggestionLists.add(Collections.singletonList(words[words.length-2] + "-" + words[words.length-1]));
+        }
+        List<String> additionalSuggestions = suggestionLists.get(0);
+        for (int idx = 1; idx < suggestionLists.size(); idx++) {
+          List<String> suggestionList = suggestionLists.get(idx);
+          List<String> newList = new ArrayList<>(additionalSuggestions.size() * suggestionList.size());
+          for (String additionalSuggestion : additionalSuggestions) {
+            for (String aSuggestionList : suggestionList) {
+              newList.add(additionalSuggestion + "-" + aSuggestionList);
+            }
+          }
+          additionalSuggestions = newList;
+        }
+        return additionalSuggestions;
+      }
     }
     return Collections.emptyList();
   }
@@ -320,6 +369,46 @@ public class GermanSpellerRule extends CompoundAwareHunspellRule {
       }
     }
     return null;
+  }
+
+  private boolean ignoreCompoundWithIgnoredWord(String word) throws IOException{
+    String[] words = word.split("-");
+    if (words.length < 2) {
+      return false;
+    }
+
+    boolean hasIgnoredWord = false;
+    List<String> toSpellCheck = new ArrayList<>(3);
+    String stripFirst = word.substring(words[0].length()+1);
+    String stripLast  = word.substring(0, word.length()-words[words.length-1].length()-1);
+
+    if (super.ignoreWord(stripFirst)) { // e.g., "Senioren-Au-pair"
+      hasIgnoredWord = true;
+      if (!super.ignoreWord(words[0])) {
+        toSpellCheck.add(words[0]);
+      }
+    } else if (super.ignoreWord(stripLast)) { // e.g., "Au-pair-Agentur"
+      hasIgnoredWord = true;
+      if (!super.ignoreWord(words[words.length-1])){
+        toSpellCheck.add(words[words.length-1]);
+      }
+    } else {
+      for (String word1 : words) {
+        if (super.ignoreWord(word1)) {
+          toSpellCheck.add(word1);
+          hasIgnoredWord = true;
+        }
+      }
+    }
+
+    if (hasIgnoredWord) {
+      for (String w : toSpellCheck) {
+        if (hunspellDict.misspelled(w)) {
+          return false;
+        }
+      }
+    }
+    return hasIgnoredWord;
   }
 
   private List<String> sortByReplacements(String misspelling, List<String> suggestions) {

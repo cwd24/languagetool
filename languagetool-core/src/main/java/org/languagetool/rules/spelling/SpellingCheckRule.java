@@ -18,10 +18,6 @@
  */
 package org.languagetool.rules.spelling;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.JLanguageTool;
@@ -29,7 +25,14 @@ import org.languagetool.Language;
 import org.languagetool.rules.ITSIssueType;
 import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
+import org.languagetool.rules.patterns.PatternToken;
+import org.languagetool.rules.patterns.PatternTokenBuilder;
+import org.languagetool.tagging.disambiguation.rules.DisambiguationPatternRule;
 import org.languagetool.tokenizers.WordTokenizer;
+import org.languagetool.tools.StringTools;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * An abstract rule for spellchecking rules.
@@ -57,11 +60,13 @@ public abstract class SpellingCheckRule extends Rule {
 
   private final Set<String> wordsToBeIgnored = new HashSet<>();
   private final Set<String> wordsToBeProhibited = new HashSet<>();
-
+  private final CachingWordListLoader wordListLoader = new CachingWordListLoader();
+  
+  private List<DisambiguationPatternRule> antiPatterns = new ArrayList<>();
   private boolean considerIgnoreWords = true;
   private boolean convertsCase = false;
 
-  public SpellingCheckRule(final ResourceBundle messages, final Language language) {
+  public SpellingCheckRule(ResourceBundle messages, Language language) {
     super(messages);
     this.language = language;
     setLocQualityIssueType(ITSIssueType.Misspelling);
@@ -87,13 +92,15 @@ public abstract class SpellingCheckRule extends Rule {
 
   /**
    * Add the given words to the list of words to be ignored during spell check.
+   * You might want to use {@link #acceptPhrases(List)} instead, as only that
+   * can also deal with phrases.
    */
   public void addIgnoreTokens(List<String> tokens) {
     wordsToBeIgnored.addAll(tokens);
   }
 
   /**
-   * Set whether the list of words to be explicitly ignored is considered at all.
+   * Set whether the list of words to be explicitly ignored (set with {@link #addIgnoreTokens(List)}) is considered at all.
    */
   public void setConsiderIgnoreWords(boolean considerIgnoreWords) {
     this.considerIgnoreWords = considerIgnoreWords;
@@ -184,9 +191,15 @@ public abstract class SpellingCheckRule extends Rule {
   }
   
   protected void init() throws IOException {
-    loadWordsToBeIgnored(getIgnoreFileName());
-    loadWordsToBeIgnored(getSpellingFileName());
-    loadWordsToBeProhibited(getProhibitFileName());
+    for (String ignoreWord : wordListLoader.loadWords(getIgnoreFileName())) {
+      addIgnoreWords(ignoreWord, wordsToBeIgnored);
+    }
+    for (String ignoreWord : wordListLoader.loadWords(getSpellingFileName())) {
+      addIgnoreWords(ignoreWord, wordsToBeIgnored);
+    }
+    for (String prohibitedWord : wordListLoader.loadWords(getProhibitFileName())) {
+      wordsToBeProhibited.addAll(expandLine(prohibitedWord));
+    }
   }
 
   /**
@@ -239,23 +252,6 @@ public abstract class SpellingCheckRule extends Rule {
     }
   }
 
-  private void loadWordsToBeIgnored(String ignoreFile) throws IOException {
-    if (!JLanguageTool.getDataBroker().resourceExists(ignoreFile)) {
-      return;
-    }
-    try (InputStream inputStream = JLanguageTool.getDataBroker().getFromResourceDirAsStream(ignoreFile);
-         Scanner scanner = new Scanner(inputStream, "utf-8")) {
-      while (scanner.hasNextLine()) {
-        final String line = scanner.nextLine();
-        if (isComment(line)) {
-          continue;
-        }
-        failOnSpace(ignoreFile, line);
-        addIgnoreWords(line, wordsToBeIgnored);
-      }
-    }
-  }
-
   /**
    * @param line the line as read from {@code spelling.txt}.
    * @param wordsToBeIgnored the set of words to be ignored
@@ -274,31 +270,61 @@ public abstract class SpellingCheckRule extends Rule {
     return Collections.singletonList(line);
   }
 
-  private void loadWordsToBeProhibited(String prohibitFile) throws IOException {
-    if (!JLanguageTool.getDataBroker().resourceExists(prohibitFile)) {
-      return;
-    }
-    try (InputStream inputStream = JLanguageTool.getDataBroker().getFromResourceDirAsStream(prohibitFile);
-         Scanner scanner = new Scanner(inputStream, "utf-8")) {
-      while (scanner.hasNextLine()) {
-        String line = scanner.nextLine();
-        if (isComment(line)) {
-          continue;
+  /**
+   * Accept (case-sensitively, unless at the start of a sentence) the given phrases even though they
+   * are not in the built-in dictionary.
+   * Use this to avoid false alarms on e.g. names and technical terms. Unlike {@link #addIgnoreTokens(List)}
+   * this can deal with phrases. A way to call this is like this:
+   * <code>rule.acceptPhrases(Arrays.asList("duodenal atresia"))</code>
+   * This way, checking would not create an error for "duodenal atresia", but it would still
+   * create and error for "duodenal" or "atresia" if they appear on their own.
+   * @since 3.3
+   */
+  public void acceptPhrases(List<String> phrases) {
+    List<List<PatternToken>> antiPatterns = new ArrayList<>();
+    for (String phrase : phrases) {
+      String[] parts = phrase.split(" ");
+      List<PatternToken> patternTokens = new ArrayList<>();
+      int i = 0;
+      boolean startsLowercase = false;
+      for (String part : parts) {
+        if (i == 0) {
+          String uppercased = StringTools.uppercaseFirstChar(part);
+          if (!uppercased.equals(part)) {
+            startsLowercase = true;
+          }
         }
-        failOnSpace(prohibitFile, line);
-        wordsToBeProhibited.addAll(expandLine(line));
+        patternTokens.add(new PatternTokenBuilder().csToken(part).build());
+        i++;
+      }
+      antiPatterns.add(patternTokens);
+      if (startsLowercase) {
+        antiPatterns.add(getTokensForSentenceStart(parts));
       }
     }
+    this.antiPatterns = makeAntiPatterns(antiPatterns, language);
   }
 
-  private boolean isComment(String line) {
-    return line.startsWith("#");
-  }
-
-  private void failOnSpace(String fileName, String line) {
-    if (line.contains(" ")) {
-      throw new RuntimeException("No space expected in " + fileName + ": '" + line + "'");
+  private List<PatternToken> getTokensForSentenceStart(String[] parts) {
+    List<PatternToken> ucPatternTokens = new ArrayList<>();
+    int j = 0;
+    for (String part : parts) {
+      if (j == 0) {
+        // at sentence start, we also need to accept a phrase that starts with an uppercase char:
+        String uppercased = StringTools.uppercaseFirstChar(part);
+        ucPatternTokens.add(new PatternTokenBuilder().posRegex(JLanguageTool.SENTENCE_START_TAGNAME).build());
+        ucPatternTokens.add(new PatternTokenBuilder().csToken(uppercased).build());
+      } else {
+        ucPatternTokens.add(new PatternTokenBuilder().csToken(part).build());
+      }
+      j++;
     }
+    return ucPatternTokens;
+  }
+
+  @Override
+  public List<DisambiguationPatternRule> getAntiPatterns() {
+    return antiPatterns;
   }
 
 }

@@ -49,12 +49,22 @@ public class UppercaseSentenceStartRule extends Rule {
 
   private String lastParagraphString = "";
   
-  public UppercaseSentenceStartRule(final ResourceBundle messages,
-      final Language language) {
+  /** @since 3.3 */
+  public UppercaseSentenceStartRule(ResourceBundle messages, Language language, IncorrectExample incorrectExample, String correctExample) {
     super(messages);
-    super.setCategory(new Category(messages.getString("category_case")));
+    super.setCategory(Categories.CASING.getCategory(messages));
     this.language = language;
     setLocQualityIssueType(ITSIssueType.Typographical);
+    if (incorrectExample != null && correctExample != null) {
+      addExamplePair(incorrectExample, correctExample);
+    }
+  }
+
+  /**
+   * @deprecated use {@link #UppercaseSentenceStartRule(ResourceBundle, Language, IncorrectExample, String)} instead (deprecated since 3.3)
+   */
+  public UppercaseSentenceStartRule(ResourceBundle messages, Language language) {
+    this(messages, language, null, null);
   }
 
   @Override
@@ -68,14 +78,14 @@ public class UppercaseSentenceStartRule extends Rule {
   }
 
   @Override
-  public final RuleMatch[] match(final AnalyzedSentence sentence) {
-    final List<RuleMatch> ruleMatches = new ArrayList<>();
-    final AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
+  public final RuleMatch[] match(AnalyzedSentence sentence) {
+    List<RuleMatch> ruleMatches = new ArrayList<>();
+    AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
     if (tokens.length < 2) {
       return toRuleMatchArray(ruleMatches);
     }
     int matchTokenPos = 1; // 0 = SENT_START
-    final String firstToken = tokens[matchTokenPos].getToken();
+    String firstToken = tokens[matchTokenPos].getToken();
     String secondToken = null;
     String thirdToken = null;
     // ignore quote characters:
@@ -83,7 +93,7 @@ public class UppercaseSentenceStartRule extends Rule {
       matchTokenPos = 2;
       secondToken = tokens[matchTokenPos].getToken();
     }
-    final String firstDutchToken = dutchSpecialCase(firstToken, secondToken, tokens);
+    String firstDutchToken = dutchSpecialCase(firstToken, secondToken, tokens);
     if (firstDutchToken != null) {
       thirdToken = firstDutchToken;
       matchTokenPos = 3;
@@ -125,9 +135,9 @@ public class UppercaseSentenceStartRule extends Rule {
     }
 
     if (checkToken.length() > 0) {
-      final char firstChar = checkToken.charAt(0);
+      char firstChar = checkToken.charAt(0);
       if (!preventError && Character.isLowerCase(firstChar)) {
-        final RuleMatch ruleMatch = new RuleMatch(this,
+        RuleMatch ruleMatch = new RuleMatch(this,
                 tokens[matchTokenPos].getStartPos(),
                 tokens[matchTokenPos].getEndPos(),
                 messages.getString("incorrect_case"));
@@ -139,8 +149,8 @@ public class UppercaseSentenceStartRule extends Rule {
   }
 
   @Nullable
-  private String dutchSpecialCase(final String firstToken,
-      final String secondToken, final AnalyzedTokenReadings[] tokens) {
+  private String dutchSpecialCase(String firstToken,
+      String secondToken, AnalyzedTokenReadings[] tokens) {
     if (!language.getShortName().equals("nl")) {
       return null;
     }

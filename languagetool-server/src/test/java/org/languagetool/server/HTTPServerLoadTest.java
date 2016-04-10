@@ -44,27 +44,31 @@ public class HTTPServerLoadTest extends HTTPServerTest {
   @Test
   @Override
   public void testHTTPServer() throws Exception {
-    final long startTime = System.currentTimeMillis();
+    long startTime = System.currentTimeMillis();
     HTTPServerConfig config = new HTTPServerConfig(HTTPTools.getDefaultPort(), true);
-    final HTTPServer server = new HTTPServer(config);
+    HTTPServer server = new HTTPServer(config);
     assertFalse(server.isRunning());
     try {
       server.run();
       assertTrue(server.isRunning());
-      final ExecutorService executorService = Executors.newFixedThreadPool(getThreadCount());
-      final List<Future> futures = new ArrayList<>();
-      for (int i = 0; i < getThreadCount(); i++) {
-        final Future<?> future = executorService.submit(new TestRunnable());
-        futures.add(future);
-      }
-      for (Future future : futures) {
-        future.get();
-      }
+      doTest();
     } finally {
       server.stop();
       assertFalse(server.isRunning());
-      final long runtime = System.currentTimeMillis() - startTime;
+      long runtime = System.currentTimeMillis() - startTime;
       System.out.println("Running with " + getThreadCount() + " threads in " + runtime + "ms");
+    }
+  }
+
+  protected void doTest() throws InterruptedException, java.util.concurrent.ExecutionException {
+    ExecutorService executorService = Executors.newFixedThreadPool(getThreadCount());
+    List<Future> futures = new ArrayList<>();
+    for (int i = 0; i < getThreadCount(); i++) {
+      Future<?> future = executorService.submit(new TestRunnable());
+      futures.add(future);
+    }
+    for (Future future : futures) {
+      future.get();
     }
   }
 
@@ -92,7 +96,7 @@ public class HTTPServerLoadTest extends HTTPServerTest {
           throw new RuntimeException(e);
         } finally {
           int count = runningTests.decrementAndGet();
-          System.out.println("Tests currently running " + count);
+          System.out.println("Tests currently running: " + count);
         }
       }
     }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -37,7 +38,7 @@ import org.languagetool.AnalyzedToken;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.Ukrainian;
-import org.languagetool.rules.Category;
+import org.languagetool.rules.Categories;
 import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.synthesis.Synthesizer;
@@ -55,6 +56,8 @@ public class TokenAgreementRule extends Rule {
   private static final String VIDMINOK_SUBSTR = ":v_";
   private static final Pattern REQUIRE_VIDMINOK_REGEX = Pattern.compile(":r(v_[a-z]+)");
   private static final Pattern VIDMINOK_REGEX = Pattern.compile(":(v_[a-z]+)");
+  private static final String reqAnimInanimRegex = ":r(?:in)?anim";
+  private static final Pattern REQ_ANIM_INANIM_PATTERN = Pattern.compile(reqAnimInanimRegex);
 
   private final Ukrainian ukrainian = new Ukrainian();
 
@@ -65,8 +68,8 @@ public class TokenAgreementRule extends Rule {
       "ім'я", "прізвище"
       ));
 
-  public TokenAgreementRule(final ResourceBundle messages) throws IOException {
-    super.setCategory(new Category(messages.getString("category_misc")));
+  public TokenAgreementRule(ResourceBundle messages) throws IOException {
+    super.setCategory(Categories.MISC.getCategory(messages));
   }
 
   @Override
@@ -91,7 +94,7 @@ public class TokenAgreementRule extends Rule {
   }
 
   @Override
-  public final RuleMatch[] match(final AnalyzedSentence text) {
+  public final RuleMatch[] match(AnalyzedSentence text) {
     List<RuleMatch> ruleMatches = new ArrayList<>();
     AnalyzedTokenReadings[] tokens = text.getTokensWithoutWhitespace();    
     boolean insideMultiword = false;
@@ -215,7 +218,7 @@ public class TokenAgreementRule extends Rule {
 
         //TODO: only for subset: президенти/депутати/мери/гості... or by verb піти/йти/балотуватися/записатися...
         if( prep.equalsIgnoreCase("в") || prep.equalsIgnoreCase("у") || prep.equals("межи") || prep.equals("між") || prep.equals("на") ) {
-          if( PosTagHelper.hasPosTag(tokenReadings, ".*p:v_naz.*:anim[^&]*") ) { // but not &pron:
+          if( PosTagHelper.hasPosTag(tokenReadings, "noun:anim.*:p:v_naz[^&]*") ) { // but not &pron:
             reqTokenReadings = null;
             continue;
           }
@@ -223,7 +226,7 @@ public class TokenAgreementRule extends Rule {
 
         if (prep.equalsIgnoreCase("на")) {
           // 1) на (свято) Купала, на (вулиці) Мазепи, на (вулиці) Тюльпанів
-          if ((Character.isUpperCase(token.charAt(0)) && posTag.matches("noun:.:v_rod.*"))
+          if ((Character.isUpperCase(token.charAt(0)) && posTag.matches("noun.*?:.:v_rod.*"))
                 // 2) поміняти ім'я на Захар; поміняв Іван на Петро
                 || (posTag.matches(".*[fl]name.*")
                     && ((i > 1 && NAMES.contains(tokens[i-2].getAnalyzedToken(0).getToken()))
@@ -266,7 +269,7 @@ public class TokenAgreementRule extends Rule {
             continue;
           }
 
-          if( IPOSTag.isNum(tokens[i+1].getAnalyzedToken(0).getPOSTag())
+          if( PosTagHelper.hasPosTag(tokens[i+1], "num.*")
               && (token.equals("мінус") || token.equals("плюс")
                   || token.equals("мінімум") || token.equals("максимум") ) ) {
             reqTokenReadings = null;
@@ -274,13 +277,13 @@ public class TokenAgreementRule extends Rule {
           }
 
           // на мохом стеленому дні - пропускаємо «мохом»
-          if( PosTagHelper.hasPosTag(tokenReadings, "noun:.:v_oru.*")
+          if( PosTagHelper.hasPosTag(tokenReadings, "noun.*?:.:v_oru.*")
               && tokens[i+1].hasPartialPosTag("adjp") ) {
             continue;
           }
           
           if( (prep.equalsIgnoreCase("через") || prep.equalsIgnoreCase("на"))  // років 10, відсотки 3-4
-              && (posTag.startsWith("noun:p:v_naz") || posTag.startsWith("noun:p:v_rod")) // token.equals("років") 
+              && (posTag.startsWith("noun:inanim:p:v_naz") || posTag.startsWith("noun:inanim:p:v_rod")) // token.equals("років") 
               && IPOSTag.isNum(tokens[i+1].getAnalyzedToken(0).getPOSTag()) ) {
             reqTokenReadings = null;
             continue;
@@ -363,13 +366,13 @@ public class TokenAgreementRule extends Rule {
     return false;
   }
 
-  private boolean forwardSearch(AnalyzedTokenReadings[] tokens, int pos, String string, int maxSkip) {
-    for(int i=pos+1; i < tokens.length && i <= pos + maxSkip; i++) {
-      if( tokens[i].getAnalyzedToken(0).getToken().equalsIgnoreCase(string) )
-        return true;
-    }
-    return false;
-  }
+//  private boolean forwardSearch(AnalyzedTokenReadings[] tokens, int pos, String string, int maxSkip) {
+//    for(int i=pos+1; i < tokens.length && i <= pos + maxSkip; i++) {
+//      if( tokens[i].getAnalyzedToken(0).getToken().equalsIgnoreCase(string) )
+//        return true;
+//    }
+//    return false;
+//  }
 
   private boolean isTokenToSkip(AnalyzedTokenReadings tokenReadings) {
     for(AnalyzedToken token: tokenReadings) {
@@ -423,23 +426,42 @@ public class TokenAgreementRule extends Rule {
 
   private RuleMatch createRuleMatch(AnalyzedTokenReadings tokenReadings, AnalyzedTokenReadings reqTokenReadings, List<String> posTagsToFind) {
     String tokenString = tokenReadings.getToken();
-
+    
     Synthesizer ukrainianSynthesizer = ukrainian.getSynthesizer();
 
     List<String> suggestions = new ArrayList<>();
-    String oldPosTag = tokenReadings.getAnalyzedToken(0).getPOSTag();
+    
     String requiredPostTagsRegEx = ":(" + StringUtils.join(posTagsToFind,"|") + ")";
-    String posTag = oldPosTag.replaceFirst(":v_[a-z]+", requiredPostTagsRegEx);
+    for (AnalyzedToken analyzedToken: tokenReadings.getReadings()) {
+    
+      String oldPosTag = analyzedToken.getPOSTag();
+      
+      if( oldPosTag == null )
+        continue;
+      
+      String requiredPostTagsRegExToApply = requiredPostTagsRegEx;
 
-    //    System.out.println("  creating suggestion for " + tokenReadings + " / " + tokenReadings.getAnalyzedToken(0) +" and tag " + posTag);
+      Matcher matcher = REQ_ANIM_INANIM_PATTERN.matcher(oldPosTag);
+      if( matcher.find() ) {
+        requiredPostTagsRegExToApply += matcher.group(0);
+      }
+      else {
+        requiredPostTagsRegExToApply += "(?:" + reqAnimInanimRegex + ")?";
+      }
 
-    try {
-      String[] synthesized = ukrainianSynthesizer.synthesize(tokenReadings.getAnalyzedToken(0), posTag, true);
+      String posTag = oldPosTag.replaceFirst(":v_[a-z]+", requiredPostTagsRegExToApply);
 
-      //      System.out.println("Synthesized: " + Arrays.asList(synthesized));
-      suggestions.addAll( Arrays.asList(synthesized) );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+      try {
+        String[] synthesized = ukrainianSynthesizer.synthesize(analyzedToken, posTag, true);
+
+        suggestions.addAll( Arrays.asList(synthesized) );
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    
+    if( suggestions.size() > 0 ) {  // remove duplicates
+      suggestions = new ArrayList<>(new LinkedHashSet<>(suggestions));
     }
 
     List<String> reqVidminkyNames = new ArrayList<>();
@@ -468,7 +490,7 @@ public class TokenAgreementRule extends Rule {
     String msg = MessageFormat.format("Прийменник «{0}» вимагає іншого відмінка: {1}, а знайдено: {2}", 
         reqTokenReadings.getToken(), StringUtils.join(reqVidminkyNames, ", "), StringUtils.join(foundVidminkyNames, ", "));
         
-    if( tokenString.equals("їх") ) {
+    if( tokenString.equals("їх") && requiredPostTagsRegEx != null ) {
       msg += ". Можливо тут потрібно присвійний займенник «їхній»?";
       try {
         String newYihPostag = "adj:p" + requiredPostTagsRegEx + ".*";
@@ -481,7 +503,7 @@ public class TokenAgreementRule extends Rule {
     else if( reqTokenReadings.getToken().equalsIgnoreCase("о") ) {
       for(AnalyzedToken token: tokenReadings.getReadings()) {
         String posTag2 = token.getPOSTag();
-        if( posTag2.matches(".*:v_naz.*:anim.*") ) {
+        if( posTag2.matches("noun:anim.*:v_naz.*") ) {
           msg += ". Можливо тут «о» — це вигук і потрібно кличний відмінок?";
           try {
             String newPostag = posTag2.replace("v_naz", "v_kly");

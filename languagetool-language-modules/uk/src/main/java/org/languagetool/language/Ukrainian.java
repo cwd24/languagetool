@@ -50,7 +50,6 @@ import org.languagetool.tokenizers.Tokenizer;
 import org.languagetool.tokenizers.uk.UkrainianWordTokenizer;
 
 public class Ukrainian extends Language {
-
   private static final List<String> RULE_FILES = Arrays.asList(
       "grammar-spelling.xml",
       "grammar-grammar.xml",

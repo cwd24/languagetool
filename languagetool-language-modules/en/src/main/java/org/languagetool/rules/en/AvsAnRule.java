@@ -21,10 +21,7 @@ package org.languagetool.rules.en;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedToken;
 import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.rules.Category;
-import org.languagetool.rules.Example;
-import org.languagetool.rules.ITSIssueType;
-import org.languagetool.rules.RuleMatch;
+import org.languagetool.rules.*;
 import org.languagetool.tools.StringTools;
 
 import java.util.ArrayList;
@@ -53,8 +50,8 @@ public class AvsAnRule extends EnglishRule {
 
   private static final Pattern cleanupPattern = Pattern.compile("[^αa-zA-Z0-9\\.;,:']");
 
-  public AvsAnRule(final ResourceBundle messages) {
-    super.setCategory(new Category(messages.getString("category_misc")));
+  public AvsAnRule(ResourceBundle messages) {
+    super.setCategory(Categories.MISC.getCategory(messages));
     setLocQualityIssueType(ITSIssueType.Misspelling);
     addExamplePair(Example.wrong("The train arrived <marker>a hour</marker> ago."),
                    Example.fixed("The train arrived <marker>an hour</marker> ago."));
@@ -71,9 +68,9 @@ public class AvsAnRule extends EnglishRule {
   }
 
   @Override
-  public RuleMatch[] match(final AnalyzedSentence sentence) {
-    final List<RuleMatch> ruleMatches = new ArrayList<>();
-    final AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
+  public RuleMatch[] match(AnalyzedSentence sentence) {
+    List<RuleMatch> ruleMatches = new ArrayList<>();
+    AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
     int prevTokenIndex = 0;
     for (int i = 1; i < tokens.length; i++) {  // ignoring token 0, i.e., SENT_START
       AnalyzedTokenReadings token = tokens[i];
@@ -123,7 +120,7 @@ public class AvsAnRule extends EnglishRule {
    * @param origWord Word that needs an article.
    * @return String containing the word with a determiner, or just the word if the word is an abbreviation.
    */
-  public String suggestAorAn(final String origWord) {
+  public String suggestAorAn(String origWord) {
     AnalyzedTokenReadings token = new AnalyzedTokenReadings(new AnalyzedToken(origWord, null, null), 0);
     Determiner determiner = getCorrectDeterminerFor(token);
     if (determiner == Determiner.A) {

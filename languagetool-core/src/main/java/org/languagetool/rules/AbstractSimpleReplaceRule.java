@@ -71,9 +71,9 @@ public abstract class AbstractSimpleReplaceRule extends Rule {
     ignoreTaggedWords = true;
   }
 
-  public AbstractSimpleReplaceRule(final ResourceBundle messages)
+  public AbstractSimpleReplaceRule(ResourceBundle messages)
       throws IOException {
-    super.setCategory(new Category(messages.getString("category_misc")));
+    super.setCategory(Categories.MISC.getCategory(messages));
   }
 
   @Override
@@ -100,7 +100,7 @@ public abstract class AbstractSimpleReplaceRule extends Rule {
   }
 
   @Override
-  public final RuleMatch[] match(final AnalyzedSentence sentence) {
+  public RuleMatch[] match(AnalyzedSentence sentence) {
     List<RuleMatch> ruleMatches = new ArrayList<>();
     AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
 

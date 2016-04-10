@@ -18,13 +18,14 @@
  */
 package org.languagetool.rules.uk;
 
-import org.apache.commons.lang.StringUtils;
-import org.languagetool.rules.AbstractSimpleReplaceRule;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import org.apache.commons.lang.StringUtils;
+import org.languagetool.rules.AbstractSimpleReplaceRule;
+import org.languagetool.rules.ITSIssueType;
 
 /**
  * A rule that matches words for which better alternatives exist and suggests them instead.
@@ -42,8 +43,9 @@ public class SimpleReplaceSoftRule extends AbstractSimpleReplaceRule {
     return wrongWords;
   }
 
-  public SimpleReplaceSoftRule(final ResourceBundle messages) throws IOException {
+  public SimpleReplaceSoftRule(ResourceBundle messages) throws IOException {
     super(messages);
+    setLocQualityIssueType(ITSIssueType.Style);
   }
 
   @Override

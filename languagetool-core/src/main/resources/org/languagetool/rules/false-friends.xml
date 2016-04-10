@@ -6,7 +6,7 @@ title="Pretty print" ?>
 title="Easy editing stylesheet" ?>
 <!--
 Rules: False Friends
-Copyright (C) 2001-2005 Daniel Naber (http://www.danielnaber.de)
+Copyright (C) 2001-2016 Daniel Naber (http://www.danielnaber.de)
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -148,7 +148,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         </rule>
         <rule>
             <pattern lang="es">
-                <token inflected="yes" regexp="yes">acomod(ación|odo)</token>
+                <token inflected="yes" regexp="yes">acomodación|acomododo</token>
             </pattern>
             <translation lang="en">adaptation</translation>
             <translation lang="en">arrangement</translation>
@@ -680,7 +680,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         </rule>
         <rule>
             <pattern lang="gl">
-                <token regexp="yes">alegad[ao]s?</token>
+                <token regexp="yes">alegado|alegada|alegados|alegadas</token>
             </pattern>
             <translation lang="en">claimed</translation>
             <translation lang="en">pleaded</translation>
@@ -3213,7 +3213,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
     <rulegroup id="GASTRONOME">
         <rule>
             <pattern lang="en">
-                <token inflected="yes" regexp="yes">gastronom(er?|ist)</token>
+                <token inflected="yes" regexp="yes">gastronome|gastronomer|gastronomist</token>
             </pattern>
             <translation lang="pl">smakosz, smakoszka</translation>
         </rule>
@@ -3422,12 +3422,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <translation lang="en">high school</translation>
             <translation lang="en">secondary school</translation>
             <translation lang="gl">Instituto de Educación Secundaria</translation>
+            <translation lang="es">bachillerato</translation>
         </rule>
         <rule>
             <pattern lang="pl">
                 <token inflected="yes">gimnazjum</token>
             </pattern>
             <translation lang="en">(lower) secondary school</translation>
+        </rule>
+        <rule>
+            <pattern lang="es">
+                <token>gimnasio</token>
+            </pattern>
+            <translation lang="de">Fitnessstudio</translation>
+            <translation lang="de">Turnhalle</translation>
         </rule>
     </rulegroup>
     <rulegroup id="HANDY">
@@ -3680,7 +3688,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         </rule>
         <rule>
             <pattern lang="gl">
-                <token regexp="yes">intoxicad[oa]s?</token>
+                <token regexp="yes">intoxicado|intoxicada|intoxicados|intoxicadas</token>
             </pattern>
             <translation lang="en">poisoned</translation>
         </rule>
@@ -6827,6 +6835,228 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <token>タレント</token>
             </pattern>
             <translation lang="en">Celebrity</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="VASO">
+        <rule>
+            <pattern lang="es"><token inflected="yes">vaso</token></pattern>
+            <translation lang="de">Glas (zum Trinken)</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Vase</token></pattern>
+            <translation lang="es">jarrón</translation>
+            <translation lang="es">florero</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="ALTA">
+        <rule>
+            <pattern lang="es"><token inflected="yes">alto</token></pattern>
+            <translation lang="de">hoch</translation>
+            <translation lang="de">groß</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">alt</token></pattern>
+            <translation lang="es">viejo</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="BRAVO">
+        <rule>
+            <pattern lang="es"><token inflected="yes">bravo</token></pattern>
+            <translation lang="de">mutig</translation>
+            <translation lang="de">tapfer</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">brav</token></pattern>
+            <translation lang="es">bueno</translation>
+            <translation lang="es">buena</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="COMPLEMENTO">
+        <rule>
+            <pattern lang="es"><token inflected="yes">complemento</token></pattern>
+            <translation lang="de">Ergänzung</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Kompliment</token></pattern>
+            <translation lang="es">cumplido</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="CONCURRENCIA">
+        <rule>
+            <pattern lang="es"><token>concurrencia</token></pattern>
+            <translation lang="de">Zulauf</translation>
+            <translation lang="de">Menschenmenge</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Konkurrenz</token></pattern>
+            <translation lang="es">competencia</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="CURIOSO">
+        <rule>
+            <pattern lang="es"><token inflected="yes">curioso</token></pattern>
+            <translation lang="de">neugierig</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">kurios</token></pattern>
+            <translation lang="es">raro</translation>
+            <translation lang="es">rara</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="EXITO">
+        <rule>
+            <pattern lang="es"><token>exito</token></pattern>
+            <translation lang="de">Erfolg</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Exitus</token></pattern>
+            <translation lang="es">éxitus</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="FERIA">
+        <rule>
+            <pattern lang="es"><token>feria</token></pattern>
+            <translation lang="de">Messe (z.B. Industriemesse)</translation>
+            <translation lang="de">Volksfest</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Ferien</token></pattern>
+            <translation lang="es">vacaciones</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="HARTO">
+        <rule>
+            <pattern lang="es"><token regexp="yes">harto|harta</token></pattern>
+            <translation lang="de">satt</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">hart</token></pattern>
+            <translation lang="es">duro</translation>
+            <translation lang="es">dura</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="DEBIL">
+        <rule>
+            <pattern lang="es"><token regexp="yes">débil</token></pattern>
+            <translation lang="de">schwach</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">debil</token></pattern>
+            <translation lang="es">deficiente mental</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="IMPONER">
+        <rule>
+            <pattern lang="es"><token inflected="yes">imponer</token></pattern>
+            <translation lang="de">aufzwingen</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">imponieren</token></pattern>
+            <translation lang="es">impresionar</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="INVESTER">
+        <rule>
+            <pattern lang="es"><token inflected="yes">investir</token></pattern>
+            <translation lang="de">versetzen</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">investieren</token></pattern>
+            <translation lang="es">invertir</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="RAQUETA">
+        <rule>
+            <pattern lang="es"><token inflected="yes">raqueta</token></pattern>
+            <translation lang="de">(Tennis-)schläger</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Rakete</token></pattern>
+            <translation lang="es">cohete</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="RASANTE">
+        <rule>
+            <pattern lang="es"><token inflected="yes">rasante</token></pattern>
+            <translation lang="de">Neigung</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">rasant</token></pattern>
+            <translation lang="es">rápido</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="REGALO">
+        <rule>
+            <pattern lang="es"><token inflected="yes">regalo</token></pattern>
+            <translation lang="de">Geschenk</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Regal</token></pattern>
+            <translation lang="es">estantería</translation>
+            <translation lang="es">estante</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="RESPECTAR">
+        <rule>
+            <pattern lang="es"><token inflected="yes">respectar</token></pattern>
+            <translation lang="de">betreffen</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">respektieren</token></pattern>
+            <translation lang="es">respetar</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="MANTEL">
+        <rule>
+            <pattern lang="es"><token inflected="yes">mantel</token></pattern>
+            <translation lang="de">Tischdecke</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Mantel</token></pattern>
+            <translation lang="es">abrigo</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="FAMOSO">
+        <rule>
+            <pattern lang="es"><token inflected="yes">famoso</token></pattern>
+            <translation lang="de">berühmt</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">famos</token></pattern>
+            <translation lang="es">estupendo</translation>
+            <translation lang="es">estupenda</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="DIRIGENTE">
+        <rule>
+            <pattern lang="es"><token inflected="yes">dirigente</token></pattern>
+            <translation lang="de">Führungs...</translation>
+            <translation lang="de">leitend</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Dirigent</token></pattern>
+            <translation lang="es">director de orquesta</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="ENTE">
+        <rule>
+            <pattern lang="es"><token inflected="yes">ente</token></pattern>
+            <translation lang="de">Wesen</translation>
+            <translation lang="de">Körperschaft</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Ente</token></pattern>
+            <translation lang="es">plato</translation>
+        </rule>
+    </rulegroup>
+    <rulegroup id="FLAUTA">
+        <rule>
+            <pattern lang="es"><token inflected="yes">flauta</token></pattern>
+            <translation lang="de">Flöte</translation>
+        </rule>
+        <rule>
+            <pattern lang="de"><token inflected="yes">Flaute</token></pattern>
+            <translation lang="es">calma</translation>
         </rule>
     </rulegroup>
 

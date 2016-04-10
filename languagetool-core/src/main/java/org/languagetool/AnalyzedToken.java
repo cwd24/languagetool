@@ -18,11 +18,9 @@
  */
 package org.languagetool;
 
-import java.util.Objects;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * A word (or punctuation, or whitespace) and its analysis (part-of-speech tag, lemma)
@@ -34,19 +32,19 @@ public final class AnalyzedToken {
   private final String token;
   private final String posTag;
   private final String lemma;
-  private final String tokenInflected;  // used only for matching with Elements
+  private final String lemmaOrToken;  // used only for matching with Elements
 
   private boolean isWhitespaceBefore;
   private boolean hasNoPOSTag;
 
-  public AnalyzedToken(final String token, final String posTag, final String lemma) {
+  public AnalyzedToken(String token, String posTag, String lemma) {
     this.token = Objects.requireNonNull(token, "token cannot be null");
     this.posTag = posTag;
     this.lemma = lemma;    
     if (lemma == null) {
-      tokenInflected = token;
+      lemmaOrToken = token;
     } else {
-      tokenInflected = lemma;
+      lemmaOrToken = lemma;
     }
     hasNoPOSTag = (posTag == null 
         || JLanguageTool.SENTENCE_END_TAGNAME.equals(posTag)
@@ -75,9 +73,10 @@ public final class AnalyzedToken {
 
   /**
    * Like {@link #getLemma()}, but returns the token if the lemma is {@code null}
+   * @deprecated deprecated since 3.4
    */
   public String getTokenInflected() {
-    return tokenInflected;
+    return lemmaOrToken;
   }
   
   public void setWhitespaceBefore(boolean whitespaceBefore) {
@@ -93,7 +92,7 @@ public final class AnalyzedToken {
    * @return true if all of the non-null values (lemma, POS, token) of AnalyzedToken match this token
    * @since 1.5
    */
-  public boolean matches(final AnalyzedToken an) {
+  public boolean matches(AnalyzedToken an) {
     if (this.equals(an)) {
       return true;
     }
@@ -136,28 +135,24 @@ public final class AnalyzedToken {
   
   @Override
   public String toString() {
-    return tokenInflected + '/' + posTag;
+    return lemmaOrToken + '/' + posTag;
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder().append(isWhitespaceBefore).append(lemma).append(posTag).append(token).toHashCode();
+    return Objects.hash(isWhitespaceBefore, lemma, posTag, token);
   }
 
   @Override
-  public boolean equals(final Object obj) {
-    if (obj == null) { return false; }
-    if (obj == this) { return true; }
-    if (obj.getClass() != getClass()) {
-      return false;
-    }
-    final AnalyzedToken rhs = (AnalyzedToken) obj;
-    return new EqualsBuilder()
-            .append(token, rhs.token)
-            .append(posTag, rhs.posTag)
-            .append(lemma, rhs.lemma)
-            .append(isWhitespaceBefore, rhs.isWhitespaceBefore)
-            .isEquals();
+  public boolean equals(Object o) {
+    if (o == null) return false;
+    if (o == this) return true;
+    if (o.getClass() != getClass()) return false;
+    AnalyzedToken other = (AnalyzedToken) o;
+    return Objects.equals(token, other.token)
+        && Objects.equals(posTag, other.posTag)
+        && Objects.equals(lemma, other.lemma)
+        && Objects.equals(isWhitespaceBefore, other.isWhitespaceBefore);
   }
 
 }

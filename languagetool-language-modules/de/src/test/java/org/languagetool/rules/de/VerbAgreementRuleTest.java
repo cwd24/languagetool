@@ -47,6 +47,14 @@ public class VerbAgreementRuleTest extends TestCase {
   
   public void testWrongVerb() throws IOException {
     // correct sentences:
+    assertGood("Du bist in dem Moment angekommen, als ich gegangen bin.");
+    assertGood("Kümmere du dich mal nicht darum!");
+    assertGood("Ich weiß, was ich tun werde, falls etwas geschehen sollte.");
+    assertGood("...die dreißig Jahre jünger als ich ist.");
+    assertGood("Ein Mann wie ich braucht einen Hut.");
+    assertGood("Egal, was er sagen wird, ich habe meine Entscheidung getroffen.");
+    assertGood("Du Beharrst darauf, dein Wörterbuch hätte recht, hast aber von den Feinheiten des Japanischen keine Ahnung!");
+    assertGood("Bin gleich wieder da.");
     assertGood("Wobei ich äußerst vorsichtig bin.");
     assertGood("Es ist klar, dass ich äußerst vorsichtig mit den Informationen umgehe");
     assertGood("Es ist klar, dass ich äußerst vorsichtig bin.");
@@ -70,6 +78,7 @@ public class VerbAgreementRuleTest extends TestCase {
     assertGood("Probst wurde deshalb in den Medien gefeiert.");
     assertGood("/usr/bin/firefox");
     assertGood("Das sind Leute, die viel mehr als ich wissen.");
+    assertGood("Das ist mir nicht klar, kannst ja mal beim Kunden nachfragen.");
     // incorrect sentences:
     assertBad("Als Borcarbid weißt es eine hohe Härte auf.");
     assertBad("Das greift auf Vorläuferinstitutionen bist auf die Zeit von 1234 zurück.");

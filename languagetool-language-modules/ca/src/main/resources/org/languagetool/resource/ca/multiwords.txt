@@ -1,4 +1,67 @@
 #Catalan multiwords file used for chunking
+All Blacks	_GN_MP
+Arizona Cardinals	_GN_MP
+Atlanta Falcons	_GN_MP
+Atlanta Hawks	_GN_MP
+Baltimore Ravens	_GN_MP
+Boston Celtics	_GN_MP
+Buffalo Bills	_GN_MP
+Carolina Panthers	_GN_MP
+Charlotte Bobcats	_GN_MP
+Chicago Bears	_GN_MP
+Chicago Bulls	_GN_MP
+Cincinnati Bengals	_GN_MP
+Cleveland Browns	_GN_MP
+Cleveland Cavaliers	_GN_MP
+Dallas Cowboys	_GN_MP
+Dallas Mavericks	_GN_MP
+Denver Broncos	_GN_MP
+Denver Nuggets	_GN_MP
+Detroit Lions	_GN_MP
+Detroit Pistons	_GN_MP
+Golden State Warriors	_GN_MP
+Green Bay Packers	_GN_MP
+Houston Rockets	_GN_MP
+Houston Texans	_GN_MP
+Indiana Pacers	_GN_MP
+Indianapolis Colts	_GN_MP
+Jacksonville Jaguars	_GN_MP
+Kansas City Chiefs	_GN_MP
+Los Angeles Clippers	_GN_MP
+Los Angeles Lakers	_GN_MP
+Memphis Grizzlies	_GN_MP
+Miami Dolphins	_GN_MP
+Miami Heat	_GN_MP
+Milwaukee Bucks	_GN_MP
+Minnesota Timberwolves	_GN_MP
+Minnesota Vikings	_GN_MP
+New England Patriots	_GN_MP
+New Jersey Nets	_GN_MP
+New Orleans Hornets	_GN_MP
+New Orleans Saints	_GN_MP
+New York Giants	_GN_MP
+New York Jets	_GN_MP
+New York Knicks	_GN_MP
+Oakland Raiders	_GN_MP
+Oklahoma City Thunder	_GN_MP
+Orlando Magic	_GN_MP
+Philadelphia 76ers	_GN_MP
+Philadelphia Eagles	_GN_MP
+Phoenix Suns	_GN_MP
+Pittsburgh Steelers	_GN_MP
+Portland Trail Blazers	_GN_MP
+Sacramento Kings	_GN_MP
+Saint Louis Rams	_GN_MP
+San Antonio Spurs	_GN_MP
+San Diego Chargers	_GN_MP
+San Francisco 49ers	_GN_MP
+Seattle Seahawks	_GN_MP
+Tampa Bay Buccaneers	_GN_MP
+Tennessee Titans	_GN_MP
+Toronto Raptors	_GN_MP
+Utah Jazz	_GN_MP
+Washington Redskins	_GN_MP
+Washington Wizards	_GN_MP
 Aberri Eguna	NPMSO00
 Abu Dhabi	NPCNG00
 Abu Ghraib	NPCNG00
@@ -9,6 +72,7 @@ Al Capone	NPMSSP0
 Alba Iulia	NPCNG00
 Alcalá de Guadaíra	NPCNG00
 Alcalá de Henares	NPCNG00
+Alfa Romeo	_GN_MN
 Alps Càrnics	NPCNG00
 Alta Vienne	NPFSG00
 Altin Tagh	NPCNG00
@@ -30,6 +94,7 @@ Beit Hanoun	NPCNG00
 Belo Horizonte	NPCNG00
 Ben Jawad	NPCNG00
 Beni Suef	NPCNG00
+Boca Juniors	_GN_MS
 Bosanska Krajina	NPCNG00
 Bosanski Brod	NPCNG00
 Burger King	NPCNO00
@@ -73,6 +138,7 @@ Déu n'hi do	LOC_ADV
 East Side	NPCNG00
 El Ejido	NPMSG00
 El Escorial	NPMSG00
+El Jueves	_GN_MS
 El Periódico	NPMSO00
 Elobey Chico	NPCNG00
 Elobey Grande	NPCNG00
@@ -82,6 +148,7 @@ Espíritu Santo	NPCNG00
 Estats Units	NPMPG00
 Eth Portilhon	NPCSG00
 Euskal Herria	NPCNG00
+FC Barcelona	_GN_MS
 Financial Times	NPMSO00
 Foreign Policy	NPCSO00
 Fort Lauderdale	NPCNG00
@@ -100,9 +167,12 @@ Hradec Králové	NPCNG00
 Huang He	NPCNG00
 Ille i Vilaine	NPCNG00
 In Amenas	NPCNG00
+Internet Explorer	_GN_MS
+Internet Archive	_GN_MS
 Jefferson City	NPCNG00
 José María	NPMSSP0
 José Luis	NPMSSP0
+Joventut de Badalona	_GN_MS
 Juan José	NPMSSP0
 Kafr Kanna	NPCNG00
 Kansas City	NPCNG00
@@ -159,6 +229,7 @@ María José	NPFSSP0
 Marktl am Inn	NPCNG00
 Mato Grosso	NPCNG00
 Mazar-e Sharif	NPCNG00
+Miguel de Unamuno	_GN_MS
 Minas Gerais	NPCNG00
 Montego Bay	NPCNG00
 Nagorno Karabakh	NPCNG00
@@ -236,9 +307,11 @@ Tamil Nadu	NPCNG00
 Tarin Kowt	NPCSG00
 Tel Aviv	NPCSG00
 Terranova i Labrador	NPCSG00
+The Daily Telegraph	NPMSO00
 The Economist	NPMSO00
 The Guardian	NPMSO00
 The New York Times	NPMSO00
+The Telegraph	NPMSO00
 The Times	NPMSO00
 The Wall Street Journal	NPMSO00
 The Washington Post	NPMSO00
@@ -248,6 +321,8 @@ Tîrgu Mures	NPCNG00
 Tony Blair	NPMSSP0
 Ulan Bator	NPCNG00
 Umm al-Qaywayn	NPCNG00
+US Open	_GN_MS
+València CF	_GN_MS
 Vanua Levu	NPCNG00
 Veliko Tarnovo	NPCNG00
 Venta del Moro	NPFSG00
@@ -536,6 +611,7 @@ camp a través	LOC_ADV
 campe qui puga	LOC_ADV
 campi qui pugui	LOC_ADV
 camps a través	LOC_ADV
+captatio benevolentiae	_GN_FS
 cara a cara	LOC_ADV
 carpe diem	_GN_MS
 carril bici	_GN_MS
@@ -678,6 +754,7 @@ després de	LOC_PREP
 deus ex machina	_GN_MN
 deçà i dellà d'	LOC_PREP
 deçà i dellà de	LOC_PREP
+dies irae	_GN_MS
 dia i nit	LOC_ADV
 dia sí dia no	LOC_ADV
 dolce vita	_GN_FS
@@ -814,6 +891,8 @@ fins i tot	LOC_ADV
 foc amic	_GN_MS
 foie gras	_GN_MS
 front a front	LOC_ADV
+fumata blanca	_GN_FS
+fumata negra	_GN_FS
 futbol sala	_GN_MS
 gas mostassa	_GN_MS
 gas pebre	_GN_MS
@@ -857,6 +936,7 @@ mosquit tigre	_GN_MS
 mosquits tigre	_GN_MP
 motu proprio	LOC_ADV
 mutatis mutandis	LOC_ADV
+music hall	_GN_MS
 musclo zebra	_GN_MS
 musclos zebra	_GN_MP
 més ben dit	LOC_ADV
@@ -959,6 +1039,8 @@ tan solament	LOC_ADV
 tan sols	LOC_ADV
 tant menys	LOC_ADV
 tant més	LOC_ADV
+taula braser	_GN_FS
+taules braser	_GN_FP
 think tank	_GN_MS
 think tanks	_GN_MP
 tocant a	LOC_PREP
@@ -973,6 +1055,7 @@ totes soles	LOC_ADV
 tots sols	LOC_ADV
 tour de force	_GN_MS
 trompe-l'oeil	_GN_MS
+trompe-l'œil	_GN_MS
 ultra mesura	LOC_ADV
 un per un	LOC_ADV
 un poc	LOC_ADV

@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.rules.Category;
+import org.languagetool.rules.Categories;
 import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
 
@@ -40,8 +40,8 @@ public class HiddenCharacterRule extends Rule {
 
   private static final Character HIDDEN_CHAR = '\u00AD'; // soft hyphen
   
-  public HiddenCharacterRule(final ResourceBundle messages) throws IOException {
-    super.setCategory(new Category(messages.getString("category_misc")));
+  public HiddenCharacterRule(ResourceBundle messages) throws IOException {
+    super.setCategory(Categories.MISC.getCategory(messages));
   }
 
   @Override
@@ -64,7 +64,7 @@ public class HiddenCharacterRule extends Rule {
   }
 
   @Override
-  public final RuleMatch[] match(final AnalyzedSentence sentence) {
+  public final RuleMatch[] match(AnalyzedSentence sentence) {
     List<RuleMatch> ruleMatches = new ArrayList<>();
     AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
 

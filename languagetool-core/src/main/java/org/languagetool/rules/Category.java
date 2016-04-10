@@ -18,11 +18,11 @@
  */
 package org.languagetool.rules;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A rule's category. Categories are used to group rules for
  * a better overview.
- * 
- * @author Daniel Naber
  */
 public final class Category {
 
@@ -35,35 +35,34 @@ public final class Category {
   }
 
   private final String name;
+  private final CategoryId id;
   private final Location location;
   private final boolean defaultOff;
 
   /**
-   * Create a new category.
-   * @param name name of the category
+   * @since 3.3
    */
-  public Category(final String name) {
-    this(name, Location.INTERNAL);
+  public Category(CategoryId id, String name) {
+    this(id, name, Location.INTERNAL, true);
   }
 
-  /**
-   * Create a new category.
-   * @param name name of the category
-   * @since 2.8
-   */
-  public Category(String name, Location location) {
-    this(name, location, true);
+  /** @since 3.3 */
+  public Category(CategoryId id, String name, Location location) {
+    this(id, name, location, true);
   }
 
-  /**
-   * Create a new category.
-   * @param name name of the category
-   * @since 2.9
-   */
-  public Category(String name, Location location, boolean onByDefault) {
+  /** @since 3.3 */
+  public Category(CategoryId id, String name, Location location, boolean onByDefault) {
+    this.id = id;
     this.name = name;
     this.location = location;
     this.defaultOff = !onByDefault;
+  }
+
+  /** @since 3.3 */
+  @Nullable
+  public CategoryId getId() {
+    return id;
   }
 
   public String getName() {

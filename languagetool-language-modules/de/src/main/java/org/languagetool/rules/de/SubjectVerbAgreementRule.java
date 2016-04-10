@@ -24,10 +24,11 @@ import org.languagetool.AnalyzedToken;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.chunking.ChunkTag;
 import org.languagetool.language.German;
-import org.languagetool.rules.Category;
-import org.languagetool.rules.Example;
-import org.languagetool.rules.RuleMatch;
+import org.languagetool.rules.*;
+import org.languagetool.rules.patterns.PatternToken;
+import org.languagetool.rules.patterns.PatternTokenBuilder;
 import org.languagetool.tagging.de.GermanTagger;
+import org.languagetool.tagging.disambiguation.rules.DisambiguationPatternRule;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -65,10 +66,19 @@ public class SubjectVerbAgreementRule extends GermanRule {
   private final Set<String> singular = new HashSet<>();
   private final Set<String> plural = new HashSet<>();
 
+  private static final List<List<PatternToken>> ANTI_PATTERNS = Arrays.asList(
+    Arrays.asList(
+      new PatternTokenBuilder().tokenRegex("ist|war").build(),
+      new PatternTokenBuilder().token("gemeinsam").build()
+    )
+  );
+
   private final GermanTagger tagger;
+  private final German language;
 
   public SubjectVerbAgreementRule(ResourceBundle messages, German language) {
-    super.setCategory(new Category(messages.getString("category_grammar")));
+    super.setCategory(Categories.GRAMMAR.getCategory(messages));
+    this.language = language;
     tagger = (GermanTagger) language.getTagger();
     for (SingularPluralPair pair : PAIRS) {
       singular.add(pair.singular);
@@ -89,6 +99,11 @@ public class SubjectVerbAgreementRule extends GermanRule {
   }
 
   @Override
+  public List<DisambiguationPatternRule> getAntiPatterns() {
+    return makeAntiPatterns(ANTI_PATTERNS, language);
+  }
+
+  @Override
   public URL getUrl() {
     try {
       return new URL("http://www.canoo.net/services/OnlineGrammar/Wort/Verb/Numerus-Person/ProblemNum.html");
@@ -100,9 +115,12 @@ public class SubjectVerbAgreementRule extends GermanRule {
   @Override
   public RuleMatch[] match(AnalyzedSentence sentence) throws IOException {
     List<RuleMatch> ruleMatches = new ArrayList<>();
-    AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
+    AnalyzedTokenReadings[] tokens = getSentenceWithImmunization(sentence).getTokensWithoutWhitespace();
     for (int i = 1; i < tokens.length; i++) {   // start at 1 to skip SENT_START
       AnalyzedTokenReadings token = tokens[i];
+      if (tokens[i].isImmunized()) {
+        continue;
+      }
       String tokenStr = token.getToken();
       // Detect e.g. "Der Hund und die Katze ist":
       RuleMatch singularMatch = getSingularMatchOrNull(tokens, i, token, tokenStr);

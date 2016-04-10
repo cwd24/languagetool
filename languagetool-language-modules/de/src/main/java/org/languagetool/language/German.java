@@ -153,11 +153,15 @@ public class German extends Language implements AutoCloseable {
   @Override
   public List<Rule> getRelevantRules(ResourceBundle messages) throws IOException {
     return Arrays.asList(
-            new CommaWhitespaceRule(messages),
+            new CommaWhitespaceRule(messages,
+                    Example.wrong("Die Partei<marker> ,</marker> die die letzte Wahl gewann."),
+                    Example.fixed("Die Partei<marker>,</marker> die die letzte Wahl gewann.")),
             new GenericUnpairedBracketsRule(messages,
                     Arrays.asList("[", "(", "{", "„", "»", "«"),
                     Arrays.asList("]", ")", "}", "“", "«", "»")),
-            new UppercaseSentenceStartRule(messages, this),
+            new UppercaseSentenceStartRule(messages, this,
+                    Example.wrong("Das Haus ist alt. <marker>es</marker> wurde 1950 gebaut."),
+                    Example.fixed("Das Haus ist alt. <marker>Es</marker> wurde 1950 gebaut.")),
             new MultipleWhitespaceRule(messages, this),
             // specific to German:
             new SentenceWhitespaceRule(messages),
@@ -184,7 +188,7 @@ public class German extends Language implements AutoCloseable {
   public CompoundWordTokenizer getNonStrictCompoundSplitter() {
     if (compoundTokenizer == null) {
       try {
-        final GermanCompoundTokenizer tokenizer = new GermanCompoundTokenizer(false);  // there's a spelling mistake in (at least) one part, so strict mode wouldn't split the word
+        GermanCompoundTokenizer tokenizer = new GermanCompoundTokenizer(false);  // there's a spelling mistake in (at least) one part, so strict mode wouldn't split the word
         compoundTokenizer = word -> new ArrayList<>(tokenizer.tokenize(word));
       } catch (IOException e) {
         throw new RuntimeException("Could not set up German compound splitter", e);

@@ -44,7 +44,8 @@ public final class PatternTestTools {
   // as indicating a probable regular expression.
   private static final Pattern PROBABLE_PATTERN_PL_POS = Pattern.compile(".*([^*]\\*|[+?{}()|\\[\\]].*|\\\\d).*");
 
-  private static final Pattern CHAR_SET_PATTERN = Pattern.compile("(\\(\\?-i\\))?.*(?<!\\\\)\\[^?([^\\]]+)\\]");
+  private static final Pattern CHAR_SET_PATTERN = Pattern.compile("\\[^?([^\\]]+)\\]");
+  private static final Pattern STRICT_CHAR_SET_PATTERN = Pattern.compile("(\\(\\?-i\\))?.*(?<!\\\\)\\[^?([^\\]]+)\\]");
 
   private PatternTestTools() {
   }
@@ -52,13 +53,13 @@ public final class PatternTestTools {
   // TODO: probably this would be more useful for exceptions
   // instead of adding next methods to PatternRule
   // we can probably validate using XSD and specify regexes straight there
-  public static void warnIfRegexpSyntaxNotKosher(final List<PatternToken> patternTokens,
-          final String ruleId, final String ruleSubId, final Language lang) {
+  public static void warnIfRegexpSyntaxNotKosher(List<PatternToken> patternTokens,
+          String ruleId, String ruleSubId, Language lang) {
     if (patternTokens == null) {   // for <regexp>
       return;
     }
     int i = 0;
-    for (final PatternToken pToken : patternTokens) {
+    for (PatternToken pToken : patternTokens) {
       i++;
 
       if (pToken.isReferenceElement()) {
@@ -87,9 +88,9 @@ public final class PatternTestTools {
               lang, ruleId + "[" + ruleSubId + "] (POS tag)",
               i);
 
-      final List<PatternToken> exceptionPatternTokens = new ArrayList<>();
+      List<PatternToken> exceptionPatternTokens = new ArrayList<>();
       if (pToken.getExceptionList() != null) {
-        for (final PatternToken exception: pToken.getExceptionList()) {
+        for (PatternToken exception: pToken.getExceptionList()) {
           // Detect useless exception or missing skip="...". I.e. things like this:
           // <token postag="..."><exception scope="next">foo</exception</token>
           if (exception.hasNextException() && pToken.getSkipNext() == 0) {
@@ -97,7 +98,7 @@ public final class PatternTestTools {
                     + ruleId + "[" + ruleSubId + "]"
                     + " (exception in token [" + i + "])"
                     + " has no skip=\"...\" and yet contains scope=\"next\""
-                    + " so the exception never applies. "
+                    + " so the exception never applies."
                     + " Did you forget skip=\"...\"?");
           }
 
@@ -122,8 +123,8 @@ public final class PatternTestTools {
                 // All the words foo, bar, xxx should match the token regexp, or else they
                 // are useless.
                 if (exception.getString().indexOf('|') >= 0) {
-                  final String[] alt = exception.getString().split("\\|");
-                  for (final String part : alt) {
+                  String[] alt = exception.getString().split("\\|");
+                  for (String part : alt) {
                     if (exception.getString().indexOf('(') >= 0) {
                       break;
                     }
@@ -210,7 +211,7 @@ public final class PatternTestTools {
           // this has thus a O(n^2) complexity, where n is the number
           // of exceptions in a token. But n is small and it is also
           // for testing only so that's OK.
-          for (final PatternToken otherException: exceptionPatternTokens) {
+          for (PatternToken otherException: exceptionPatternTokens) {
             if (equalException(exception, otherException)) {
               System.err.println("The " + lang + " rule: "
                       + ruleId + "[" + ruleSubId + "]"
@@ -240,8 +241,8 @@ public final class PatternTestTools {
    * Example #2, first exception implies the second exception:
    * <exception>xx</exception><exception postag="A">xx</exception>
    */
-  private static boolean equalException(final PatternToken exception1,
-                                        final PatternToken exception2)
+  private static boolean equalException(PatternToken exception1,
+                                        PatternToken exception2)
   {
     String string1 = exception1.getString() == null ? "" : exception1.getString();
     String string2 = exception2.getString() == null ? "" : exception2.getString();
@@ -258,8 +259,8 @@ public final class PatternTestTools {
       }
     }
 
-    final String posTag1 = exception1.getPOStag() == null ? "" : exception1.getPOStag();
-    final String posTag2 = exception2.getPOStag() == null ? "" : exception2.getPOStag();
+    String posTag1 = exception1.getPOStag() == null ? "" : exception1.getPOStag();
+    String posTag2 = exception2.getPOStag() == null ? "" : exception2.getPOStag();
     if (!posTag1.isEmpty() && !posTag2.isEmpty()) {
       if (!posTag1.equals(posTag2)) {
         return false;
@@ -287,15 +288,15 @@ public final class PatternTestTools {
   }
 
   private static void warnIfElementNotKosher(
-          final String stringValue,
-          final boolean isRegularExpression,
-          final boolean isCaseSensitive,
-          final boolean isNegated,
-          final boolean isInflected,
-          final boolean isPos,
-          final Language lang,
-          final String ruleId,
-          final int tokenIndex) {
+          String stringValue,
+          boolean isRegularExpression,
+          boolean isCaseSensitive,
+          boolean isNegated,
+          boolean isInflected,
+          boolean isPos,
+          Language lang,
+          String ruleId,
+          int tokenIndex) {
 
     // Check that the string value does not contain token separator.
     if (!isPos && !isRegularExpression && stringValue.length() > 1) {
@@ -311,7 +312,7 @@ public final class PatternTestTools {
     // Use a different regexp to check for probable regexp in Polish POS tags
     // since Polish uses dot '.' in POS tags. So a dot does not indicate that
     // it's a probable regexp for Polish POS tags.
-    final Pattern regexPattern = (isPos && lang.getShortName().equals("pl"))
+    Pattern regexPattern = (isPos && lang.getShortName().equals("pl"))
             ? PROBABLE_PATTERN_PL_POS // Polish POS tag.
             : PROBABLE_PATTERN;       // something else than Polish POS tag.
 
@@ -352,37 +353,40 @@ public final class PatternTestTools {
     }
 
     if (isRegularExpression) {
-      final Matcher matcher = CHAR_SET_PATTERN.matcher(stringValue);
+      Matcher matcher = CHAR_SET_PATTERN.matcher(stringValue);
       if (matcher.find()) {
-        // Remove things like \p{Punct} which are irrelevant here.
-        final String s = matcher.group(2).replaceAll("\\\\p\\{[^}]*\\}", "");
-        // case sensitive if pattern contains (?-i).
-        if (s.indexOf('|') >= 0) {
-          System.err.println("The " + lang + " rule: "
-                  + ruleId + ", token [" + tokenIndex + "], contains | (pipe) in "
-                  + " regexp bracket expression [" + matcher.group(2)
-                  + "] which is unlikely to be correct.");
-        }
+        Matcher strictMatcher = STRICT_CHAR_SET_PATTERN.matcher(stringValue);  // for performance reasons, only now use the strict pattern
+        if (strictMatcher.find()) {
+          // Remove things like \p{Punct} which are irrelevant here.
+          String s = strictMatcher.group(2).replaceAll("\\\\p\\{[^}]*\\}", "");
+          // case sensitive if pattern contains (?-i).
+          if (s.indexOf('|') >= 0) {
+            System.err.println("The " + lang + " rule: "
+                    + ruleId + ", token [" + tokenIndex + "], contains | (pipe) in "
+                    + "regexp bracket expression [" + strictMatcher.group(2)
+                    + "] which is unlikely to be correct.");
+          }
 
         /* Disabled case insensitive check for now: it gives several errors
          * in German which are minor and debatable whether it adds value.
-        final boolean caseSensitive = matcher.group(1) != null || isCaseSensitive;
+        boolean caseSensitive = matcher.group(1) != null || isCaseSensitive;
         if (!caseSensitive) {
           s = s.toLowerCase();
         }
         */
-        final char[] sorted = s.toCharArray();
-        // Sort characters in string, so finding duplicate characters can be done by
-        // looking for identical adjacent characters.
-        Arrays.sort(sorted);
-        for (int i = 1; i < sorted.length; ++i) {
-          final char c = sorted[i];
-          if ("&\\-|".indexOf(c) < 0 && sorted[i - 1] == c) {
-            System.err.println("The " + lang + " rule: "
-                    + ruleId + ", token [" + tokenIndex + "], contains "
-                    + " regexp part [" + matcher.group(2)
-                    + "] which contains duplicated char [" + c + "].");
-            break;
+          char[] sorted = s.toCharArray();
+          // Sort characters in string, so finding duplicate characters can be done by
+          // looking for identical adjacent characters.
+          Arrays.sort(sorted);
+          for (int i = 1; i < sorted.length; ++i) {
+            char c = sorted[i];
+            if ("&\\-|".indexOf(c) < 0 && sorted[i - 1] == c) {
+              System.err.println("The " + lang + " rule: "
+                      + ruleId + ", token [" + tokenIndex + "], contains "
+                      + "regexp part [" + strictMatcher.group(2)
+                      + "] which contains duplicated char [" + c + "].");
+              break;
+            }
           }
         }
       }
@@ -395,11 +399,11 @@ public final class PatternTestTools {
                   + ruleId + ", token [" + tokenIndex + "], contains empty "
                   + "disjunction | within " + "\"" + stringValue + "\".");
         }
-        final String[] groups = stringValue.split("\\)");
-        for (final String group : groups) {
-          final String[] alt = group.split("\\|");
-          final Set<String> partSet = new HashSet<>();
-          final Set<String> partSetNoCase = new HashSet<>();
+        String[] groups = stringValue.split("\\)");
+        for (String group : groups) {
+          String[] alt = group.split("\\|");
+          Set<String> partSet = new HashSet<>();
+          Set<String> partSetNoCase = new HashSet<>();
           boolean hasSingleChar = false;
           boolean hasSingleDot = false;
 
@@ -414,7 +418,7 @@ public final class PatternTestTools {
                 hasSingleChar = true;
               }
             }
-            final String partNoCase = isCaseSensitive ? part : part.toLowerCase();
+            String partNoCase = isCaseSensitive ? part : part.toLowerCase();
             if (partSetNoCase.contains(partNoCase)) {
               if (partSet.contains(part)) {
                 // Duplicate disjunction parts "foo|foo".
@@ -440,7 +444,7 @@ public final class PatternTestTools {
             // even better <token regexp="yes">[.;:]</token>
             System.err.println("The " + lang + " rule: "
                     + ruleId + ", token [" + tokenIndex + "], contains a single dot (matching any char) "
-                    + "so other single char disjunction are useless within " + "\"" + stringValue
+                    + "so other single char disjunctions are useless within " + "\"" + stringValue
                     + "\". Did you forget forget a backslash before the dot?");
           }
         }

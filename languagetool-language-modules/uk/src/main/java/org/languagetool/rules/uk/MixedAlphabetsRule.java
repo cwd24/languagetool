@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.rules.Category;
+import org.languagetool.rules.Categories;
 import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
 
@@ -47,8 +47,8 @@ public class MixedAlphabetsRule extends Rule {
   private static final Pattern LATIN_ONLY = Pattern.compile(".*[bdfghjlqrsvzDFGLNQRSUVZ].*");
   private static final Pattern COMMON_CYR_LETTERS = Pattern.compile("[АВЕІКОРСТУХ]+");
 
-  public MixedAlphabetsRule(final ResourceBundle messages) throws IOException {
-    super.setCategory(new Category(messages.getString("category_misc")));
+  public MixedAlphabetsRule(ResourceBundle messages) throws IOException {
+    super.setCategory(Categories.MISC.getCategory(messages));
   }
 
   @Override
@@ -80,7 +80,7 @@ public class MixedAlphabetsRule extends Rule {
   }
 
   @Override
-  public final RuleMatch[] match(final AnalyzedSentence sentence) {
+  public final RuleMatch[] match(AnalyzedSentence sentence) {
     List<RuleMatch> ruleMatches = new ArrayList<>();
     AnalyzedTokenReadings[] tokens = sentence.getTokensWithoutWhitespace();
 
