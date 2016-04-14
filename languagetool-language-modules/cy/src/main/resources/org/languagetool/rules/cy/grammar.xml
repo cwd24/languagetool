@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../../../../../../../languagetool-core/src/main/resources/org/languagetool/rules/print.xsl" ?>
+<?xml-stylesheet type="text/css" href="../../../../../../../../../languagetool-core/src/main/resources/org/languagetool/rules/rules.css"
+        title="Easy editing stylesheet" ?>
+<!--
+Welsh Grammar and Typo Rules for LanguageTool
+See tagset.txt for the meaning of the POS tags
+Copyright (C) 2001-2015 Daniel Naber (http://www.danielnaber.de),
+  Marcin Miłkowski and the LanguageTool contributors
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+USA
+-->
+
+<rules lang="en" xsi:noNamespaceSchemaLocation="../../../../../../../../../languagetool-core/src/main/resources/org/languagetool/rules/rules.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <category name="Possible Typo" type="misspelling">
+        <rule id="Y_FANOD1" name="Y fanod a'r ôl llafariad">
+            <pattern>
+                <marker>
+                    <token>.*[aeiouwy]$</token>
+                    <token>yr?</token>
+                </marker>
+            </pattern>
+            <message>Did you mean <suggestion>\1'r</suggestion>?</message>
+            <example correction="Mae'r"><marker>Mae y</marker> plant</example>
+        </rule>
+        <rule id="Y_FANOD2" name="Y fanod cyn llafariad">
+            <pattern>
+		<or>
+                    <token pos="SENT_START"/>
+                    <token regex="yes">.*[^aeiouwy]$</token>
+		</or>
+                <marker>
+                    <token>y</token>
+                </marker>
+                <token>^[aeihouwy].*</token>
+            </pattern>
+            <message>Did you mean <suggestion>yr</suggestion> \2?</message>
+            <example correction="yr">Yn <marker>y</marker> ysgol</example>
+        </rule>
+        <rule id="Y_FANOD3" name="Y fanod cyn cytsain">
+            <pattern>
+		<or>
+                    <token pos="SENT_START"/>
+                    <token regex="yes">.*[^aeiouwy]$</token>
+		</or>
+                <marker>
+                    <token>yr</token>
+                </marker>
+                <token>^[^aehiouwy].*</token>
+            </pattern>
+            <message>Did you mean <suggestion>y</suggestion> \2?</message>
+            <example correction="y">Yn <marker>yr</marker> pentref</example>
+        </rule>
+        <rule id="Y_FANOD3" name="Y fanod cyn cytsain">
+            <pattern>
+                <marker>
+                    <token>a</token>
+                </marker>
+                <token>^[aehiouwy].*</token>
+            </pattern>
+            <message>Did you mean <suggestion>ac</suggestion> \2?</message>
+            <example correction="ac">Afal <marker>a</marker> oren</example>
+        </rule>
+        <rule id="Y_FANOD3" name="Y fanod cyn cytsain">
+            <pattern>
+                <marker>
+                    <token>ac</token>
+                </marker>
+                <token>^[^aehiouwy].*</token>
+            </pattern>
+            <message>Did you mean <suggestion>a</suggestion> \2?</message>
+            <example correction="a">Afal <marker>ac</marker> banana</example>
+        </rule>
+        <rule id="Y_FANOD3" name="Y fanod cyn cytsain">
+            <pattern>
+                <marker>
+                    <token>â</token>
+                </marker>
+                <token>^[aehiouwy].*</token>
+            </pattern>
+            <message>Did you mean <suggestion>ag</suggestion> \2?</message>
+            <example correction="ag">Afal <marker>â</marker> oren</example>
+        </rule>
+        <rule id="Y_FANOD3" name="Y fanod cyn cytsain">
+            <pattern>
+                <marker>
+                    <token>ag</token>
+                </marker>
+                <token>^[^aehiouwy].*</token>
+            </pattern>
+            <message>Did you mean <suggestion>a</suggestion> \2?</message>
+            <example correction="a">Afal <marker>ag</marker> banana</example>
+        </rule>
+    </category>
+</rules>
