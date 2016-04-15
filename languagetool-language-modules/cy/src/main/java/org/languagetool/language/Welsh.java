@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.languagetool.Language;
-import org.languagetool.LanguageMaintainedState;
 import org.languagetool.rules.*;
 //import org.languagetool.rules.br.TopoReplaceRule;
 //import org.languagetool.rules.br.MorfologikBretonSpellerRule;
@@ -106,8 +105,10 @@ public class Welsh extends Language {
     return Arrays.asList(
             new CommaWhitespaceRule(messages),
             new DoublePunctuationRule(messages),
+            new GenericUnpairedBracketsRule(messages),
  //           new MorfologikBretonSpellerRule(messages, this),
             new UppercaseSentenceStartRule(messages, this),
+            new WordRepeatRule(messages, this),
             new MultipleWhitespaceRule(messages, this)//,
  //           new SentenceWhitespaceRule(messages)//,
  //           new TopoReplaceRule(messages)
