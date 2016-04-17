@@ -33,7 +33,7 @@ USA
                 </marker>
                 <token regexp="yes">[aeihouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>ac</suggestion>?</message>
+            <message>Oeddech yn golygu <suggestion>ac</suggestion>?</message>
             <example correction="ac">Afal <marker>&amp;</marker> oren</example>
         </rule>
         <rule id="AMP_CYTSAIN" name="Ni ddefnyddir &amp; yn y Gymraeg">
@@ -43,7 +43,7 @@ USA
                 </marker>
                 <token regexp="yes">[^aeihouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>a</suggestion>?</message>
+            <message>Oeddech yn golygu <suggestion>a</suggestion>?</message>
             <example correction="a">Afal <marker>&amp;</marker> banana</example>
         </rule>
         <rule id="Y_FANOD_COLLNOD_R" name="Y fanod a'r ôl llafariad">
@@ -53,7 +53,7 @@ USA
                     <token regexp="yes">yr?</token>
                 </marker>
             </pattern>
-            <message>Did you mean <suggestion>\1'r</suggestion>?</message>
+            <message>Oeddech yn golygu <suggestion>\1'r</suggestion>?</message>
             <example correction="Mae'r"><marker>Mae y</marker> plant</example>
         </rule>
         <rule id="Y_FANOD_YR" name="Y fanod cyn llafariad">
@@ -67,7 +67,7 @@ USA
                 </marker>
                 <token regexp="yes">[aeihouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>yr</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>yr</suggestion> \2?</message>
             <example correction="yr">Yn <marker>y</marker> ysgol</example>
         </rule>
         <rule id="Y_FANOD_Y" name="Y fanod cyn cytsain">
@@ -81,7 +81,7 @@ USA
                 </marker>
                 <token regexp="yes">[^aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>y</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>y</suggestion> \2?</message>
             <example correction="y">Yn <marker>yr</marker> pentref</example>
         </rule>
         <rule id="AC" name="A cyn llafariad">
@@ -91,7 +91,7 @@ USA
                 </marker>
                 <token regexp="yes">[aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>ac</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>ac</suggestion> \2?</message>
             <example correction="ac">Afal <marker>a</marker> oren</example>
         </rule>
         <rule id="A" name="Ac cyn cytsain">
@@ -101,7 +101,7 @@ USA
                 </marker>
                 <token regexp="yes">[^aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>a</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>a</suggestion> \2?</message>
             <example correction="a">Afal <marker>ac</marker> banana</example>
         </rule>
         <rule id="AG" name="Â cyn llafariad">
@@ -111,7 +111,7 @@ USA
                 </marker>
                 <token regexp="yes">[aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>ag</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>ag</suggestion> \2?</message>
             <example correction="ag">Afal <marker>â</marker> oren</example>
         </rule>
         <rule id="A_TO" name="Ag cyn cytsain">
@@ -121,7 +121,7 @@ USA
                 </marker>
                 <token regexp="yes">[^aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>â</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>â</suggestion> \2?</message>
             <example correction="â">Afal <marker>ag</marker> banana</example>
         </rule>
         <rule id="NAG" name="Na cyn llafariad">
@@ -131,7 +131,7 @@ USA
                 </marker>
                 <token regexp="yes">[aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>nag</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>nag</suggestion> \2?</message>
             <example correction="nag">Afal <marker>na</marker> oren</example>
         </rule>
         <rule id="NA" name="Nag cyn cytsain">
@@ -141,7 +141,7 @@ USA
                 </marker>
                 <token regexp="yes">[^aehiouwy].*</token>
             </pattern>
-            <message>Did you mean <suggestion>na</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>na</suggestion> \2?</message>
             <example correction="na">Afal <marker>nag</marker> banana</example>
         </rule>
         <rule id="YM_MIL" name="Defnyddir ym o flaen 1000-1999">
@@ -151,7 +151,7 @@ USA
                 </marker>
                 <token regexp="yes">1\d\d\d</token>
             </pattern>
-            <message>Did you mean <suggestion>ym</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>ym</suggestion> \2?</message>
             <example correction="ym">Fe anwyd <marker>yn</marker> 1900</example>
         </rule>
         <rule id="AC_EITHRIO" name="Ac eithrio">
@@ -161,7 +161,7 @@ USA
                 </marker>
                 <token>eithrio</token>
             </pattern>
-            <message>Did you mean <suggestion>ac</suggestion> \2?</message>
+            <message>Oeddech yn golygu <suggestion>ac</suggestion> \2?</message>
             <example correction="ac"><marker>ag</marker> eithrio</example>
         </rule>
         <rule id="O_FEWN" name="Defnyddiwch 'yn' yn lle 'o fewn'">
@@ -171,7 +171,7 @@ USA
                     <token>fewn</token>
                 </marker>
             </pattern>
-            <message>Did you mean <suggestion>yn</suggestion>?</message>
+            <message>Oeddech yn golygu <suggestion>yn</suggestion>?</message>
             <example correction="yn"><marker>o fewn</marker> y wlad</example>
         </rule>
         <rule id="MAEN_NHW" name="maen nhw">
@@ -183,7 +183,7 @@ USA
                     <token>nhw</token>
                 </marker>
             </pattern>
-            <message>Did you mean <suggestion>maen nhw</suggestion>?</message>
+            <message>Oeddech yn golygu <suggestion>maen nhw</suggestion>?</message>
             <example correction="maen nhw"><marker>mae'n nhw</marker> yn y wlad</example>
         </rule>
     </category>
