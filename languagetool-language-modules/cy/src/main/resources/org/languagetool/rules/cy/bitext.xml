@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules targetLang="pl" xsi:noNamespaceSchemaLocation="../../../../../../../../../languagetool-core/src/main/resources/org/languagetool/rules/bitext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <category name="Collocations">
+        <rule lang="cy" id="adolescents_pobl_ifanc" name="adolescents -> glasoed">
+            <pattern>
+                <source lang="en">
+                    <token>adolescents</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>pobl</token>
+                        <token>ifanc</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>y glasoed</suggestion> ar gyfer 'adolescents'?</message>
+        </rule>
+        <rule lang="cy" id="educative_addysgol" name="educative -> addysgiadol">
+            <pattern>
+                <source lang="en">
+                    <token>educative</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>addysgol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>addysgiadol</suggestion> ar gyfer 'educative'?</message>
+        </rule>
+        <rule lang="cy" id="instructive_addysgol" name="instructive -> addysgiadol">
+            <pattern>
+                <source lang="en">
+                    <token>instructive</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>addysgol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>addysgiadol</suggestion> ar gyfer 'instructive'?</message>
+        </rule>
+        <rule lang="cy" id="educational_addysgiadol" name="educational -> addysgol">
+            <pattern>
+                <source lang="en">
+                    <token>educational</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>addysgiadol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>addysgol</suggestion> ar gyfer 'educational'?</message>
+        </rule>
+        <rule lang="cy" id="for_ar_gyfer" name="for -> ">
+            <pattern>
+                <source lang="en">
+                    <token>for</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>ar gyfer</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion></suggestion> ar gyfer 'for'?</message>
+        </rule>
+        <rule lang="cy" id="code_côd" name="code -> cod">
+            <pattern>
+                <source lang="en">
+                    <token>code</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>côd</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cod</suggestion> ar gyfer 'code'?</message>
+        </rule>
+        <rule lang="cy" id="cod_cod" name="cod -> còd">
+            <pattern>
+                <source lang="en">
+                    <token>cod</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>cod</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>còd</suggestion> ar gyfer 'cod'?</message>
+        </rule>
+        <rule lang="cy" id="qualified_cymwys" name="qualified -> cymwysedig">
+            <pattern>
+                <source lang="en">
+                    <token>qualified</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>cymwys</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cymwysedig</suggestion> ar gyfer 'qualified'?</message>
+        </rule>
+        <rule lang="cy" id="electrical_electronig" name="electrical -> trydanol">
+            <pattern>
+                <source lang="en">
+                    <token>electrical</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>electronig</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>trydanol</suggestion> ar gyfer 'electrical'?</message>
+        </rule>
+        <rule lang="cy" id="electronic_trydanol" name="electronic -> electronig">
+            <pattern>
+                <source lang="en">
+                    <token>electronic</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>trydanol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>electronig</suggestion> ar gyfer 'electronic'?</message>
+        </rule>
+        <rule lang="cy" id="inclusion_cynhwysedd" name="inclusion -> cynhwysiant">
+            <pattern>
+                <source lang="en">
+                    <token>inclusion</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>cynhwysedd</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cynhwysiant</suggestion> ar gyfer 'inclusion'?</message>
+        </rule>
+        <rule lang="cy" id="inclusion_cynhwysiad" name="inclusion -> cynhwysiant">
+            <pattern>
+                <source lang="en">
+                    <token>inclusion</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>cynhwysiad</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cynhwysiant</suggestion> ar gyfer 'inclusion'?</message>
+        </rule>
+        <rule lang="cy" id="tribes_llwythi" name="tribes -> llwythau">
+            <pattern>
+                <source lang="en">
+                    <token>tribes</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>llwythi</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>llwythau</suggestion> ar gyfer 'tribes'?</message>
+        </rule>
+        <rule lang="cy" id="loads_llwythau" name="loads -> llwythi">
+            <pattern>
+                <source lang="en">
+                    <token>loads</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>llwythau</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>llwythi</suggestion> ar gyfer 'loads'?</message>
+        </rule>
+<!-- XXX false positives
+        <rule lang="cy" id="may_gall" name="may -> caiff">
+            <pattern>
+                <source lang="en">
+                    <token>may</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>gall</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>caiff</suggestion> ar gyfer 'may'?</message>
+        </rule>
+-->
+        <rule lang="cy" id="continuous_parhaus" name="continuous -> parhaol">
+            <pattern>
+                <source lang="en">
+                    <token>continuous</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>parhaus</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>parhaol</suggestion> ar gyfer 'continuous'?</message>
+        </rule>
+        <rule lang="cy" id="permanent_parhaus" name="permanent -> parhaol">
+            <pattern>
+                <source lang="en">
+                    <token>permanent</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>parhaus</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>parhaol</suggestion> ar gyfer 'permanent'?</message>
+        </rule>
+        <rule lang="cy" id="continual_parhaol" name="continual -> parhaus">
+            <pattern>
+                <source lang="en">
+                    <token>continual</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>parhaol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'continual'?</message>
+        </rule>
+        <rule lang="cy" id="sustained_parhaol" name="sustained -> parhaus">
+            <pattern>
+                <source lang="en">
+                    <token>sustained</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>parhaol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'sustained'?</message>
+        </rule>
+        <rule lang="cy" id="persistent_parhaol" name="persistent -> parhaus">
+            <pattern>
+                <source lang="en">
+                    <token>persistent</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>parhaol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'persistent'?</message>
+        </rule>
+        <rule lang="cy" id="possibilities_posibilrwydd" name="possibilities -> posibiliadau">
+            <pattern>
+                <source lang="en">
+                    <token>possibilities</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>posibilrwydd</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>posibiliadau</suggestion> ar gyfer 'possibilities'?</message>
+        </rule>
+        <rule lang="cy" id="possibility_posibiliadau" name="possibility -> posibilrwydd">
+            <pattern>
+                <source lang="en">
+                    <token>possibility</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>posibiliadau</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>posibilrwydd</suggestion> ar gyfer 'possibility'?</message>
+        </rule>
+        <rule lang="cy" id="skill_sgil" name="skill -> sgìl">
+            <pattern>
+                <source lang="en">
+                    <token>skill</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>sgil</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>sgìl</suggestion> ar gyfer 'skill'?</message>
+        </rule>
+        <rule lang="cy" id="sign up to_llofnodi" name="sign up to -> cytuno">
+            <pattern>
+                <source lang="en">
+                    <token>sign</token>
+                    <token>up</token>
+                    <token>to</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>llofnodi</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cytuno</suggestion> ar gyfer 'sign up to'?</message>
+        </rule>
+        <rule lang="cy" id="these_yma" name="these -> hyn">
+            <pattern>
+                <source lang="en">
+                    <token>these</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>yma</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>hyn</suggestion> ar gyfer 'these'?</message>
+        </rule>
+        <rule lang="cy" id="this_yma" name="this -> hwn|hon">
+            <pattern>
+                <source lang="en">
+                    <token>this</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>yma</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>hwn|hon</suggestion> ar gyfer 'this'?</message>
+        </rule>
+        <rule lang="cy" id="whether_os" name="whether -> a">
+            <pattern>
+                <source lang="en">
+                    <token>whether</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>os</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>a</suggestion> ar gyfer 'whether'?</message>
+        </rule>
+        <rule lang="cy" id="whether_p'un" name="whether -> a">
+            <pattern>
+                <source lang="en">
+                    <token>whether</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>p</token>
+                        <token>'</token>
+                        <token>un</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>a</suggestion> ar gyfer 'whether'?</message>
+        </rule>
+        <rule lang="cy" id="or not_neu beidio" name="or not -> ai peidio">
+            <pattern>
+                <source lang="en">
+                    <token>or not</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>neu beidio</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>ai peidio</suggestion> ar gyfer 'or not'?</message>
+        </rule>
+    </category>
+</rules>
