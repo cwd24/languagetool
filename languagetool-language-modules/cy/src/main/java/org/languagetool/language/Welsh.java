@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.languagetool.Language;
+import org.languagetool.LanguageMaintainedState;
 import org.languagetool.rules.*;
 //import org.languagetool.rules.br.TopoReplaceRule;
 //import org.languagetool.rules.br.MorfologikBretonSpellerRule;
