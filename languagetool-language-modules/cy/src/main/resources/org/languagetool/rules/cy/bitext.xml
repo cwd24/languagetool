@@ -18,7 +18,10 @@
         <rule lang="cy" id="educative_addysgol" name="educative -> addysgiadol">
             <pattern>
                 <source lang="en">
-                    <token>educative</token>
+                    <or>
+                        <token>educative</token>
+                        <token>instructive</token>
+                    </or>
                 </source>
                 <target>
                     <marker>
@@ -26,20 +29,7 @@
                     </marker>
                 </target>
             </pattern>
-            <message>Defnyddio <suggestion>addysgiadol</suggestion> ar gyfer 'educative'?</message>
-        </rule>
-        <rule lang="cy" id="instructive_addysgol" name="instructive -> addysgiadol">
-            <pattern>
-                <source lang="en">
-                    <token>instructive</token>
-                </source>
-                <target>
-                    <marker>
-                        <token>addysgol</token>
-                    </marker>
-                </target>
-            </pattern>
-            <message>Defnyddio <suggestion>addysgiadol</suggestion> ar gyfer 'instructive'?</message>
+            <message>Defnyddio <suggestion>addysgiadol</suggestion> ar gyfer 'educative/instructive'?</message>
         </rule>
         <rule lang="cy" id="educational_addysgiadol" name="educational -> addysgol">
             <pattern>
@@ -139,20 +129,10 @@
                 </source>
                 <target>
                     <marker>
-                        <token>cynhwysedd</token>
-                    </marker>
-                </target>
-            </pattern>
-            <message>Defnyddio <suggestion>cynhwysiant</suggestion> ar gyfer 'inclusion'?</message>
-        </rule>
-        <rule lang="cy" id="inclusion_cynhwysiad" name="inclusion -> cynhwysiant">
-            <pattern>
-                <source lang="en">
-                    <token>inclusion</token>
-                </source>
-                <target>
-                    <marker>
-                        <token>cynhwysiad</token>
+                        <or>
+                            <token>cynhwysedd</token>
+                            <token>cynhwysiad</token>
+                        </or>
                     </marker>
                 </target>
             </pattern>
@@ -202,7 +182,10 @@
         <rule lang="cy" id="continuous_parhaus" name="continuous -> parhaol">
             <pattern>
                 <source lang="en">
-                    <token>continuous</token>
+                    <or>
+                        <token>continuous</token>
+                        <token>permanent</token>
+                    </or>
                 </source>
                 <target>
                     <marker>
@@ -210,25 +193,16 @@
                     </marker>
                 </target>
             </pattern>
-            <message>Defnyddio <suggestion>parhaol</suggestion> ar gyfer 'continuous'?</message>
-        </rule>
-        <rule lang="cy" id="permanent_parhaus" name="permanent -> parhaol">
-            <pattern>
-                <source lang="en">
-                    <token>permanent</token>
-                </source>
-                <target>
-                    <marker>
-                        <token>parhaus</token>
-                    </marker>
-                </target>
-            </pattern>
-            <message>Defnyddio <suggestion>parhaol</suggestion> ar gyfer 'permanent'?</message>
+            <message>Defnyddio <suggestion>parhaol</suggestion> ar gyfer 'continuous/permanent'?</message>
         </rule>
         <rule lang="cy" id="continual_parhaol" name="continual -> parhaus">
             <pattern>
                 <source lang="en">
-                    <token>continual</token>
+                    <or>
+                        <token>continual</token>
+                        <token>persistent</token>
+                        <token>sustained</token>
+                    </or>
                 </source>
                 <target>
                     <marker>
@@ -236,33 +210,7 @@
                     </marker>
                 </target>
             </pattern>
-            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'continual'?</message>
-        </rule>
-        <rule lang="cy" id="sustained_parhaol" name="sustained -> parhaus">
-            <pattern>
-                <source lang="en">
-                    <token>sustained</token>
-                </source>
-                <target>
-                    <marker>
-                        <token>parhaol</token>
-                    </marker>
-                </target>
-            </pattern>
-            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'sustained'?</message>
-        </rule>
-        <rule lang="cy" id="persistent_parhaol" name="persistent -> parhaus">
-            <pattern>
-                <source lang="en">
-                    <token>persistent</token>
-                </source>
-                <target>
-                    <marker>
-                        <token>parhaol</token>
-                    </marker>
-                </target>
-            </pattern>
-            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'persistent'?</message>
+            <message>Defnyddio <suggestion>parhaus</suggestion> ar gyfer 'continual/persistent/sustained'?</message>
         </rule>
         <rule lang="cy" id="possibilities_posibilrwydd" name="possibilities -> posibiliadau">
             <pattern>
