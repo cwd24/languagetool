@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import org.languagetool.Language;
 import org.languagetool.LanguageMaintainedState;
 import org.languagetool.rules.*;
-//import org.languagetool.rules.br.TopoReplaceRule;
+import org.languagetool.rules.cy.TopoReplaceRule;
 //import org.languagetool.rules.br.MorfologikBretonSpellerRule;
 import org.languagetool.tagging.Tagger;
 import org.languagetool.tagging.xx.DemoTagger;
@@ -110,9 +110,9 @@ public class Welsh extends Language {
  //           new MorfologikBretonSpellerRule(messages, this),
             new UppercaseSentenceStartRule(messages, this),
             new WordRepeatRule(messages, this),
-            new MultipleWhitespaceRule(messages, this)//,
+            new MultipleWhitespaceRule(messages, this),
  //           new SentenceWhitespaceRule(messages)//,
- //           new TopoReplaceRule(messages)
+            new TopoReplaceRule(messages)
     );
   }
 
