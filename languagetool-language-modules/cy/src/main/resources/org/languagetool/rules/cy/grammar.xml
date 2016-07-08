@@ -186,5 +186,43 @@ USA
             <message>Oeddech yn golygu <suggestion>maen nhw</suggestion>?</message>
             <example correction="maen nhw"><marker>mae'n nhw</marker> yn y wlad</example>
         </rule>
+        <rule id="EI_GILYDD" name="ei gilydd">
+            <pattern>
+                <marker>
+                    <token>eu</token>
+                    <token>gilydd</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>ei gilydd</suggestion> bob amser.</message>
+            <example correction="ei gilydd">Siarad ymysg <marker>eu gilydd</marker> yn y wlad</example>
+        </rule>
+<!-- COMMA BEFORE WORDS #1 -->
+<rulegroup id="COMMA_1" name="Vírgula antes #1">
+  <rule>
+    <pattern>
+      <marker>
+        <token><exception regexp="yes">[,;:—\–\(]</exception></token>
+      </marker>
+      <token>sef</token>
+    </pattern>
+    <message>Mae angen coma: <suggestion>\1,</suggestion></message>
+    <example correction="chocolate,">Fe brynnodd 
+<marker>chocolate</marker> sef hwn.</example>
+  </rule>
+  <rule>
+    <pattern>
+      <marker>
+        <token><exception regexp="yes">[,;:—\–\(]</exception></token>
+      </marker>
+      <token>fodd</token>
+      <token>bynnag</token>
+    </pattern>
+    <message>Mae angen coma: <suggestion>\1,</suggestion></message>
+    <example correction="chocolate,">Eu gosto muito de
+<marker>chocolate</marker> no entanto não posso comer para não
+engordar.</example>
+  </rule>
+</rulegroup>
+
     </category>
 </rules>
