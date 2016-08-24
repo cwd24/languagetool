@@ -28,11 +28,74 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 <!DOCTYPE rules [
     <!ENTITY weekdays "понедельник|вторник|среда|четверг|пятница|суббота|воскресенье">
     <!ENTITY months "январь|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь|января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря">
-    <!ENTITY abbrevMonths "янв|фев|мар|апр|ин|ил|авг|сен|окт|ноя|дек">
+<!ENTITY abbrevMonths "янв|фев|мар|апр|ин|ил|авг|сен|окт|ноя|дек">
+<!ENTITY color "черн.*|чёрн.*|бел.*|красн.*|син.*|желт.*|жёлт.*|зелен.*|зелён.*"> <!-- цвет -->
+<!ENTITY nation "русск.*|прусск.*|австрийск.*|английск.*|немецк.*|французск.*|испанск.*|португальск.*|голландск.*|датск.*|китайск.*|японск.*|арабск.*|индийск.*|армянск.*|грузинск.*|польск.*|чешск.*|венгерск.*|греческ.*|лишн.*|византийск.*"> <!-- язык, человек,стиль -->
+<!ENTITY time "будущ.*|прошл.*|прошедш.*|послед.*|наст.*|следующ.*|текущ.*"> <!-- время,раз -->
+<!ENTITY human "учён.*|учен.*|ленив.*|умн.*|глуп.*|храбр.*|трусл.*|смел.*|быстр.*|медленн.*|здоров.*|больн.*|слаб.*|нищ.*|мертв.*|мёртв.*|полицейск.*|взросл.*|достойн.*|правоверн.*|несовершеннолетн.*|небольш.*|счастлив.*|главн.*|свят.*|бедн.*|стар.*|молод.*|разн.*|сыт.*|голодн.*|знаменит.*|одержим.*|чист.*|рабоч.*|подконтрольн.*|противоположн.*|праздн.*|тороплив.*|недовольн.*|голый|голая|голые|голому|голой|голым|горбат.*|отвратительн.*|посторонн.*|извест.*|странн.*|пеш.*|бережён.*|бережен.*"> <!-- человек,люди,людей -->
+<!ENTITY dual "урока|брата|сына|cапога|курса|помощника|фактора|языка|парня|закона|сестры|жены|угла|дня|вопроса|звезды|телефона|любовника|зуба|переводчика|господина|типа|участка|фильма|яблока|вида|прогноза|вектора|села|представителя|вдоха|человека|корабля|спутника|пчелы|шара|билета|ответа|брака|канала|лицея|соседа|ресторана|скворечника|часа|вкуса|кабеля|вулкана|хребта|гиганта|варианта|пресса|обеда|рода|стула|взноса|слезы|приступа|отца|экзамена|стекла|игрока|писаки|военных|этапа|причины|коллеги|вагин|героя|друга|вождя|паек|телеканала|коридора|терминала|Венеры|маршрута|храма|юл|олушей|бедра|дубов|художника|полка|лозунга|законопроекта|органа|блока|заказника|банка|изолятора|департамента|говора|района|порта|символа|брокера|парка|стола|магазина"> <!-- два,двое,пара -->
 ]>
 
 <rules lang="ru" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../../../languagetool-core/src/main/resources/org/languagetool/rules/rules.xsd">
+
+    <unification feature="number">
+        <equivalence type="Sin">
+            <token postag="(.*:Sin(:.*)*)|((ADJ|ADJ_Com|ADJ_Short|Ord|PADJ|PT:(Past|Real)|PT_Short:Real|VB:Past):(Masc|Fem|Neut)(:.*)*)|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="PL">
+            <token postag=".*:PL(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+    </unification>
+     
+    <unification feature="case">
+        <equivalence type="Nom">
+            <token postag=".*:Nom(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="R">
+            <token postag=".*:R(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="D">
+            <token postag=".*:D(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="V">
+            <token postag=".*:V(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="T">
+            <token postag=".*:T(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="P">
+            <token postag=".*:P(:.*)*|(NN|NNN):(Masc|Fem|Neut)" postag_regexp="yes"></token>
+        </equivalence>
+    </unification> 
+       
+    <unification feature="gender">
+        <equivalence type="Masc">
+            <token postag=".*:Masc(:.*)*" postag_regexp="yes"/>
+        </equivalence>
+        <equivalence type="Fem">
+            <token postag=".*:Fem(:.*)*" postag_regexp="yes"/>
+        </equivalence>
+        <equivalence type="Neut">
+            <token postag=".*:Neut(:.*)*" postag_regexp="yes"/>
+        </equivalence>
+        <equivalence type="Plural">
+            <token postag=".*:PL(:.*)*|NN:(Masc|Fem|Neut)" postag_regexp="yes"/>
+        </equivalence>
+    </unification>
     
+    <unification feature="person">
+        <equivalence type="P1">
+            <token postag=".*:.*:.*:P1" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="P2">
+            <token postag=".*:.*:.*:P2" postag_regexp="yes"></token>
+        </equivalence>
+        <equivalence type="P3">
+            <token postag=".*:.*:.*:P3" postag_regexp="yes"></token>
+        </equivalence>
+    </unification>
+    
+       
     <category id="LOGIC" name="Логические ошибки">
           <rulegroup id="INVALID_DATE" name="Неверная дата, например «31 февраля 2014»">
             <rule>
@@ -106,7 +169,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
           
           
         </rulegroup>
-
+        <rule id="Slovosoch_interesnaja_kniga" name="Опечатка «Интересная/интересую»">
+            <pattern>
+		<token postag="VB:.*" postag_regexp="yes"></token>
+                <token>интересую</token>
+                <token postag="NN:.*:Sin:V" postag_regexp="yes"></token>
+            </pattern>
+            <message>Опечатка: <suggestion>\1 интересную \3</suggestion></message>
+            <short>Опечатка</short>
+            <example correction="купил интересную книгу"><marker>купил интересую книгу</marker></example>
+            <example>прочесть интересную книгу</example>
+        </rule>
+        <rule id="Slovosoch_v_proshlom" name="Опечатка «в прошлом/в пошлом»">
+            <pattern>
+		<marker>
+                <token>в</token>
+                <token>пошлом</token>
+                </marker>
+                <token postag="VB:.*" postag_regexp="yes"></token>
+            </pattern>
+            <message>Опечатка: <suggestion>\1 прошлом</suggestion></message>
+            <short>Опечатка</short>
+            <example correction="в прошлом">Хотя <marker>в пошлом</marker> были предложены решения, мы только сегодня имеем результат.</example>
+            <example>Хотя в прошлом были предложены решения, мы только сегодня имеем результат.</example>
+        </rule>
 	<rulegroup id="na_poverku" name="Логические ошибки «на поверку/на проверку»">
             <rule> 
                 <pattern>
@@ -269,6 +355,95 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <message>Имелось в виду <suggestion>скрепя сердце</suggestion>?</message>
                 <short>Логическая ошибка.</short>
                 <example correction="скрепя сердце"><marker>скрипя сердцем</marker></example>
+            </rule>
+          </rulegroup>
+          <rulegroup id="okazat_zabotu" name="Логические ошибки «оказать заботу»">
+            <rule> <!--  TODO   add inflected  -->
+                <pattern>
+                    <token>оказать</token>
+                    <token>заботу</token>
+                </pattern>              
+                <message>Должно быть: <suggestion>проявить <match no="2"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="проявить заботу"><marker>оказать заботу</marker></example>
+            </rule>
+          </rulegroup>
+          <rulegroup id="povisit_svoi_krugozor" name="Логические ошибки «повысить свой кругозор»">
+            <rule>
+                <pattern>
+                    <token inflected="yes">повысить</token>
+                    <token>свой</token>
+                    <token>кругозор</token>
+                </pattern>              
+                <message>Должно быть: <suggestion><match no="1" regexp_match="[Пп]овыс(.*)" regexp_replace="расшир$1"></match> <match no="2"></match> <match no="3"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="расширить свой кругозор"><marker>повысить свой кругозор</marker></example>
+            </rule>
+          </rulegroup>
+          <rulegroup id="predprinjat_meri" name="Логические ошибки «предпринять меры»">
+            <rule>
+                <pattern>
+                    <token inflected="yes">предпринять</token>
+                    <token>меры</token>
+                </pattern>              
+                <message>Должно быть: <suggestion><match no="1" regexp_match="[Пп]редприн(.*)" regexp_replace="прин$1"></match> <match no="2"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="принять меры"><marker>предпринять меры</marker></example>
+                <example correction="принял меры"><marker>предпринял меры</marker></example>
+            </rule>
+          </rulegroup>
+          <rulegroup id="predstavlennie_neudobstva" name="Логические ошибки «представленные неудобства»">
+            <rule>
+                <pattern>
+                    <token regexp="yes">предоставленные|представленные</token>
+                    <token>неудобства</token>
+                </pattern>              
+                <message>Должно быть: <suggestion>доставленные <match no="2"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="доставленные неудобства">Мы приносим свои искренние извинения за <marker>представленные неудобства</marker>.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <token regexp="yes">предоставленные|представленные</token>
+                    <token></token>
+                    <token>неудобства</token>
+                </pattern>              
+                <message>Должно быть: <suggestion>доставленные <match no="2"></match> <match no="3"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="доставленные вам неудобства">Мы приносим свои искренние извинения за <marker>представленные вам неудобства</marker>.</example>
+            </rule>
+          </rulegroup>
+          <rulegroup id="vziskivat_uscherb" name="Логические ошибки «взыскивать ущерб»">
+            <rule>
+                <pattern>
+                    <token inflected="yes" regexp="yes">взыскивать|взыскать</token>
+                    <token>ущерб</token>
+                </pattern>              
+                <message>Должно быть: <suggestion><match no="1"></match> деньги за причинённый <match no="2"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="взыскал деньги за причинённый ущерб"><marker>взыскал ущерб</marker></example>
+            </rule>
+          </rulegroup>
+            <rulegroup id="sorvat_ovacii" name="Логические ошибки «сорвать овации»">
+            <rule>
+                <pattern>
+                    <token inflected="yes">сорвать</token>
+                    <token>овации</token>
+                </pattern>              
+                <message>Должно быть: <suggestion><match no="1"></match> аплодисменты</suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="сорвал аплодисменты">Артист <marker>сорвал овации</marker>.</example>
+            </rule>
+          </rulegroup>
+          <rulegroup id="bolshinstvo_vremeni" name="Логические ошибки «большинство времени»">
+            <rule> 
+                <pattern>
+                    <token>большинство</token>
+                    <token>времени</token>
+                </pattern>              
+                <message>Должно быть: <suggestion>болшая часть <match no="2"></match></suggestion>?</message>
+                <short>Логическая ошибка.</short>
+                <example correction="болшая часть времени"><marker>большинство времени</marker></example>
             </rule>
           </rulegroup>
           <rulegroup id="na_ladan_dishit" name="Логические ошибки «на ладан дышит»">
@@ -488,7 +663,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             </rule>
         </rulegroup>
         <rulegroup id="BOLSHAJA_POLOVINA" name="Словосочетание «большая/меньшая половина»">
-            <rule> 
+            <rule>
                 <pattern>
                     <token regexp="yes" >большая|меньшая</token>
                     <token>половина</token>
@@ -500,6 +675,66 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example>меньшая часть</example>
             </rule>
         </rulegroup>
+        <rulegroup id="ISKLUCHIT_ISKLUCHENIE" name="Тавтология «исключить исключение»">
+            <rule> 
+                <pattern>
+                    <token inflected="yes" >исключить</token>
+                    <token>исключение</token>
+                </pattern>
+                <message>Языковая избыточность: <suggestion><match no="1" regexp_match="исключи(.*)" regexp_replace="убра$1"></match> <match no="2"/></suggestion>?</message>         
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>     
+                <short>Языковая избыточность.</short>
+                <example correction="убрать исключение"><marker>исключить исключение</marker></example>
+            </rule>
+        </rulegroup>
+        <rulegroup id="POTREBOVAT_TREBOVANIE" name="Тавтология «потребовать требование»">
+            <rule> 
+                <pattern>
+                    <token inflected="yes" >потребовать</token>
+                    <token>требование</token>
+                </pattern>
+                <message>Языковая избыточность: <suggestion><match no="1" regexp_match="потребова(.*)" regexp_replace="заяви$1"></match> <match no="2"/></suggestion>?</message>         
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>     
+                <short>Языковая избыточность.</short>
+                <example correction="заявить требование"><marker>потребовать требование</marker></example>
+            </rule>
+        </rulegroup>
+        <rulegroup id="POJELAT_JELANIE" name="Тавтология «пожелать желание»">
+            <rule> 
+                <pattern>
+                    <token inflected="yes" >пожелать</token>
+                    <token>желание</token>
+                </pattern>
+                <message>Языковая избыточность: <suggestion><match no="1" regexp_match="пожела(.*)" regexp_replace="загада$1"></match> <match no="2"/></suggestion>?</message>         
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>     
+                <short>Языковая избыточность.</short>
+                <example correction="загадать желание"><marker>пожелать желание</marker></example>
+            </rule>
+        </rulegroup>
+        <rulegroup id="ZAKAZAT_ZAKAZ" name="Тавтология «заказать заказ»">
+            <rule> 
+                <pattern>
+                    <token inflected="yes" >заказать</token>
+                    <token>заказ</token>
+                </pattern>
+                <message>Языковая избыточность: <suggestion><match no="1" regexp_match="заказа(.*)" regexp_replace="сдела$1"></match> <match no="2"/></suggestion>?</message>         
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>     
+                <short>Языковая избыточность.</short>
+                <example correction="сделать заказ"><marker>заказать заказ</marker></example>
+            </rule>
+        </rulegroup>
+        <rulegroup id="PODARIT_PODAROK" name="Тавтология «подарить подарок»">        
+              <rule> 
+                <pattern>
+                    <token inflected="yes">подарить</token>
+                    <token>подарок</token>                  
+                </pattern>
+                <message>Языковая избыточность (плеоназм): <suggestion><match no="1" regexp_match="подари(.*)" regexp_replace="вручи$1"></match> <match no="2"/></suggestion>?</message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>
+                <short>Тавтология.</short>
+                <example correction="вручил подарок">Он <marker>подарил подарок</marker>.</example>
+            </rule>
+            </rulegroup>   
            <rulegroup id="SPUSKATSJA_VNIZ" name="Тавтология «спускаться вниз»">
             <rule> 
                 <pattern>
@@ -539,6 +774,64 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example correction="Суть"><marker>Главная суть</marker> рассказа</example>
             </rule>
         </rulegroup>    
+
+        <rulegroup id="DUMU_DUMAT" name="Тавтология «думу думать»">
+            <rule> 
+                <pattern>
+                    <token>думу</token>
+                    <token inflected="yes">думать</token>                  
+                </pattern>
+                <message>Языковая избыточность (плеоназм): <suggestion>\2</suggestion>?</message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>
+                <short>Тавтология.</short>
+                <example correction="думали">Они <marker>думу думали</marker>.</example>
+            </rule>
+            <rule> 
+                <pattern>
+                    <token>работу</token>
+                    <token inflected="yes">работать</token>                  
+                </pattern>
+                <message>Языковая избыточность (плеоназм): <suggestion>\2</suggestion>?</message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>
+                <short>Тавтология.</short>
+                <example correction="работали">Они <marker>работу работали</marker>.</example>
+            </rule>
+            <rule> 
+                <pattern>
+                    <token>шутки</token>
+                    <token inflected="yes">шутить</token>                  
+                </pattern>
+                <message>Языковая избыточность (плеоназм): <suggestion>\2</suggestion>?</message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>
+                <short>Тавтология.</short>
+                <example correction="шутили">Они <marker>шутки шутили</marker>.</example>
+            </rule>
+        </rulegroup>    
+
+
+        <rulegroup id="KRUG_KRUGLIJ" name="Тавтология «круг круглый»">
+            <rule> 
+                <pattern>
+                    <token>круг</token>
+                    <token>круглый</token>                  
+                </pattern>
+                <message>Языковая избыточность (плеоназм): <suggestion>\1</suggestion>?</message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>
+                <short>Тавтология.</short>
+                <example correction="круг"><marker>круг круглый</marker></example>
+            </rule>
+            <rule> 
+                <pattern>
+                    <token>масло</token>
+                    <token>масляное</token>                  
+                </pattern>
+                <message>Языковая избыточность (плеоназм): <suggestion>\1</suggestion>?</message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B2%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%28%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0%29</url>
+                <short>Тавтология.</short>
+                <example correction="масло"><marker>масло масляное</marker></example>
+            </rule>
+        </rulegroup> 
+
 
         <rulegroup id="TOLPA_LUDEJ" name="Тавтология «толпа людей»">
             <rule> 
@@ -727,6 +1020,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <short>Логическая ошибка.</short>
             <example correction="цены выросли">На рынке <marker>подорожали цены</marker></example>
             <example>На рынке цены выросли</example>
+          </rule>
+          <rule>  
+            <pattern>
+                <token>дорогие</token>
+                <token>цены</token>
+            </pattern>
+            <message>Логическая ошибка: <suggestion>высокие цены</suggestion>?</message>
+            <short>Логическая ошибка.</short>
+            <example correction="высокие цены">На рынке сегодня были <marker>дорогие цены</marker>.</example>
+          </rule>
+          <rule>  
+            <pattern>
+                <token regexp="yes">деш[её]вые</token>
+                <token>цены</token>
+            </pattern>
+            <message>Логическая ошибка: <suggestion>низкие цены</suggestion>?</message>
+            <short>Логическая ошибка.</short>
+            <example correction="низкие цены">На рынке сегодня были <marker>дешёвые цены</marker>.</example>
           </rule>
           <rule>
             <pattern>
@@ -1269,9 +1580,32 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <example>в связи с этим</example>
         </rule>
         
+        <rulegroup id="Logical_skritij_skritnij" name="Логические ошибки «скрытый/скрытный»">
+           <!-- скрытый/скрытный   -->
+            <rule>      
+                <pattern>
+                    <token inflected="yes">скрытный</token>
+                    <token inflected="yes" regexp="yes">проводка|признак</token>
+                </pattern>
+                <message>Логическая ошибка: <suggestion><match no="1" regexp_match="(скрытн)(.*)" regexp_replace="скрыт$2" /> <match no="2"  /></suggestion>?</message>
+                
+                <short>Логическая ошибка.</short>
+                <example correction="скрытая проводка">В комнате выполнена <marker>скрытная проводка</marker>.</example>
+               
+            </rule>
+            <rule>      
+                <pattern>
+                    <token inflected="yes">скрытый</token>
+                    <token inflected="yes" regexp="yes">характер|человек</token>
+                </pattern>
+                <message>Логическая ошибка: <suggestion><match no="1" regexp_match="(скрыт)(.*)" regexp_replace="скрытн$2" /> <match no="2"  /></suggestion>?</message>
+                
+                <short>Логическая ошибка.</short>
+                <example correction="скрытный характер">У этого человека очень <marker>скрытый характер</marker>.</example>
+            </rule>
+        </rulegroup>  
         
-        <rulegroup id="Logical_odel_nadel" name="Логические ошибки «одеть (или надеть)»">
-            <!-- TODO скрытый/скрытный   -->
+        <rulegroup id="Logical_odel_nadel" name="Логические ошибки «одеть/надеть»">
             <rule>      
                 <pattern>
                     <token inflected="yes">одеть</token>
@@ -1341,6 +1675,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             </rule>                   
         </rulegroup>
         
+        
+         <rulegroup id="Logical_prazdnoe_prazdnichnoe" name="Ошибки в употреблении: «праздничное» или «праздное»">
+          
+            <rule>      
+                <pattern>
+                    <token inflected="yes">праздничный</token>
+                    <token inflected="yes">жизнь</token>
+                </pattern>
+                <message>Логическая ошибка: <suggestion><match no="1" regexp_match="(празднич)(.*)" regexp_replace="празд$2" /> <match no="2"  /></suggestion>?</message>
+                
+                <short>Логическая ошибка.</short>
+                <example correction="праздную жизнь">Человек ведет  <marker>праздничную жизнь</marker>.</example>
+                <example>Человек ведет праздную жизнь.</example>
+            </rule>  
+              <rule>      
+                <pattern>
+                    <token inflected="yes">праздный</token>
+                    <token inflected="yes">настроение</token>
+                </pattern>
+                <message>Логическая ошибка: <suggestion><match no="1" regexp_match="(празд)(.*)" regexp_replace="празднич$2" /> <match no="2"  /></suggestion>?</message>
+                
+                <short>Логическая ошибка.</short>
+                <example correction="праздничное настроение">У меня сегодня <marker>праздное настроение</marker>.</example>
+                <example>У меня сегодня праздничное настроение.</example>
+            </rule>                     
+        </rulegroup>
+        
         <rule id="Linguistics_hrabry" name="Лингвистические ошибки «храбрая (или смелая) мысль, решение, идея»">
             <pattern>
                 <token inflected="yes" >храбрый</token>
@@ -1355,6 +1716,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
     </category>
     
     <category id="PUNCTUATION" name="Пунктуация">
+    	<rule default="on" id="Utochnenie_dejstvija" name="Уточнение действия">
+    	    <pattern case_sensitive="no">
+            	<token>таким</token>
+    	        <token>образом</token>
+    	        <token regexp="yes">что|чтобы|как</token>
+    	    </pattern>
+    	    <message>Пропущена запятая:<suggestion>\1 \2, \3</suggestion>.</message>
+    	    <short>Пропущена запятая.</short>
+    	    <example correction="таким образом, что">Это сделано <marker>таким образом что</marker> и не найти.</example>
+    	    <example>Таким образом, что слово есть, что его нет - без разницы.</example>
+    	</rule>
         <rulegroup default="on" id="Prep_i" name="Пропущена запятая перед предлогом «и» в сложном предложении">
             <rule>     
                 <pattern>
@@ -1514,16 +1886,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 -->
             <rule>
                 <pattern case_sensitive="yes">
-                    <token negate="yes" regexp="yes">[\p{Punct}]|-|—|так|и|но<exception postag="SENT_START"></exception></token>
-                    <token>как</token>
-                    <token regexp="yes">обычно|всегда|правило|исключение|нарочно|сейчас</token>
-                    <token negate="yes" regexp="yes">[\p{Punct}]|-|—|…</token>
+                    <marker>
+                        <token negate="yes" regexp="yes">[\p{Punct}]|-|—|так|и|но<exception postag="SENT_START"></exception></token>
+                        <token>как</token>
+                        <token regexp="yes">обычно|всегда|правило|исключение|нарочно|сейчас</token>
+                        <token skip= "1" negate="yes" regexp="yes">[\p{Punct}]|-|—|…<exception  postag_regexp="yes" postag="NN:.*"></exception><exception  scope="next" postag_regexp="yes" postag="NN:.*"></exception></token>
+                    </marker>
+                    <token></token>
                 </pattern>
                 <message>Пропущена запятая: <suggestion>\1, \2 \3, \4</suggestion>.</message>
                 <url>http://ru.wikipedia.org/wiki/%D0%92%D0%B2%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D1%81%D0%BB%D0%BE%D0%B2%D0%B0</url>
                 <short>Пропущена запятая.</short>
                 <example><marker>Мы, как правило, ходим</marker> ходим в походы летом.</example>
                 <example correction="Мы, как правило, ходим"><marker>Мы как правило ходим</marker> в походы летом.</example>
+                <example>Правило правого винта, известное также из курса физики как правило буравчика.</example>
+                <example>Эта рекомендация известна как правило одного экрана.</example>
             </rule>
             
             
@@ -1547,12 +1924,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                         <token>как</token>
                         <token regexp="yes">обычно|всегда|правило|исключение|нарочно|сейчас</token>
                     </marker>
-                    <token negate="yes" regexp="yes">[\p{Punct}]|-|—|…</token>
+                    <token negate="yes" regexp="yes">[\p{Punct}]|-|—|…<exception  postag_regexp="yes" postag="NN:.*"></exception></token>
                 </pattern>
                 <message>Пропущена запятая: <suggestion>\2 \3,</suggestion></message>
                 <url>http://ru.wikipedia.org/wiki/%D0%92%D0%B2%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D1%81%D0%BB%D0%BE%D0%B2%D0%B0</url>
                 <short>Пропущена запятая.</short>
                 <example correction="как правило,">Мы, <marker>как правило</marker> ходим в походы летом.</example>
+                <example>Правило правого винта, известное также из курса физики как правило буравчика.</example>
             </rule>
             
             <rule>
@@ -1894,7 +2272,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                     <marker>
                         <token regexp="yes">конечно|несомненно|вероятно|кажется|однако</token>
                     </marker>
-                    <token negate="yes" regexp="yes"><exception regexp= "yes" >если|же|ж</exception>[\p{Punct}]|-|—</token>
+                    <token negate="yes" regexp="yes" skip="-1"><exception regexp= "yes" >если|же|ж</exception><exception scope="next" postag_regexp="yes" postag="VB:.*"></exception>[\p{Punct}]|-|—</token>
+                    <token regexp="yes">[.,:;!?]</token>
                 </pattern>
                 <message>Пропущена запятая:<suggestion>\2,</suggestion>.</message>
                 <url>http://ru.wikipedia.org/wiki/%D0%92%D0%B2%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D1%81%D0%BB%D0%BE%D0%B2%D0%B0</url>
@@ -1903,6 +2282,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example>Я поеду в город, однако если будут пробки, то я заночую в мотеле.</example>
                 <!--  todo: "однако если" не требует запятой
                   перед "если", если конструкция с "если" содержит "то"  -->
+                <example>Они умолкли, однако не успокоились.</example>
+                <example>Перестрелка затихла, однако ядра и бомбы продолжали летать сюда, как и отсюда.</example>          
                 <example correction="конечно,">Эта работа, <marker>конечно</marker> представляет огромную научную ценность.</example>
             </rule>
             <rule>
@@ -2018,8 +2399,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             -->
             <!--TODO: Detect 2 comma.-->
             <rule>
-                <pattern case_sensitive="yes">
-                    <token negate="yes" regexp="yes">[\p{Punct}]|-|—|бы|возникши(.*)<exception postag="SENT_START"></exception><exception postag_regexp="yes"  postag="VB:.*"></exception></token>
+                <pattern> <!--  remove case sensitive --> 
+                    <token negate="yes" regexp="yes">[\p{Punct}]|-|—|бы|возникши(.*)|но|однако<exception postag="SENT_START"></exception><exception postag_regexp="yes"  postag="VB:.*"></exception></token>
                     <token regexp="yes">кроме|помимо|вместо</token>
                 </pattern>
                 <message>Пропущена запятая:<suggestion>\1, \2</suggestion>.</message>
@@ -2027,6 +2408,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <short>Пропущена запятая.</short>
                 <example>Около костра, кроме Ивана, грелось ещё пять человек.</example>
                 <example>Он ел вместо груш яблоки.</example>
+                <example>Но вместо нужной конструкции привезли типовую.</example>
+                <example>Однако вместо нужной конструкции привезли типовую.</example>
                 <example>Обстоятельства, возникшие помимо воли и желания сторон.</example>
                 <example correction="костра, кроме">Около <marker>костра кроме</marker> Ивана грелось ещё пять человек.</example>
             </rule>
@@ -2472,6 +2855,46 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
     </category>
     <category id="GRAMMAR" name="Грамматика">
         
+      <rulegroup id="Sklonenije_NUM_NN" name="Склонение числительное + существительное">
+            <!-- исключения один, два, три, четыре -->
+        <rule>
+            <pattern>
+                    <token postag="NumC:Nom" ><exception regexp="yes">одни|один|одно|одна|две|два|три|четыре|столько|сколько|несколько|много|немного|немало|мало|сто|тысяча</exception></token>
+                    <token postag="NN:.*:.*:.*" postag_regexp="yes"><exception postag="NN:.*:.*:.*" negate_pos="yes" postag_regexp="yes"/><exception postag="NN:.*:PL:R"  postag_regexp="yes"/></token>
+            </pattern>
+            <message>Числительное не согласуется с существительным по падежу: <suggestion><match no="1"/> <match no="2" postag_regexp="yes" postag="NN:(.*):.*:.*" postag_replace="NN:$1:PL:R" /></suggestion>.</message>
+            <url>https://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5#.D0.A1.D0.BA.D0.BB.D0.BE.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B8.D0.BC.D1.91.D0.BD_.D1.87.D0.B8.D1.81.D0.BB.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D1.8B.D1.85</url>
+            <short>Неверное склонение.</short>
+            <example correction="пять карандашей" >В коробке лежало <marker>пять карандаша</marker>.</example>
+            <example>В коробке лежало пять карандашей.</example>
+            <example>Это позволило в несколько раз расширить диапазон длин волн.</example>
+            <example>Численность рабочих уменьшилась в пять раз.</example>
+            <example>Новая машина займёт много места.</example>
+         </rule>
+         <rule>
+            <pattern>
+                    <token>один</token>
+                    <token postag="NN:.*:.*:.*" postag_regexp="yes"><exception postag="NN:.*:.*:.*" negate_pos="yes" postag_regexp="yes"/><exception postag="NN:.*:Sin:Nom"  postag_regexp="yes"/></token>
+            </pattern>
+            <message>Числительное не согласуется с существительным по падежу: <suggestion><match no="1"/> <match no="2" postag_regexp="yes" postag="NN:(.*):.*:.*" postag_replace="NN:$1:Sin:Nom" /></suggestion>.</message>
+            <url>https://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5#.D0.A1.D0.BA.D0.BB.D0.BE.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B8.D0.BC.D1.91.D0.BD_.D1.87.D0.B8.D1.81.D0.BB.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D1.8B.D1.85</url>
+            <short>Неверное склонение.</short>
+            <example correction="один карандаш" >В коробке лежал <marker>один карандаша</marker>.</example>
+            <example>В коробке лежал один карандаш.</example>
+         </rule>
+         <rule>
+            <pattern>
+                    <token regexp="yes">два|три|четыре</token>
+                    <token postag="NN:.*:.*:.*" postag_regexp="yes"><exception postag="NN:.*:.*:.*" negate_pos="yes" postag_regexp="yes"/><exception postag="NN:.*:Sin:R"  postag_regexp="yes"/></token>
+            </pattern>
+            <message>Числительное не согласуется с существительным по падежу: <suggestion><match no="1"/> <match no="2" postag_regexp="yes" postag="NN:(.*):.*:.*" postag_replace="NN:$1:Sin:R" /></suggestion>.</message>
+            <url>https://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5#.D0.A1.D0.BA.D0.BB.D0.BE.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B8.D0.BC.D1.91.D0.BD_.D1.87.D0.B8.D1.81.D0.BB.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D1.8B.D1.85</url>
+            <short>Неверное склонение.</short>
+            <example correction="три карандаша" >В коробке лежало <marker>три карандаш</marker>.</example>
+            <example>В коробке лежало два карандаша.</example>
+         </rule>
+        </rulegroup>   
+        
         <rulegroup id="Sklonenije_chislitelnih" name="Склонение количественных числительных">
             <!-- Склонение количественных числительных (Т) -->
          <rule>
@@ -2652,7 +3075,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <example>Мальчик немного бледный.</example>
             <example>Мальчик бледноват</example>
         </rule>
-         
+       
+          <rule id="prosit_proshenija" name="Выражение «просить прощения»">
+            <pattern>
+                <token inflected="yes">просить</token>
+                <token>прощение</token>
+            </pattern>
+            <message>Правильно: <suggestion>\1 прощения</suggestion>.</message>         
+            <short>Правильно: «просить прощения».</short>
+            <example correction="просил прощения">Он <marker>просил прощение</marker>.</example>
+      
+        </rule>  
            
         <rule id="skuchat_za" name="Грамматические ошибки «скучать за ... »">
             <pattern>
@@ -2827,196 +3260,391 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
            </rule>
         </rulegroup>
            
-        <rulegroup default="on" id="SoglasovanieP" name="Согласование падежей">
-            <rule>
-                <pattern>
-                    <!--           ADJ:.*:Nom   NN:.*:.*:Nom    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:.*:Nom"></exception></token>
-                    <marker>
-                        <token postag="ADJ:.*:Nom" postag_regexp="yes"><exception negate_pos="yes" postag="ADJ:.*:Nom" postag_regexp="yes"></exception><exception scope="previous" postag_regexp="yes" postag="NN:.*"></exception></token>
-                        <token postag="NN:(.*):(.*):.*" skip="-1" postag_regexp="yes"><exception postag="NN:.*:.*:Nom" postag_regexp="yes"></exception><exception scope="next" postag="NN:.*:.*:Nom" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>
-                <message>Прилагательное не согласуется с существительным по падежу: <suggestion><match no="2"></match> <match no="3" postag="NN:(.*):(.*):.*" postag_regexp="yes" postag_replace="NN:$1:$2:Nom"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании падежей.</short>
-                <example>Добротная усадьба.</example>
-                <example correction="Добротная усадьба"><marker>Добротная усадьбе</marker>.</example>
-            </rule>
-            <rule>
-                <pattern>
-                    
-                    <!--           ADJ:.*:R   NN:.*:.*:R    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:.*:R"></exception></token>
-                    <marker>
-                        <token postag="ADJ:(.*):.*" postag_regexp="yes"><exception postag="ADJ:.*:R" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:(.*):.*" postag_regexp="yes"></exception><exception scope="previous" postag="NN:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:.*:.*:R" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:.*:.*:R" postag_regexp="yes"></exception><exception negate_pos="yes" scope="next" postag="NN:.*:.*:R" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>               
-                <message>Прилагательное не согласуется с существительным по падежу: <suggestion><match no="2" postag="ADJ:(.*):.*" postag_regexp="yes" postag_replace="ADJ:$1:R"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании падежей.</short>
-                <example>Нет крепкого сна.</example>
-                <example correction="крепкого сна">Нет <marker>крепкому сна</marker>.</example>
-            </rule>
-            
-            <rule>
-                <pattern>
-                    <!--           ADJ:.*:D   NN:.*:.*:D    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:.*:D"></exception></token>
-                    <marker>
-                        <token postag="ADJ:(.*):.*" postag_regexp="yes"><exception postag="ADJ:.*:D" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:(.*):.*" postag_regexp="yes"></exception><exception scope="previous" postag="NN:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:.*:.*:D" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:.*:.*:D" postag_regexp="yes"></exception><exception negate_pos="yes" scope="next" postag="NN:.*:.*:D" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>                
-                <message>Прилагательное не согласуется с существительным по падежу: <suggestion><match no="2" postag="ADJ:(.*):.*" postag_regexp="yes" postag_replace="ADJ:$1:D"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании падежей.</short>
-                <example>Вода стекала по мягкому жёлобу.</example>
-                <example correction="мягкому жёлобу">Вода стекала по <marker>мягкого жёлобу</marker>.</example>
-            </rule>
-            
-            <rule>
-                <pattern>
-                    <!--           ADJ:.*:V   NN:.*:.*:V    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:.*:V"></exception></token>
-                    <marker>
-                        <token postag="ADJ:(.*):.*" postag_regexp="yes"><exception postag="ADJ:.*:V" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:(.*):.*" postag_regexp="yes"></exception><exception scope="previous" postag_regexp="yes" postag="NN:.*"></exception></token>
-                        <token postag="NN:.*:.*:V" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:.*:.*:V" postag_regexp="yes"></exception><exception negate_pos="yes" scope="next" postag="NN:.*:.*:V" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>               
-                <message>Прилагательное не согласуется с существительным по падежу: <suggestion><match no="2" postag="ADJ:(.*):.*" postag_regexp="yes" postag_replace="ADJ:$1:V"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании падежей.</short>
-                <example>Мы увидели бурную реку.</example>
-                <example correction="бурную реку">Мы увидели <marker>бурной реку</marker>.</example>
-            </rule>
-            <rule>
-                <pattern>
-                    <!--           ADJ:.*:T   NN:.*:.*:T    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:.*:T"></exception></token>
-                    <marker>
-                        <token postag="ADJ:(.*):.*" postag_regexp="yes"><exception postag="ADJ:.*:T" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:(.*):.*" postag_regexp="yes"></exception><exception scope="previous" postag="NN:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:.*:.*:T" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:.*:.*:T" postag_regexp="yes"></exception><exception negate_pos="yes" scope="next" postag="NN:.*:.*:T" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>                
-                <message>Прилагательное не согласуется с существительным по падежу: <suggestion><match no="2" postag="ADJ:(.*):.*" postag_regexp="yes" postag_replace="ADJ:$1:T"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании падежей.</short>
-                <example>Они справились с бурной рекой</example>
-                <example correction="бурной рекой|бурною рекой">Они справились с <marker>бурную рекой</marker>.</example>
-            </rule>
-            <rule>
-                <pattern>
-                    <!--           ADJ:.*:P   NN:.*:.*:P    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:.*:P"></exception></token>
-                    <marker>
-                        <token postag="ADJ:(.*):.*" postag_regexp="yes"><exception postag="ADJ:.*:P" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:(.*):.*" postag_regexp="yes"></exception><exception scope="previous" postag="NN:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:.*:.*:P" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:.*:.*:P" postag_regexp="yes"></exception><exception negate_pos="yes" scope="next" postag="NN:.*:.*:P" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>
-                <message>Прилагательное не согласуется с существительным по падежу: <suggestion><match no="2" postag="ADJ:(.*):.*" postag_regexp="yes" postag_replace="ADJ:$1:P"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании падежей.</short>
-                <example>Они думали о родном доме.</example>
-                <example correction="родном доме">Они думали о <marker>родного доме</marker>.</example>
-            </rule>
-        </rulegroup>
-        <rulegroup default="on" id="SoglasovanieG" name="Согласование существительного с прилагательным по роду/числу">
-            <rule>
-                
-                <pattern>
-                    <!--           ADJ:Masc   NN:Masc    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:Masc:Sin:.*"></exception></token>
-                    <marker>
-                        <token postag="ADJ:.*:.*" postag_regexp="yes"><exception postag="ADJ:Masc:.*" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:.*:.*" postag_regexp="yes"></exception><exception scope="previous" postag="NumC:.*|Num:.*" postag_regexp="yes"></exception><exception scope="previous" regexp="yes">[\p{Digit}]*</exception><exception postag="ADJ:PL:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:Masc:Sin:.*" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:Masc:Sin:.*" postag_regexp="yes"></exception><exception postag="NN:.*:Sin:.*" scope="next" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>               
-                <message>Прилагательное не согласуется с существительным по роду: <suggestion><match no="2" postag="ADJ:.*:(.*)" postag_regexp="yes" postag_replace="ADJ:Masc:$1"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании по роду.</short>
-                <example>Был построен добротный дом.</example>
-                <example correction="добротный дом">Был построен <marker>добротная дом</marker>.</example>
-            </rule>
-            <rule>
-                <pattern>  
-                    <!--           ADJ:Fem   NN:Fem    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:Fem:Sin:.*"></exception></token>
-                    <marker>
-                        <token postag="ADJ:.*:.*" postag_regexp="yes"><exception postag="ADJ:Fem:.*" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:.*:.*" postag_regexp="yes"></exception><exception scope="previous" postag="NumC:.*|Num:.*" postag_regexp="yes"></exception><exception scope="previous" regexp="yes">[\p{Digit}]*</exception><exception postag="ADJ:PL:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:Fem:Sin:.*" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:Fem:Sin:.*" postag_regexp="yes"></exception><exception postag="NN:.*:Sin:.*" scope="next" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>               
-                <message>Прилагательное не согласуется с существительным по роду: <suggestion><match no="2" postag="ADJ:.*:(.*)" postag_regexp="yes" postag_replace="ADJ:Fem:$1"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании по роду.</short>
-                <example>Пушистая кошка грелась на солнышке.</example>
-                <example correction="пушистая кошка|пушистую кошка">Эта <marker>пушистое кошка</marker> грелась.</example>
-            </rule>
-            <rule>
-                <pattern>  
-                    <!--           ADJ:Neut   NN:Neut    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:Neut:Sin:.*"></exception></token>
-                    <marker>
-                        <token postag="ADJ:.*:.*" postag_regexp="yes"><exception postag="ADJ:Neut:.*" postag_regexp="yes"></exception><exception negate_pos="yes" postag="ADJ:.*:.*" postag_regexp="yes"></exception><exception scope="previous" postag="NumC:.*|Num:.*" postag_regexp="yes"></exception><exception scope="previous" regexp="yes">[\p{Digit}]*</exception><exception postag="ADJ:PL:.*" postag_regexp="yes"></exception></token>
-                        <token postag="NN:Neut:Sin:.*" skip="-1" postag_regexp="yes"><exception negate_pos="yes" postag="NN:Neut:Sin:.*" postag_regexp="yes"></exception><exception postag="NN:.*:Sin:.*" scope="next" postag_regexp="yes"></exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>
-                <message>Прилагательное не согласуется с существительным по роду: <suggestion><match no="2" postag="ADJ:.*:(.*)" postag_regexp="yes" postag_replace="ADJ:Neut:$1"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании по роду.</short>
-                <example>Вдали виднелось синее небо.</example>
-                <example correction="синее небо">Вдали виднелось <marker>синий небо</marker>.</example>
-            </rule>
-            
-            <rule>
-                <pattern>
-                    <!--           ADJ:PL   NN:.*:PL    -->
+        <rulegroup default="on" id="Soglasovanie_ADJ_NN" name="Согласование прилагательного с существительным">
+	        <antipattern>
+		        <marker>
+			        <token case_sensitive="yes" regexp="yes">[А-Я].+<exception postag="CONJ|PREP" postag_regexp="yes" /></token>
+			        <token case_sensitive="yes" regexp="yes">[А-Я].+<exception postag="CONJ|PREP" postag_regexp="yes" /></token>
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <marker>
+			        <token case_sensitive="yes" regexp="yes">[А-Я].*[А-Я].*</token>
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <token regexp="yes">&human;</token>
+		        <marker>
+			        <token postag="(NN|NNN):.*:(Nom|R)"
+			               postag_regexp="yes" />
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <token regexp="yes">&time;</token>
+		        <marker>
+			        <token postag="(NN|NNN):.*:*"
+			               postag_regexp="yes" />
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <token regexp="yes">&human;</token>
+		        <marker>
+			        <token postag="(NN|NNN):.*:T|ADV"
+			               postag_regexp="yes">
+				        <exception postag="(NN|NNN):.*:T|ADV"
+				                   postag_regexp="yes" negate_pos='yes'/> 
+			        </token>
+		        </marker>
+	        </antipattern>
 
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:PL:.*"></exception></token>
-                    <marker>
-                        <token postag="ADJ:PL:.*" postag_regexp="yes"><exception negate_pos="yes" postag="ADJ:PL:.*" postag_regexp="yes"></exception> <exception scope="previous" postag="NumC:.*|Num:.*" postag_regexp="yes"></exception><exception scope="previous" regexp="yes">[\p{Digit}]*</exception>  </token>
-                        <token postag="NN:.*:.*:.*" skip="-1" postag_regexp="yes"><exception postag="NN:.*:PL:.*" postag_regexp="yes"></exception><exception postag="NN:.*:PL:.*" scope="next" postag_regexp="yes"></exception><exception negate_pos="yes" postag="NN:.*:.*:.*" postag_regexp="yes"></exception><exception scope="next" regexp="yes">и|[\p{Punct}]</exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>
-                
-                <message>Прилагательное не согласуется с существительным по числу.</message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании по числу.</short>
+	        <antipattern>
+		        <marker>
+			        <token regexp="yes" postag="ADJ:.*"
+			               postag_regexp="yes">&nation;</token>
+		        </marker>
+	        </antipattern>
+	        <antipattern>		        
+		        <marker>
+			        <token postag="(NN|NNN):.*" postag_regexp="yes"
+			               regexp="yes">&dual;</token>
+		        </marker>
+	        </antipattern> <!-- TODO remove after adding PL tags -->
+
+	        <antipattern>
+		        <marker>
+			        <token postag="VB:INF" />
+			        <token postag="ADJ:.*"
+			               postag_regexp="yes"/>
+			        <token postag="(NN|NNN):.*"
+			               postag_regexp="yes"/>			        
+		        </marker>
+	        </antipattern>
+
+	        <antipattern>
+		        <marker>
+			        <token postag="VB:.*" postag_regexp="yes"/>
+			        <token postag="ADJ:(Masc|Fem|Neut):T" postag_regexp="yes"/>
+			        <token postag="(NN|NNN):.*:Sin:V" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <marker>
+			        <token postag="VB:.*" postag_regexp="yes" />
+			        <token postag="ADJ:PL:T"/>
+			        <token postag="(NN|NNN):.*:PL:V" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <marker>
+			        <token postag="VB:.*" postag_regexp="yes"/>
+			        <token postag="ADV"/>
+			        <token postag="ADJ:(Masc|Fem|Neut):T" postag_regexp="yes"/>
+			        <token postag="(NN|NNN):.*:Sin:V" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+	        <antipattern>
+		        <marker>
+			        <token postag="VB:.*" postag_regexp="yes" />
+			        <token postag="ADV"/>
+			        <token postag="ADJ:PL:T"/>
+			        <token postag="(NN|NNN):.*:PL:V" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+	        <!-- "Нам объявят необходимым запрет на спиртное." -->
+	        <!-- Нам объявят необходимыми игры на свежем воздухе. -->
+	        <!-- Делала политически невозможной отмену единожды данных им законом прав -->
+	        <antipattern>
+		        <token postag="PT:.*:PL:.*" postag_regexp="yes" skip="2">
+			        <exception scope="next" regexp="yes">[«»",]</exception>
+		        </token>
+			        <token postag="ADJ:PL:T"/>
+		        <marker>
+			        <token postag="(NN|NNN):.*" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+
+	        <antipattern>
+		        <token postag="PT:.*:.*" postag_regexp="yes" skip="2">
+			        <exception postag=".*:PL:.*" postag_regexp="yes"/>
+			        <exception scope="next"  regexp="yes">[«»",]</exception>
+		        </token>
+		        <token postag="ADJ:*:T" postag_regexp="yes">
+			        <exception postag=".*:PL:.*" postag_regexp="yes"/>
+		        </token>
+		        <marker>
+			        <token postag="(NN|NNN):.*" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+
+	        <antipattern>
+		        <marker>
+			        <token postag="ADJ:.*:R" postag_regexp="yes">
+				        <exception scope="previous">по</exception>
+			        </token>
+			        <token postag="(NN|NNN):.*:D" postag_regexp="yes"/>
+		        </marker>
+	        </antipattern>
+
+	        <antipattern>
+		        <marker>
+			        <token postag="ADJ:.*:V" postag_regexp="yes">
+				        <exception scope="previous">по</exception>
+			        </token>
+			        <token postag="(NN|NNN):.*:D" postag_regexp="yes">
+				        <exception postag="(NN|NNN):.*:D" postag_regexp="yes" negate_pos="yes"/>
+			        </token>
+		        </marker>
+	        </antipattern>
+
+	        <rule  id="Unify_Adj_NN_number">
+		        <pattern>
+			        <marker>
+				        <unify negate="yes">
+					        <feature id="number"/>
+					        <token postag="ADJ:.*|ADJ_Com:.*"
+					               postag_regexp="yes">
+						        <exception scope="previous"
+						                   regexp="yes">,|и|-|—</exception>
+						        <exception postag="ADV|ADJ_Sup|PT:.*|NN:.*"
+						                   postag_regexp='yes'/>
+						        <exception regexp="yes">полн.*|выходн(ых|ые)|средн.*|арифметическ(ое|ие)|зернов.*|животных|основн.*|легких|лёгких|позднее|поминальное</exception>
+					        </token>
+					        <token postag="(NN|NNN):.*" postag_regexp="yes">
+						        <exception postag="CONJ|PREP|ADV" postag_regexp="yes" />
+						        <exception regexp="yes">друг|уже|были|дай|гей|стряпней|стерней</exception>
+					        </token>
+				        </unify>				        
+			        </marker>
+			        <token>
+				        <exception regexp="yes">и|[«»",]</exception>
+				        <exception postag="NN:.*" postag_regexp="yes"/>
+			        </token>
+		        </pattern>
+
+		        <message>Прилагательное не согласуется с
+		        существительным по числу:
+		        </message>
+		        <short>Грамматическая ошибка в согласовании числа.</short>
+		        <example>Крепкие столы.</example>
+		        <example>Суеверие — это религия слабых духом.</example>
+		        <example>Счастливые часов не наблюдают.</example>
+		        <example>Смелого пуля боится.</example>
+		        <example>Быть умным Николаю мешала лень.</example>
+		        <example>Делала политически невозможной отмену единожды данных им законом прав.</example>
+		        <example>Этот экспорт, полностью подконтрольный правительствам стран мира, стремительно рос.</example>
+		        <example>Нам объявят необходимым запрет на спиртное.</example>
+		        <example>Нам объявят необходимыми игры на свежем воздухе.</example>
+		        <example>Для оставшихся неготовыми лодок соорудили бокс.</example>
+		        <example>Для оставшейся неготовой лодки соорудили бокс.</example>
+		        <example>Умные уже тут.</example>
+		        <example>Мы чужие друг другу.</example>
+		        <example>Белый стул.</example>
+		        <example>Больных гриппом просим не входить.</example>
+		        <example>Если загорелся зелёный машинам, то можно ехать.</example>
+		        <example>Преподавать русский инострацам сложно.</example>
+		        <example>Корзина была полная ягод.</example>
+		        <example>Воспользуемся средним чисел а и б.</example>
+		        <example>После выходных работник смотрелся не важно.</example>
+		        <example correction=""><marker>Железные кровать</marker>.</example>
                 <example>Вдали виднелись красивые сосны.</example>
                 <example correction="">Вдали виднелись <marker>красивые ёлка</marker>.</example>
-            </rule>
-            <rule>
-                <pattern>
-                    <!--           ADJ:!PL   NN:.*:Sin    -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag_regexp="yes" postag="NN:.*:Sin:.*"></exception></token>
-                    <marker>
-                        <token postag="ADJ:.*:(.*)" postag_regexp="yes"><exception negate_pos="yes" postag="ADJ:.*:(.*)" postag_regexp="yes"></exception><exception postag="ADJ:PL:.*" postag_regexp="yes"></exception><exception regexp="yes" scope="previous">и|или|но|да</exception></token>
-                        <token postag="NN:.*:.*:.*" skip="-1" postag_regexp="yes"><exception postag="NN:.*:Sin:.*" postag_regexp="yes"></exception><exception postag="NN:.*:Sin:.*" scope="next" postag_regexp="yes"></exception><exception negate_pos="yes" postag="NN:.*:.*:.*" postag_regexp="yes"></exception><exception scope="next" regexp="yes">и|[\p{Punct}]</exception></token>
-                    </marker>
-                    <token regexp="yes">[.;]</token>
-                </pattern>     
-                <message>Прилагательное не согласуется с существительным по числу: <suggestion><match no="2" postag="ADJ:.*:(.*)" postag_regexp="yes" postag_replace="ADJ:PL:$1"></match> <match no="3"></match></suggestion></message>
-                <url>http://ru.wikipedia.org/wiki/%D0%98%D0%BC%D1%8F_%D0%BF%D1%80%D0%B8%D0%BB%D0%B0%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5</url>
-                <short>Грамматическая ошибка в согласовании по числу.</short>
                 <example>Мебель сделана из красивой сосны.</example>
-                <example correction="красивых сосен">Столы сделаны из <marker>красивой сосен</marker>.</example>
-            </rule>
-            
-            
-            
+                <example correction="">Столы сделаны из <marker>красивой сосен</marker>.</example>
+	        </rule>
+
+	        <rule  id="Unify_Adj_NN_gender">
+		        <pattern>
+			        <marker>
+				        <unify negate="yes">
+					        <feature id="gender"/>
+					        <token postag="ADJ:.*|ADJ_Com:.*"
+					               postag_regexp="yes">
+						        <exception scope="previous"
+						                   regexp="yes">,|-|—</exception>
+						        <exception
+						            postag="ADV|ADJ_Sup|PT:.*|NN:.*"
+						            postag_regexp="yes"/>
+						        <exception regexp="yes">полн.*|выходн(ых|ые)|средн.*|арифметическ(ое|ие)|подобн.*|отличн.*|книжном|продуктовом|праздную|вещей|мобильного</exception>
+						        <exception case_sensitive="yes">Божию</exception>
+					        </token>
+					        <token postag="(NN|NNN):.*" postag_regexp="yes">
+						        <exception postag="CONJ|PREP|ADV|ADJ:.*" postag_regexp="yes" />
+						        <exception regexp="yes">друг|уже|уж|при|после|весь|мировой|молодой|куплю|байке|лажа|лазанью|были|дай|гей</exception>
+						        <exception case_sensitive="yes">Tом</exception>
+					        </token>
+				        </unify>				        
+			        </marker>
+			        <token>
+				        <exception regexp="yes">и|[«»",]</exception>
+				        <exception postag="NN:.*" postag_regexp="yes"/>
+			        </token>
+		        </pattern>
+		        <message>Прилагательное не согласуется с
+		        существительным по роду:
+		        </message>
+		        <example>Крепкие столы.</example>
+		        <example>Суеверие — это религия слабых духом.</example>
+		        <example>Счастливые часов не наблюдают.</example>
+		        <example>Смелого пуля боится.</example>
+		        <example>Быть умным Николаю мешала лень.</example>
+		        <example>Делала политически невозможной отмену единожды данных им законом прав.</example>
+		        <example>Этот экспорт, полностью подконтрольный правительствам стран мира, стремительно рос.</example>
+		        <example>Нам объявят необходимым запрет на спиртное.</example>
+		        <example>Нам объявят необходимыми игры на свежем воздухе.</example>
+		        <example>Для оставшихся неготовыми лодок соорудили бокс.</example>
+		        <example>Для оставшейся неготовой лодки соорудили бокс.</example>
+		        <example>Вестминстер — место пребывания короля, а позднее парламента.</example>
+		        <example>Крепкий стол.</example>
+		        <example>Крепкая ограда.</example>
+		        <example>Умные уже тут.</example>
+		        <example>Мы чужие друг другу.</example>
+		        <example>Белый стул.</example>
+		        <example>Больных гриппом просим не входить.</example>
+		        <example>Если загорелся зелёный машинам, то можно ехать.</example>
+		        <example>Если загорелся зелёный кошке, то ехать нельзя.</example>
+		        <example>Преподавать русский инострацам сложно.</example>
+		        <example>Корзина была полная ягод.</example>
+		        <example>Воспользуемся средним чисел а и б.</example>
+		        <example>После выходных работник смотрелся не важно.</example>
+		        <example correction=""><marker>Железный кровать</marker>.</example>
+               <example>Вдали виднелись красивые сосны.</example>
+                <example correction="">Вдали виднелись <marker>красивый ёлка</marker>.</example>
+                <example>Мебель сделана из красивой сосны.</example>
+                <example correction="">Столы сделаны из <marker>красивая деревьев</marker>.</example>
+                <example correction=""><marker>Твердолобая тори</marker>.</example>
+                <example>Был построен добротный дом.</example>
+                <example correction="">Был построен <marker>добротная дом</marker>.</example>
+                <example>Пушистая кошка грелась на солнышке.</example>
+                <example correction="">Эта <marker>пушистое кошка</marker> грелась.</example>
+                <example>Вдали виднелось синее небо.</example>
+                <example correction="">Вдали виднелось <marker>синий небо</marker>.</example>
+	        </rule>
+
+	        <rule  id="Unify_Adj_NN_case">
+		        <antipattern>
+				        <token postag="ADJ:.*:T" postag_regexp='yes'>
+					        <exception postag="ADJ:.*:T"
+					                   postag_regexp='yes' negate_pos='yes'/>
+				        </token>
+                    <marker>
+				        <token postag="(NN|NNN):.*:Nom" postag_regexp='yes' />
+			        </marker>
+		        </antipattern>
+		        
+		        <antipattern>
+				        <token postag="ADJ:PL:T">
+					        <exception postag="PADJ:.*"
+					                   postag_regexp='yes' scope="previous"/>
+				        </token>
+                    <marker>
+				        <token postag="(NN|NNN):.*:PL:V" postag_regexp='yes' />
+			        </marker>
+		        </antipattern>
+		        <!-- Временными правительства называли журналисты. -->
+		        <antipattern>
+				        <token postag="ADJ:(Masc|Fem|Neut):T" postag_regexp='yes'>
+					        <exception postag="PADJ:.*"
+					                   postag_regexp='yes' scope="previous"/>
+				        </token>
+                    <marker>
+				        <token postag="(NN|NNN):.*:Sin:V" postag_regexp='yes' />
+			        </marker>
+		        </antipattern>
+		        <!-- Временной заплату считали недолго. -->
+
+		        <pattern>
+			        <marker>
+				        <unify negate="yes">
+					        <feature id="case"/>
+					        <token postag="ADJ:.*|ADJ_Com:.*"
+					               postag_regexp="yes">
+						        <exception scope="previous"
+						                   regexp="yes">,|-|—</exception>
+						        <exception postag="PT:.*|ADV|ADJ_Sup|NN:.*" postag_regexp="yes" />
+						        <exception regexp="yes">полн.*|выходн(ых|ые)|средн.*|арифметическ(ое|ие)|подобн.*|отличн.*|книжном|продуктовом|праздную|вещей|возможным|невозможным|собственн(ом|ый)|активн(ым|ыми)|сборной|большее|меньшее</exception>
+						        <exception postag="ADJ:Masc:.*"
+						                   postag_regexp="yes" regexp="yes">
+							        &color;|мобильн.*
+						        </exception>
+						        <exception case_sensitive="yes">Божию</exception>
+					        </token>
+					        <token postag="NN:.*|NNN:.*" postag_regexp="yes">
+						        <exception regexp="yes">друг|уже|уж|при|после|весь|мировой|молодой|куплю|байке|лажа|лазанью</exception>
+						        <exception postag="VB:.*|CONJ|PREP|ADV|ADJ:.*" postag_regexp="yes" />
+						        <!-- Слова без буквы ё имеют неправильный падеж -->
+						        <exception regexp="yes">жилье|белье|щеткой|стерней|сырье</exception>
+						        <exception case_sensitive="yes">Tом</exception>
+					        </token>
+				        </unify>				        
+			        </marker>
+			        <token>
+				        <exception regexp="yes">[«»",]</exception>
+				        <exception postag="NN:.*" postag_regexp="yes"/>
+				        <exception>щеткой</exception>
+			        </token>
+		        </pattern>
+		        <message>Прилагательное не согласуется с
+		        существительным по падежу:
+		        </message>
+		        <example>Ставшие хрестоматийными слова «Природой здесь нам суждено в Европу прорубить окно», которые А. С. Пушкин вкладывает в уста Петра I — лишь риторически эффектная фраза.</example>
+		        <example correction="">Я терпеть не могу эту <marker>глупою женщину</marker>.</example>
+		        <example>Временными правительства называли журналисты.</example>
+		        <example>Временной заплату считали недолго.</example>
+		        <example>Среди них наибольшей известностью пользовались простые шутки.</example>
+		        <example>Среди них большей известностью пользовались простые шутки.</example>
+		        <example>Крепкие столы.</example>
+		        <example>Суеверие — это религия слабых духом.</example>
+		        <example>Счастливые часов не наблюдают.</example>
+		        <example>Смелого пуля боится.</example>
+		        <example>Быть умным Николаю мешала лень.</example>
+		        <example>Делала политически невозможной отмену единожды данных им законом прав.</example>
+		        <example>Этот экспорт, полностью подконтрольный правительствам стран мира, стремительно рос.</example>
+		        <example>Нам объявят необходимым запрет на спиртное.</example>
+		        <example>Нам объявят необходимыми игры на свежем воздухе.</example>
+		        <example>Для оставшихся неготовыми лодок соорудили бокс.</example>
+		        <example>Для оставшейся неготовой лодки соорудили бокс.</example>
+		        <example>Вестминстер — место пребывания короля, а позднее парламента.</example>
+		        <example>Крепкий стол.</example>
+		        <example>Крепкая ограда.</example>
+		        <example>Умные уже тут.</example>
+		        <example>Мы чужие друг другу.</example>
+		        <example>Белый стул.</example>
+		        <example>Больных гриппом просим не входить.</example>
+		        <example>Если загорелся зелёный машинам, то можно ехать.</example>
+		        <example>Если загорелся зелёный кошке, то ехать нельзя.</example>
+		        <example>Преподавать русский инострацам сложно.</example>
+		        <example>Корзина была полная ягод.</example>
+		        <example>Воспользуемся средним чисел а и б.</example>
+		        <example>После выходных работник смотрелся не важно.</example>
+		        <example correction=""><marker>Железная кроватью</marker>.</example>
+                <example>Вдали виднелись красивые сосны.</example>
+                <example correction="">Вдали виднелись <marker>красивой ёлка</marker>.</example>
+                <example>Мебель сделана из красивой сосны.</example>
+                <example>При императрице Екатерине Великой Россия успешно воевала с Турцией</example>
+                <example>При Ярославе Мудром митрополит впервые был избран из числа русских священников</example>
+                <example>В бассейне Нижней Таймыры есть такие объекты как Река Мамонта</example>
+                <!-- <example correction="">Столы сделаны из <marker>красивых куски</marker> древесины.</example> -->
+                <!-- <example correction="">Столы сделаны из <marker>красивых деревья</marker>.</example> -->
+                <example>Был построен добротный дом.</example>
+                <example correction="">Был построен <marker>добротный дому</marker>.</example>
+                <example>Пушистая кошка грелась на солнышке.</example>
+                <example correction="">Эта <marker>пушистая кошкой</marker> грелась.</example>
+                <example>Вдали виднелось синее небо.</example>
+                <example>Оно смотрелось синее неба.</example>
+                <example>Добротная усадьба.</example>
+                <example correction=""><marker>Добротная усадьбе</marker>.</example>
+                <example>Нет крепкого сна.</example>
+                <example correction="">Нет <marker>крепкому сна</marker>.</example>
+                <example>Вода стекала по мягкому жёлобу.</example>
+                <example correction="">Вода стекала по <marker>мягкого жёлобу</marker>.</example>
+                <example>Мы увидели бурной реку и стремительными рыб, идущих против течения.</example>
+                <example>Они справились с бурной рекой</example>
+                <example correction="">Они справились с <marker>бурную рекой</marker>.</example>
+                <example>Они думали о родном доме.</example>
+                <example correction="">Они думали о <marker>родного доме</marker>.</example>
+	        </rule>
         </rulegroup>
+
         
         <rulegroup default="on" id="SoglasovaniePNN_Verb" name="Согласование подлежащего (местоимения) со сказуемым">
             <rule>
@@ -3083,7 +3711,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <rule>
                 <pattern>
                     <!--           NN:Masc:Sin:Nom   VB:Past:Masc   -->
-                    <token postag="SENT_START" skip="-1"><exception scope="next" postag="NN:Fem:Sin:Nom"></exception><exception scope="next" postag="NN:Neut:Sin:Nom"></exception> <exception scope="next" postag_regexp="yes" postag="PNN:.*"></exception></token>
+                    <token postag="SENT_START" skip="-1"><exception scope="next" postag="NN:Fem:Sin:Nom"></exception><exception scope="next" postag="NN:Neut:Sin:Nom"></exception> <exception scope="next" postag_regexp="yes" postag="PNN:.*"></exception></token>           
                     <marker>
                         <token postag="NN:Masc:Sin:Nom"><exception negate_pos="yes" postag="NN:Masc:Sin:Nom"></exception></token>
                         <token postag="VB:Past:.*" postag_regexp="yes" skip="-1"><exception postag="VB:Past:Masc"></exception><exception postag="VB:Past:PL"></exception><exception negate_pos="yes" postag_regexp="yes" postag="VB:Past:.*"></exception> <exception scope="next" postag="NN:Fem:Sin:Nom"></exception><exception scope="next" postag="NN:Neut:Sin:Nom"></exception></token>
@@ -3432,6 +4060,49 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example>Здесь были четыре подруги.</example>
                 <example correction="четыре подруги">Здесь были <marker>четверо подруг</marker>.</example>
             </rule>
+            <rule>
+                <pattern>
+                    <token>двое</token>
+                    <token regexp="yes" >волков|медведей|котов|кабанов</token>
+                </pattern>
+                <message>Собирательные числительные (двое, трое, четверо, пятеро, шестеро, семеро) не употребляются с названиями взрослых особей животных: <suggestion>два <match no="2" postag="NN:(.*):PL:R" postag_regexp="yes" postag_replace="NN:$1:Sin:R"></match></suggestion></message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%B1%D0%B8%D1%80%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5</url>
+                <short>Грамматическая ошибка.</short>
+                <example>В зоопарке находились два волка.</example>
+                <example correction="два медведя">В зоопарке находились <marker>двое медведей</marker>.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <token>трое</token>
+                    <token regexp="yes" >волков|медведей|котов|кабанов</token>
+                </pattern>
+                <message>Собирательные числительные (двое, трое, четверо, пятеро, шестеро, семеро) не употребляются с названиями взрослых особей животных: <suggestion>три <match no="2" postag="NN:(.*):PL:R" postag_regexp="yes" postag_replace="NN:$1:Sin:R"></match></suggestion></message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%B1%D0%B8%D1%80%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5</url>
+                <short>Грамматическая ошибка.</short>
+                <example>В зоопарке находились три волка.</example>
+                <example correction="три медведя">В зоопарке находились <marker>трое медведей</marker>.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <token>четверо</token>
+                    <token regexp="yes" >волков|медведей|котов|кабанов</token>
+                </pattern>
+                <message>Собирательные числительные (двое, трое, четверо, пятеро, шестеро, семеро) не употребляются с названиями взрослых особей животных: <suggestion>четыре <match no="2" postag="NN:(.*):PL:R" postag_regexp="yes" postag_replace="NN:$1:Sin:R"></match></suggestion></message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%B1%D0%B8%D1%80%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5</url>
+                <short>Грамматическая ошибка.</short>
+                <example>В зоопарке находились четыре волка.</example>
+                <example correction="четыре медведя">В зоопарке находились <marker>четверо медведей</marker>.</example>
+            </rule>
+             <rule>
+                <pattern>
+                    <token regexp="yes">пятеро|шестеро|семеро</token>
+                    <token regexp="yes" >волков|медведей|котов|кабанов|собак|кошек|тигров|леопардов|львов</token>
+                </pattern>
+                <message>Собирательные числительные (двое, трое, четверо, пятеро, шестеро, семеро) не употребляются с названиями взрослых особей животных: <suggestion><match no="1" regexp_match="(пят|шест|сем)еро" regexp_replace="$1ь"></match> <match no="2"></match></suggestion></message>
+                <url>http://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%B1%D0%B8%D1%80%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5</url>
+                <short>Грамматическая ошибка.</short>
+                <example correction="семь волков">В зоопарке находились <marker>семеро волков</marker>.</example>
+            </rule>
         </rulegroup>
 
         <rulegroup default="on" id="Para_NN" name="Числительное «пара» + существительное">
@@ -3592,6 +4263,125 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example correction="Как будто"><marker>Какбудто</marker> время остановилось.</example>
             </rule>
         </rulegroup>
+         <rulegroup default="on" id="Pravopisanie_s_odnoj" name="Словосочетание  «с одной»">    
+            <rule>
+                <pattern>
+                    <marker>
+                        <token>с</token>
+                        <token>одной</token>
+                    </marker>        
+                    <token><exception   postag_regexp="yes" postag="NN:Fem:Sin:T|NN:Fem:Sin:R|ADJ:.*|ABR|PT:.*|PREP|CONJ|ADV"></exception><exception regexp="yes">[,"«.;:]</exception><exception>ВПП</exception></token>
+                </pattern>
+                <message>Пропущено слово.</message>
+                <short>Пропущено слово.</short>
+                <example correction=""><marker>С одной</marker> оптимизатору было проще найти минимум.</example>
+                <example>С одной стороны оптимизатору было проще найти минимум.</example>
+                <example>Микроскопы Ван Левенгука представляли собой относительно небольшие изделия с одной очень сильной линзой.</example>
+            </rule>
+        </rulegroup>
+        <rulegroup default="on" id="Pravopisanie_po-prezhnemu" name="Правописание слов «по-прежнему» или «по прежнему»">    
+            <rule>
+                <pattern>
+                    <marker>
+                        <token>по</token>
+                        <token  postag="ADJ:Masc:D" />
+                    </marker>
+                    <token>,</token>
+                    <token skip="-1">
+                        <exception scope="next" postag_regexp="yes" postag="NN:Masc:.*:D|NN:Neut:.*:D" />
+                    </token>
+                    <token postag="SENT_END" />
+                </pattern>
+                <message>Слово пишется через дефис: <suggestion>\1-\2</suggestion>.</message>
+                <short>Пишется слитно.</short>
+                <example correction="по-зимнему">Я оделся <marker>по зимнему</marker>, так как было холодно.</example>
+                <example correction="по-хорошему">Давай <marker>по хорошему</marker>, иначе будет грустно.</example>
+                <example correction="по-прежнему">Я поступлю <marker>по прежнему</marker>, как бы вы меня ни уговаривали.</example>
+                <example correction="по-прежнему">Я поступлю <marker>по прежнему</marker>, как меня не уговаривай и чем меня не заманивай в эту ловушку.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <marker>
+                        <token>по</token>
+                        <token  postag="ADJ:Masc:D">
+                            <exception regexp="yes">черному|чёрному|белому|красному|синему|желтому|жёлтому|русскому|прусскому|австрийскому|английскому|немецкому|французскому|испанскому|португальскому|голландскому|датскому|китайскому|японскому|арабскому|индийскому|армянскому|грузинскому|польскому|чешскому</exception>
+                        </token>
+                    </marker>
+                    <token>.</token>
+                </pattern>
+                <message>Слово пишется через дефис: <suggestion>\1-\2</suggestion>.</message>
+                <short>Пишется слитно.</short>
+                <example correction="по-зимнему">Я оделся <marker>по зимнему</marker>.</example>
+                <example correction="по-хорошему">Давай <marker>по хорошему</marker>.</example>
+                <example correction="по-прежнему">Я поступлю <marker>по прежнему</marker>.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <marker>
+                        <token>по</token>
+                        <token  postag="ADJ:Masc:D">
+                            <exception regexp="yes">черному|чёрному|белому|красному|синему|желтому|жёлтому|русскому|прусскому|австрийскому|английскому|немецкому|французскому|испанскому|португальскому|голландскому|датскому|китайскому|японскому|арабскому|индийскому|армянскому|грузинскому|польскому|чешскому</exception>
+                        </token>
+                    </marker>
+                    <token skip="-1">
+                        <exception postag_regexp="yes" postag="NN:Masc:.*:D|NN:Neut:.*:D" />
+                        <exception scope="next" postag_regexp="yes" postag="NN:Masc:.*:D|NN:Neut:.*:D" />
+                    </token>
+                    <token>,</token>
+                    <token skip="-1">
+                        <exception scope="next" postag_regexp="yes" postag="NN:Masc:.*:D|NN:Neut:.*:D" />
+                    </token>
+                    <token postag="SENT_END" />
+                </pattern>
+                <message>Слово пишется через дефис: <suggestion>\1-\2</suggestion>.</message>
+                <short>Пишется слитно.</short>
+                <example correction="по-зимнему">Я оделся <marker>по зимнему</marker> тепло, так как было холодно.</example>
+                <example correction="по-хорошему">Давай <marker>по хорошему</marker> разберёмся, иначе будет грустно.</example>
+                <example correction="по-прежнему">Я поступлю <marker>по прежнему</marker> отчаянно, как бы вы меня ни уговаривали.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <marker>
+                        <token>по</token>
+			<token  postag="ADJ:Masc:D" case_sensitive="yes">
+                            <exception regexp="yes">[А-Я].*|черному|чёрному|белому|красному|синему|желтому|жёлтому|русскому|прусскому|австрийскому|английскому|немецкому|французскому|испанскому|португальскому|голландскому|датскому|китайскому|японскому|арабскому|индийскому|армянскому|грузинскому|польскому|чешскому</exception>
+                        </token>
+                    </marker>
+                    <token skip="-1">
+                        <exception postag_regexp="yes" postag="NN:Masc:.*:D|NN:Neut:.*:D" />
+                        <exception scope="next" postag_regexp="yes" postag="NN:Masc:.*:D|NN:Neut:.*:D" />
+                        <exception>IP-адресу</exception>
+                    </token>
+                    <token>.</token>
+                </pattern>
+                <message>Слово пишется через дефис: <suggestion>\1-\2</suggestion>.</message>
+                <short>Пишется слитно.</short>
+                <example correction="по-зимнему">Я оделся <marker>по зимнему</marker> тепло.</example>
+                <example correction="по-хорошему">Давай <marker>по хорошему</marker> разберёмся.</example>
+                <example correction="по-прежнему">Я поступлю <marker>по прежнему</marker> отчаянно.</example>
+            </rule>
+
+            <rule>
+                <pattern>
+                    <marker>
+                        <token postag="ADV" regexp="yes" skip="1">по-.*<exception regexp="yes">по-моему|по-твоему|по-нашему|по-вашему|по-разному</exception></token>
+                    </marker>
+                    <token skip="-1"  postag_regexp="yes" postag="NN:Masc:Sin:D|NN:Neut:Sin:D">
+                    <!--<exception>IP-адресу</exception>-->
+                    </token>
+                    <token postag="SENT_END" />                
+                </pattern>
+                <message>Слова пишутся раздельно: <suggestion>по <match no="1" regexp_match="([пП]о-)(.*)" regexp_replace="$2"></match></suggestion>.</message>
+                <short>Пишется слитно.</short>
+                <example correction="по прежнему">Я спускаюсь к речке <marker>по-прежнему</marker>, знакомому с самого детства, пути.</example>
+                <example correction="по прежнему">Я спускаюсь к речке <marker>по-прежнему</marker> пути, знакомому с самого детства.</example>
+                <example> По-моему, снегу осталось лежать совсем не долго.</example>
+                <example> Как, по-вашему, снегу лежать еще долго?</example>
+                <example correction="по весеннему">Лисица проваливалась <marker>по-весеннему</marker> снегу.</example>
+                <example> Россия, по-прежнему, стоит в ряду развивающихся стран.</example>
+                <!--<example correction="по весеннему">Лисица проваливалась <marker>по-весеннему</marker>, совсем талому снегу.</example>-->
+            </rule>
+        </rulegroup>
         <rulegroup default="on" id="Pravopisanie_slitno1" name="Правописание слов «наверху», «внизу» ...">
     
 
@@ -3625,7 +4415,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                     <token regexp="yes" >встречу|счёт|счет</token>  <!--<exception scope="next" postag_regexp="yes" postag="*.:R"></exception>  в-->
                     </marker>
                     <token>
-                        <exception  postag="PREP"></exception><exception  regexp="yes" inflected="yes">поставщик|заказчик|контрагент</exception>
+                        <exception  postag="PREP"></exception><exception postag_regexp="yes" postag="VB:.*"></exception><exception  regexp="yes" inflected="yes">поставщик|заказчик|контрагент|покупатель|продавец|исполнитель|денежный</exception>
                     </token>
                 </pattern>
                 <message>Слово пишется слитно: <suggestion>\1\2</suggestion>.</message>
@@ -3787,6 +4577,41 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example correction="невзирая на">Премия в этом году состоялась <marker>не взирая на</marker> кризис.</example>
             </rule>
         </rulegroup>
+        <rulegroup id="TO_JE" name="«Тоже/то же">
+          <rule>
+            <pattern>
+                <token>тоже<exception postag="NN:.*:.*:.*|PNN:.*" postag_regexp="yes" scope="previous"></exception></token>
+                <token postag="NN:Neut:.*" postag_regexp="yes"></token>
+            </pattern>
+            <message>Пишется раздельно:<suggestion>то же \2</suggestion>.</message>
+            <url>http://lik-bez.com/board/orfografija/slitno_razdelno_cherez_defis/to_zhe_tak_zhe/64-1-0-303</url>
+            <short>Пишется раздельно.</short>
+            <example correction="то же время">Буду в <marker>тоже время</marker>.</example>
+            <example>Буду в то же время.</example>
+            <example>Сосна тоже дерево, только хвойное.</example>
+         </rule>
+         <rule>
+            <pattern>
+                <token>тоже<exception postag="NN:.*:.*:.*" postag_regexp="yes" scope="previous"></exception></token>
+                <token>самое</token>
+            </pattern>
+            <message>Пишется раздельно:<suggestion>то же \2</suggestion>.</message>
+            <url>http://lik-bez.com/board/orfografija/slitno_razdelno_cherez_defis/to_zhe_tak_zhe/64-1-0-303</url>
+            <short>Пишется раздельно.</short>
+            <example correction="то же самое">Буду в <marker>тоже самое</marker> время.</example>           
+         </rule>
+         <rule>
+            <pattern>
+                <token>тоже<exception postag="NN:.*:.*:.*" postag_regexp="yes" scope="previous"></exception></token>
+                <token>,</token>
+                <token>что</token>
+            </pattern>
+            <message>Пишется раздельно:<suggestion>то же\2 \3</suggestion>.</message>
+            <url>http://lik-bez.com/board/orfografija/slitno_razdelno_cherez_defis/to_zhe_tak_zhe/64-1-0-303</url>
+            <short>Пишется раздельно.</short>
+            <example correction="то же, что">Сегодня <marker>тоже, что</marker> и вчера.</example>           
+         </rule>
+        </rulegroup>
         <rulegroup default="on" id="i_tak_dalee" name="«И так далее»">
             <rule>
                 <pattern case_sensitive="no">
@@ -3841,7 +4666,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example correction="так же как и">Мы, <marker>также как и</marker> наши товарищи, любим заниматься спортом.</example>
             </rule>
         </rulegroup>
-        
+        <rule id="TAK_JE_KAK" name="Сложный союз «так же как»">
+            <pattern>
+                <token>,</token>
+                <marker>
+                <token>так</token>
+                <token>же</token>
+                <token >,</token>
+                <token>как</token>
+                </marker>
+            </pattern>
+            <message>Запятая не нужна:<suggestion><match no="2"/> <match no="3"/> <match no="5"/></suggestion></message>
+ <!--           <url>http://new.gramota.ru/spravka/punctum?layout=item&id=58_710</url>    -->
+            <short>Запятая не нужна</short>
+            <example correction="так же как">Мы, <marker>так же, как</marker> и наши товарищи, любим заниматься спортом.</example>
+        </rule>
         <rulegroup default="on" id="Ni_to_ni_drugoe" name="Сложный союз «ни то, ни другое»">
             <rule>
                 <pattern case_sensitive="no">
@@ -4211,6 +5050,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             </rule>
             <rule>
                 <pattern>
+                    <token>в</token>
+                    <or>
+                    <token regexp="yes" case_sensitive="yes" >в[бвгджзклмнпрстфхчшщ].*</token>
+                    <token regexp="yes" case_sensitive="yes" >Втор.*</token>
+                    </or>
+                </pattern>
+                <message>Правильная форма предлога: <suggestion>во \2</suggestion>.</message>
+                <short>Беглая гласная.</short>
+                <example>Хождение во власть.</example>
+                <example correction="во власть">Хождение <marker>в власть</marker>.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <token>в</token>
+                    <token regexp="yes" case_sensitive="yes" >В[бвгджзклмнпрстфхчшщ].*</token>
+                </pattern>
+                <message>Правильная форма предлога: <suggestion>во \2</suggestion>.</message>
+                <short>Беглая гласная.</short>
+                <example>Жить во Владивостоке.</example>
+                <example correction="во Владимир">Приехал <marker>в Владимир</marker>.</example>
+                <example correction="Во Внуково"><marker>В Внуково</marker> я успел.</example>
+            </rule>
+            <rule>
+                <pattern>
                     <token>ко</token>
                     <token regexp="yes">[аеёиоуыэюяьън].*</token>
                 </pattern>
@@ -4241,25 +5104,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             </rule>
             <rule>
                 <pattern>
-                    <token>изо</token>
+                    <token case_sensitive="yes" regexp="yes">Изо|изо</token>
                     <token regexp="yes">[аеёиоуыэюяьън].*</token>
                 </pattern>
                 <message>Неправильная форма предлога. Буква &quot;о&quot; не нужна: <suggestion>из \2</suggestion>.</message>
                 <short>Буква &quot;о&quot; не нужна.</short>
                 <example>Из окна выпал пакет.</example>
+                <example>На ИЗО одному мальчику не хватило красок.</example>
                 <example correction="Из окна"><marker>Изо окна</marker> выпал пакет.</example>
             </rule>
         </rulegroup>
-        <rulegroup default="off" id="S_SO" name="Беглая гласная в предлогах: «c», «co»">
+        <rulegroup default="on" id="S_SO" name="Беглая гласная в предлогах: «c», «co»">
             <rule>
                 <pattern>
                     <token>с</token>
-                    <token regexp="yes">[сзшжлрмщ][йцкнгшщзхфвпрлджчсмтб].*|ль[йцкнгшщзхфвпрлджчсмтб].*</token>
+                    <token regexp="yes" case_sensitive="yes" >[сзшжлрмщ][йцкнгшщзхфвпрлджчсмтб].*|ль[йцкнгшщзхфвпрлджчсмтб].*</token>
                 </pattern>
                 <message>Неправильная форма предлога. Исправление: <suggestion>со \2</suggestion>.</message>
                 <short>Неправильная форма предлога.</short>
                 <example>Кошка спрыгнула со шкафа.</example>
                 <example correction="со шкафа">Кошка спрыгнула <marker>с шкафа</marker>.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <token>с</token>
+                    <token regexp="yes" case_sensitive="yes" >С[бвгджзклмнпрстфхчшщ].*<exception>СвДП</exception></token>
+                </pattern>
+                <message>Неправильная форма предлога. Исправление: <suggestion>со \2</suggestion>.</message>
+                <short>Неправильная форма предлога.</short>
+                <example>Co Степаном я знаком</example>
+                <example correction="Со Смирновым"><marker>С Смирновым</marker> я знаком.</example>
+                <example correction="со Степаном"> Я встретился <marker>с Степаном</marker>.</example>
+                <!-- <example correction="со СвДП"> ХСС делила власть <marker>с СвДП</marker>.</example> -->
             </rule>
         </rulegroup>
         <rulegroup default="on" id="Vo_izbezhanie" name="Правописание предлога «во избежание»">
@@ -4310,10 +5186,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
         <rule default="on" id="Verb_and_Verb" name="Глагол и глагол">
             <pattern case_sensitive="yes">
                 <!--     VB:.*  VB:.* (VB:INF)            -->
-                <token postag="VB:.*" postag_regexp="yes" regexp="yes">[а-яё].*<exception postag="VB:INF"></exception>
+       <!--         <token postag="VB:.*" postag_regexp="yes" regexp="yes">[а-яё].*<exception postag="VB:INF"></exception>
                     <exception postag_regexp="yes" negate_pos="yes" postag="VB:.*"></exception><exception postag="ADV"></exception>
                     <exception regexp="yes">трём|давай|давайте|иди</exception>
-                </token>
+                </token>   -->
+                <token regexp="yes">будет|стало</token>
                 <token postag="VB:.*" postag_regexp="yes">
                     <exception postag="VB:INF"></exception>
                     <exception postag_regexp="yes" negate_pos="yes" postag="VB:.*"></exception>
@@ -4613,7 +5490,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <example correction="сквозь стеклянного|сквозь стеклянное|сквозь стеклянный|стеклянному">Луч света попал <marker>сквозь стеклянному</marker> окно в комнату.</example>
         </rule>
         
-        <rule default="on" id="PREP_Pri_and_Noun" name="Предлог «при» и существительное">
+        <rulegroup default="on" id="PREP_V_and_Noun" name="Предлог «в» и существительное">
+            <rule>
+            <pattern>
+                <!--              PREP при -> NN:.:.:V или NN:.:.P  исключение для "в учителя",... -->
+                <token>в</token>
+                <token postag="NN:.*:.*:.*" postag_regexp="yes"><exception regexp="yes">тысяча|миллион</exception><exception postag="NN:.*:.*:R" postag_regexp="yes" regexp="yes">.*y</exception><exception postag="NN:.*:.*:(P|V)" postag_regexp="yes"></exception><exception postag="NN:.*:.*:.*" negate_pos="yes" postag_regexp="yes"></exception><exception postag="NN:.*:PL:Nom" postag_regexp="yes"></exception></token> 
+            </pattern>
+            <message>Предлог «в» предполагает употребление существительного в винительном или предложном падеже: <suggestion><match no="1"></match> <match no="2" postag="NN:(.*):(.*):.*" postag_regexp="yes" postag_replace="NN:$1:$2:P"></match></suggestion> или <suggestion><match no="1"></match> <match no="2" postag="NN:(.*):(.*):.*" postag_regexp="yes" postag_replace="NN:$1:$2:V"></match></suggestion> </message>
+            <short>Требуется винительный или предложный падеж.</short>
+            <example>Он смотрел в окно.</example>
+            <example>в дыму</example>
+            <example>Дебаты кандидатов в депутаты.</example>
+            <example correction="в окне|в окно">Я увидел её <marker>в окном</marker>.</example>
+        </rule>
+        </rulegroup>
+        <rulegroup default="on" id="PREP_Pri_and_Noun" name="Предлог «при» и существительное">
+            <rule>
             <pattern>
                 <!--              PREP при -> NN:.*:P   -->
                 <token>при</token>
@@ -4630,6 +5523,43 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <example>Лаборатория была создана при центре.</example>
             <example correction="при центре|центр">Лаборатория была создана <marker>при центр</marker>.</example>
         </rule>
+        <rule>
+            <pattern>
+                <!--              PREP при -> NN:.*:P   -->
+                <token>при</token>
+                <token postag="NN:.*:.*:P" postag_regexp="yes"></token>
+                <token>и</token>
+                <token postag="NN:.*:.*:.*" postag_regexp="yes">
+                    <exception postag="NN:.*:.*:P" postag_regexp="yes"></exception>
+                    <exception postag="NN:.*:.*:.*" negate_pos="yes" postag_regexp="yes"></exception>
+                </token>
+            </pattern>
+            <message>Предлог «при» предполагает употребление существительного в предложном падеже:
+                <suggestion><match no="1"></match> <match no="2"></match> <match no="3"></match> <match no="4" postag="NN:(.*):(.*):.*" postag_regexp="yes" postag_replace="NN:$1:$2:P"></match></suggestion>
+            </message>
+            <short>Требуется предложный падеж.</short>
+            <example>В университете лаборатории созданы при кафедре и факультете.</example>
+            <example correction="при кафедре и факультете">В университете лаборатории созданы <marker>при кафедре и факультет</marker>.</example>
+        </rule>
+                <rule>
+            <pattern>
+                <!--              PREP при -> NN:.*:P   -->
+                <token>при</token>
+                <token postag="NN:.*:.*:P" postag_regexp="yes"></token>
+                <token>,</token>
+                <token postag="NN:.*:.*:.*" postag_regexp="yes">
+                    <exception postag="NN:.*:.*:P" postag_regexp="yes"></exception>
+                    <exception postag="NN:.*:.*:.*" negate_pos="yes" postag_regexp="yes"></exception>
+                </token>
+            </pattern>
+            <message>Предлог «при» предполагает употребление существительного в предложном падеже:
+                <suggestion><match no="1"></match> <match no="2"></match><match no="3"></match> <match no="4" postag="NN:(.*):(.*):.*" postag_regexp="yes" postag_replace="NN:$1:$2:P"></match></suggestion>
+            </message>
+            <short>Требуется предложный падеж.</short>
+            <example>В университете лаборатории созданы при кафедре, факультете.</example>
+            <example correction="при кафедре, факультете">В университете лаборатории созданы <marker>при кафедре, факультет</marker>.</example>
+        </rule>
+        </rulegroup>
         <rule default="on" id="PREP_Pri_and_ADJ" name="Предлог «при» и прилагательное">
             <pattern>
                 <!--              PREP при -> ADJ:.*:P   -->
@@ -4700,6 +5630,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <example><marker>Управляющий предприятием</marker> общественного питания.</example>
             <example correction="Управляющий предприятием|Управляющий предприятиями|Управляющий предприятьем|Управляющий предприятьями"><marker>Управляющий предприятия</marker> общественного питания.</example>
         </rule>
+	
+	<rule default="on" id="plit_lodkoj" name="Словосочетание «плыть лодкой» --> «плыть на лодке»">
+            <pattern case_sensitive="no">
+                <!--          -->
+                <token regexp="yes" inflected="yes">летать|плыть</token>
+                <token regexp="yes">лодкой|вертолётом|кораблём|самолётом</token>
+            </pattern>
+            <message>Существительное \1 предполагает употребление зависимого слова в предложном падеже:
+                <suggestion><match no="1"></match> на <match no="2" postag="NN:(.*):(.*):.*" postag_regexp="yes" postag_replace="NN:$1:$2:P"></match></suggestion></message>
+            <short>Требуется предложный падеж.</short>
+           
+            <example correction="плыть на лодке"><marker>плыть лодкой</marker></example>
+        </rule>
         
         <rule default="on" id="vopreki_NN" name="Предлог «вопреки» + существительное">
             <pattern case_sensitive="no">
@@ -4768,6 +5711,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             <short>Пишется слитно</short>
             <example>Южнокорейский консорциум может поучаствовать в проекте.</example>
             <example correction="поучаствовать">Южнокорейский консорциум может <marker>по участвовать</marker> в проекте.</example>
+        </rule>
+        <rule id="Potok_and_Noun" name="Словосочетание «поток» и существительное">
+	        <pattern>
+	            <token inflected="yes" regexp="yes">поток|направление<exception scope="previous" postag="VB:.*" postag_regexp="yes" /><exception regexp="yes">поток(ом|ами)</exception><exception scope="previous" postag="ADJ:.*:P|PADJ:.*:P" postag_regexp="yes" /><exception regexp="yes">направлен(ии|иях)</exception></token>
+                <token postag_regexp="yes" postag="NN:.*">
+                <exception postag_regexp="yes" postag="NN:.*:(R|T)"></exception>
+                <exception negate="yes" case_sensitive="yes" regexp="yes">[а-я].*</exception>
+                </token>
+            </pattern>
+            <message>После слов "поток" и "направление" существительные используются в родительном и творительном падеже.</message>
+            <short>Словосочетание «поток» и существительное</short>
+            <example correction=""><marker>Направление движению</marker></example>
+            <example correction="">По <marker>направлению движению</marker></example>
+            <example correction="">Линия <marker>потока энергия</marker></example>
+            <example correction=""> <marker>Поток энергия</marker></example>
+            <example>Указал направление рукой</example>
+            <example>Поток энергии</example>
+            <example>Поток стрелой устремился вниз с горы</example>
+            <example>Направление Голова</example>
         </rule>
         
         <rule id="V_TECHENII" name="Словосочетание «в течении реки»">
@@ -4901,6 +5863,53 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
             </rule>
         </rulegroup>
         
+        <rule id="KTO_VB_PL" name="Местоимение «кто» и глагол">
+            <pattern>
+                <token>кто</token>
+                <token postag="VB:.*:PL" postag_regexp="yes"><exception postag_regexp="yes" negate_pos="yes" postag="VB:.*:PL"></exception></token>
+            </pattern>
+            <message>Местоимение «кто» употребляется только с глаголами в форме единственного числа:<suggestion><match no="1"></match> <match no="2" postag_regexp="yes" postag="VB:(.*):PL" postag_replace="VB:Past:Masc" ></match></suggestion></message>
+            <short>Глагол употребляется в ед. числе.</short>
+            <example correction="кто ходил">Все, <marker>кто ходили</marker> в лес, остались довольны походом.</example>
+            <example>Все, кто ходил в лес, остались довольны походом.</example>
+        </rule>         
+                                                  
+        <rulegroup default="on" id="chto_li" name="Употребление союза «что» в придаточной части при наличии «ли»">
+            <rule>
+                <pattern>
+                    <marker>
+                        <token>,</token>
+                        <token>что</token>
+                    </marker>
+                    <token></token>
+                    <token min="0" max="2"></token>
+                    <token>ли</token>
+                </pattern>
+                <message>Лишний союз «что»: <suggestion>\1</suggestion></message>
+
+                <short>Лишний союз «что».</short>
+                <example>Я не заметил, что находится он в комнате.</example>
+                <example correction=",">Я не заметил<marker>, что</marker> находится ли он в комнате.</example>
+            </rule>
+        </rulegroup>
+        <rulegroup default="on" id="B_S_kosvr" name="Большая или маленькая буква в цитате при передаче косвенной речи">
+            <rule>
+                <pattern case_sensitive="yes">
+                    <token>,</token>
+                    <marker>
+                        <token>что</token>
+                        <token regexp="yes">["«]</token>
+                        <token regexp="yes">[А-Я].*<exception postag_regexp="yes" postag="NNN:.*|NNF:.*|NNP:.*|ABR|UNKNOWN"></exception></token>
+                    </marker>
+                    <token></token>
+                </pattern>
+                <message>Использование большой буквы в цитате при передаче косвенной речи является ошибкой: <suggestion><match no="2"></match> <match no="3"></match><match no="4" case_conversion="alllower"></match></suggestion></message>
+                <short>Требуется маленькая буква.</short>
+                <example>Как сказал А.П. Чехов, что «в человеке должно быть все прекрасно».</example>
+                <example correction="что «в">Как сказал А.П. Чехов, <marker>что «В</marker> человеке должно быть все прекрасно».</example>
+            </rule>
+        </rulegroup>
+        
         <rulegroup default="on" id="bolee_ili_menee_k" name="Словосочетание «более или менее конкретны»">
             <rule>
                 <pattern>
@@ -4966,12 +5975,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 -->
                 <pattern>
                     <token>не</token>
-                    <token postag_regexp="yes" regexp="yes">(не)[а-я](.*)<exception regexp="yes">незнаком(.*)|немец(.*)|ненавид(.*)|нескольк(.*)</exception></token>
+                    <token postag_regexp="yes" regexp="yes">(не)[а-я](.*)<exception regexp="yes">незнаком(.*)|немец(.*)|ненавид(.*)|нескольк(.*)|нес(.*)</exception></token>
                 </pattern>
                 <message>Не ставьте два «не» подряд, если это не оправдано смыслом предложения.</message>
                 <short>Не ставьте два «не» подряд.</short>
                 <example>Эта книга интересная.</example>
                 <example>Это не только не критично, но и оправданно.</example>
+                <example>Это не несёт никакой нагрузки.</example>
                 <example correction="">Эта книга <marker>не неинтересная</marker>.</example>
             </rule>
         </rulegroup>
@@ -4983,7 +5993,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 -->
                 <pattern>
                     <marker>
-                        <token skip="-1">не<exception  scope="next" regexp="yes">[,:;]</exception></token>
+                        <token skip="-1">не<exception  scope="next" regexp="yes">[,:;]</exception><exception  scope="next">и</exception></token>
                         <token skip="-1">не</token>
                     </marker>
                     <token regexp="yes">[.!?:;]</token>
@@ -4992,6 +6002,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <short>Не ставьте два «не» подряд.</short>
                 <example>Cледует пытаться избегать двойных отрицаний.</example>
                 <example>Если вы не знали меня с этой стороны, то вы вообще меня не знали.</example>
+                <example>Заявка не рассматривается и не оценивается.</example>
                 <example correction=""><marker>Не следует пытаться не</marker> избегать двойных отрицаний.</example>
             </rule>
         </rulegroup>                 
@@ -5031,7 +6042,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 <example>Кнопка выбора пути файла для сохранения цвета фона.</example>
                 <example correction="">Кнопка <marker>выбора файла сохранения цвета фона</marker>.</example>
             </rule>
-        </rulegroup>   
+       </rulegroup>
+       <rule default="on" id="prep_prep" name="Два предлога подряд">
+           <pattern case_sensitive="yes">
+               <token postag="PREP"><exception negate_pos="yes" postag="PREP"></exception><exception regexp="yes">ПО|По|К|ИЗО</exception></token>
+               <token postag="PREP"><exception negate_pos="yes" postag="PREP"></exception><exception regexp="yes">[А-Я].*</exception></token>
+           </pattern>
+           <message>Два предлога подряд: <suggestion>\1</suggestion> или <suggestion>\2</suggestion></message>
+           <short>Два предлога подряд</short>
+           <example correction="на|в">Кошка прыгнула <marker>на в</marker> окно.</example>
+       </rule>   
        <rulegroup default="on" id="kommentirovat_prep" name="Словосочетание «комментировать» + предлог">
             <rule>
                 <pattern>

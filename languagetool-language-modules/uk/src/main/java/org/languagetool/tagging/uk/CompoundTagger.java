@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +39,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.lucene.util.CollectionUtil;
 import org.jetbrains.annotations.Nullable;
 import org.languagetool.AnalyzedToken;
 import org.languagetool.JLanguageTool;
@@ -80,10 +82,20 @@ class CompoundTagger {
   private static final String ADJ_TAG_FOR_PO_ADV_NAZ = "adj:m:v_naz";
 
   private static final List<String> LEFT_O_ADJ = Arrays.asList(
-      "австро", "адиго", "американо", "англо", "афро", "еко", "етно", "індо", "іспано", "києво", 
-      "марокано", "угро"
-    );
+    "австро", "адиго", "американо", "англо", "афро", "еко", "етно", "іспано", "києво", 
+    "марокано", "угро"
+  );
 
+  private static final List<String> LEFT_INVALID = Arrays.asList(
+    "авіа", "авто", "агро", "біо", "вело", "водо", "газо", "геліо", "гео", "гідро", "давньо", "древньо", "екзо",
+    "екстра", "електро", "зоо", "ізо", "квазі", "кіно", "космо", "контр", "лже", "максимально", "мінімально", "макро", "мета",
+    "метео", "мікро", "мілі", "моно", "мото", "мульти", "напів", "нео", "палео", "псевдо", "радіо",
+    "рентгено", "соціо", "стерео", "супер", "теле", "термо", "турбо", "фоно", "фото"
+  );
+
+  private static final List<String> LEFT_O_ADJ_INVALID = Arrays.asList(
+    "багато", "мало", "високо", "низько"
+  );
 
   static {
     Map<String, List<String>> map2 = new HashMap<>();
@@ -91,24 +103,25 @@ class CompoundTagger {
     map2.put("го", Arrays.asList(":m:v_rod", ":m:v_zna:ranim", ":n:v_rod"));
     map2.put("му", Arrays.asList(":m:v_dav", ":m:v_mis", ":n:v_dav", ":n:v_mis", ":f:v_zna"));  // TODO: depends on the last digit
     map2.put("м", Arrays.asList(":m:v_oru", ":n:v_oru", ":p:v_dav"));
-//    map2.put("им", Arrays.asList(":m:v_oru", ":n:v_oru", ":p:v_dav"));
-//    map2.put("ім", Arrays.asList(":m:v_mis", ":n:v_mis"));
-//    map2.put("ша", Arrays.asList(":f:v_naz"));
-//    map2.put("га", Arrays.asList(":f:v_naz"));
-//    map2.put("та", Arrays.asList(":f:v_naz"));
-//    map2.put("тої", Arrays.asList(":f:v_rod"));
+    map2.put("им", Arrays.asList(":m:v_oru", ":n:v_oru", ":p:v_dav"));
+    map2.put("ім", Arrays.asList(":m:v_oru", ":m:v_mis", ":n:v_oru", ":n:v_mis"));
+//    map2.put("ша", Arrays.asList(":f:v_naz")); // 1-ша
+//    map2.put("га", Arrays.asList(":f:v_naz")); // 2-га
+//    map2.put("тя", Arrays.asList(":f:v_naz")); // 3-тя
+//    map2.put("та", Arrays.asList(":f:v_naz")); // 4-та
+//    map2.put("тої", Arrays.asList(":f:v_rod")); // 4-тої
 //    map2.put("тій", Arrays.asList(":f:v_dav", ":f:v_mis"));
-//    map2.put("ту", Arrays.asList(":f:v_zna"));
-//    map2.put("тою", Arrays.asList(":f:v_oru"));
+    map2.put("ту", Arrays.asList(":f:v_zna"));
+    map2.put("тою", Arrays.asList(":f:v_oru"));
     map2.put("те", Arrays.asList(":n:v_naz", ":n:v_zna"));
     map2.put("ті", Arrays.asList(":p:v_naz", ":p:v_zna"));
     map2.put("х", Arrays.asList(":p:v_rod", ":p:v_zna", ":p:v_mis"));
     NUMR_ENDING_MAP = Collections.unmodifiableMap(map2);
     
-    rightPartsWithLeftTagMap.put("бо", Pattern.compile("(verb.*:impr|.*pron|noun|adv|excl|part|predic).*"));
-    rightPartsWithLeftTagMap.put("но", Pattern.compile("(verb.*:(impr|futr)|excl).*")); 
+    rightPartsWithLeftTagMap.put("бо", Pattern.compile("(verb.*:impr|.*pron|noun|adv|intj|part|predic).*"));
+    rightPartsWithLeftTagMap.put("но", Pattern.compile("(verb.*:(impr|futr)|intj).*")); 
     rightPartsWithLeftTagMap.put("от", Pattern.compile("(.*pron|adv|part).*"));
-    rightPartsWithLeftTagMap.put("то", Pattern.compile("(.*pron|noun|adv|part|conj).*"));
+    rightPartsWithLeftTagMap.put("то", Pattern.compile("(.*pron|noun).*")); // adv|part|conj
     rightPartsWithLeftTagMap.put("таки", Pattern.compile("(verb.*:(futr|past|pres)|.*pron|noun|part|predic|insert).*")); 
     
     dashPrefixes = loadSet("/uk/dash_prefixes.txt");
@@ -156,7 +169,15 @@ class CompoundTagger {
     String leftWord = word.substring(0, dashIdx);
     String rightWord = word.substring(dashIdx + 1);
 
+
+    if( LEFT_INVALID.contains(leftWord.toLowerCase()) )
+      return null;
+
+
     List<TaggedWord> leftWdList = tagAsIsAndWithLowerCase(leftWord);
+
+
+    // стривай-бо, чекай-но, прийшов-таки, такий-от, такий-то
 
     if( rightPartsWithLeftTagMap.containsKey(rightWord) ) {
       if( leftWdList.isEmpty() )
@@ -176,6 +197,9 @@ class CompoundTagger {
       return newAnalyzedTokens.isEmpty() ? null : newAnalyzedTokens;
     }
 
+
+    // 101-й, 100-річному
+
     if( UkrainianTagger.NUMBER.matcher(leftWord).matches() ) {
       List<AnalyzedToken> newAnalyzedTokens = new ArrayList<>();
       // e.g. 101-го
@@ -183,7 +207,7 @@ class CompoundTagger {
         List<String> tags = NUMR_ENDING_MAP.get(rightWord);
         for (String tag: tags) {
           // TODO: shall it be numr or adj?
-          newAnalyzedTokens.add(new AnalyzedToken(word, IPOSTag.adj.getText()+tag, leftWord + "-" + "й"));
+          newAnalyzedTokens.add(new AnalyzedToken(word, IPOSTag.adj.getText() + tag + ":&numr", leftWord + "-" + "й"));
         }
       }
       else {
@@ -202,6 +226,9 @@ class CompoundTagger {
       }
       return newAnalyzedTokens.isEmpty() ? null : newAnalyzedTokens;
     }
+
+
+    // по-болгарськи, по-болгарському
 
     if( leftWord.equalsIgnoreCase("по") && rightWord.endsWith("ськи") ) {
       rightWord += "й";
@@ -223,9 +250,22 @@ class CompoundTagger {
       return null;
     }
 
+
+    // exclude: Малишко-це, відносини-коли
+
+    if( ! leftWord.equalsIgnoreCase(rightWord) && PosTagHelper.hasPosTag(rightAnalyzedTokens, "(part|conj).*|.*:&pron.*") )
+      return null;
+
+
+
+    // майстер-класу
+    
     if( dashPrefixes.contains( leftWord ) || dashPrefixes.contains( leftWord.toLowerCase() ) || DASH_PREFIX_LAT_PATTERN.matcher(leftWord).matches() ) {
       return getNvPrefixNounMatch(word, rightAnalyzedTokens, leftWord);
     }
+
+    
+    // пів-України
 
     if( word.startsWith("пів-") && Character.isUpperCase(word.charAt(4)) ) {
       List<AnalyzedToken> newAnalyzedTokens = new ArrayList<>(rightAnalyzedTokens.size());
@@ -249,6 +289,9 @@ class CompoundTagger {
       return newAnalyzedTokens;
     }
 
+
+    // Пенсильванія-авеню
+
     if( Character.isUpperCase(leftWord.charAt(0)) && cityAvenue.contains(rightWord) ) {
       if( leftWdList.isEmpty() )
         return null;
@@ -257,14 +300,40 @@ class CompoundTagger {
       return cityAvenueMatch(word, leftAnalyzedTokens);
     }
 
+
+
+    // don't allow: Донець-кий, зовнішньо-економічний, мас-штаби
+
+    List<AnalyzedToken> leftAnalyzedTokens = ukrainianTagger.asAnalyzedTokenListForTaggedWordsInternal(leftWord, leftWdList);
+    
+    // allow га-га!
+
+    if( ! PosTagHelper.hasPosTag(leftAnalyzedTokens, "intj.*") ) {
+      String noDashWord = word.replace("-", "");
+      List<TaggedWord> noDashWordList = tagAsIsAndWithLowerCase(noDashWord);
+      List<AnalyzedToken> noDashAnalyzedTokens = ukrainianTagger.asAnalyzedTokenListForTaggedWordsInternal(noDashWord, noDashWordList);
+
+      if( ! noDashAnalyzedTokens.isEmpty() )
+        return null;
+    }
+
+
+    // вгору-вниз, лікар-гомеопат, жило-було
+
     if( ! leftWdList.isEmpty() ) {
-      List<AnalyzedToken> leftAnalyzedTokens = ukrainianTagger.asAnalyzedTokenListForTaggedWordsInternal(leftWord, leftWdList);
 
       List<AnalyzedToken> tagMatch = tagMatch(word, leftAnalyzedTokens, rightAnalyzedTokens);
       if( tagMatch != null ) {
         return tagMatch;
       }
     }
+
+
+    if( LEFT_O_ADJ_INVALID.contains(leftWord.toLowerCase()) )
+      return null;
+
+
+    // яскраво-барвистий...
 
     if( O_ADJ_PATTERN.matcher(leftWord).matches() ) {
       return oAdjMatch(word, rightAnalyzedTokens, leftWord);
@@ -299,7 +368,7 @@ class CompoundTagger {
     for (AnalyzedToken leftAnalyzedToken : leftAnalyzedTokens) {
       String leftPosTag = leftAnalyzedToken.getPOSTag();
       
-      if( leftPosTag == null )
+      if( leftPosTag == null || IPOSTag.contains(leftPosTag, IPOSTag.abbr.getText()) )
         continue;
 
       String leftPosTagExtra = "";
@@ -322,7 +391,7 @@ class CompoundTagger {
       for (AnalyzedToken rightAnalyzedToken : rightAnalyzedTokens) {
         String rightPosTag = rightAnalyzedToken.getPOSTag();
         
-        if( rightPosTag == null )
+        if( rightPosTag == null || IPOSTag.contains(rightPosTag, IPOSTag.abbr.getText()) )
           continue;
 
         String extraNvTag = "";
@@ -344,11 +413,18 @@ class CompoundTagger {
         }
         
         if (leftPosTag.equals(rightPosTag) 
-            && IPOSTag.startsWith(leftPosTag, IPOSTag.numr, IPOSTag.adv, IPOSTag.adj, IPOSTag.excl, IPOSTag.verb) ) {
+            && (IPOSTag.startsWith(leftPosTag, IPOSTag.numr, IPOSTag.adv, IPOSTag.adj, IPOSTag.verb)
+            || (IPOSTag.startsWith(leftPosTag, IPOSTag.intj) && leftAnalyzedToken.getLemma().equalsIgnoreCase(rightAnalyzedToken.getLemma())) ) ) {
           newAnalyzedTokens.add(new AnalyzedToken(word, leftPosTag + extraNvTag + leftPosTagExtra, leftAnalyzedToken.getLemma() + "-" + rightAnalyzedToken.getLemma()));
         }
         // noun-noun
         else if ( leftPosTag.startsWith(IPOSTag.noun.getText()) && rightPosTag.startsWith(IPOSTag.noun.getText()) ) {
+
+        	// discard чорний-чорний as noun:anim
+        	if( leftAnalyzedToken.getToken().equalsIgnoreCase(rightAnalyzedToken.getToken())
+        			&& leftPosTag.contains(TAG_ANIM) && rightPosTag.contains(TAG_ANIM) )
+        		continue;
+        	
           String agreedPosTag = getAgreedPosTag(leftPosTag, rightPosTag, leftNv);
 
           if( agreedPosTag == null 
@@ -396,20 +472,30 @@ class CompoundTagger {
             }
           }
         }
-        // noun-adj match: Буш-молодший, братів-православних, рік-два
+        // noun-adj match: Буш-молодший, рік-два
+        // не робимо братів-православних — загальний noun-adj дає забагато фальшивих спрацьовувань
         else if( leftPosTag.startsWith(IPOSTag.noun.getText()) 
-            && IPOSTag.startsWith(rightPosTag, IPOSTag.adj, IPOSTag.numr) ) {
+            && IPOSTag.startsWith(rightPosTag, IPOSTag.numr) 
+                || (IPOSTag.startsWith(rightPosTag, IPOSTag.adj) && isJuniorSenior(leftAnalyzedToken, rightAnalyzedToken)) ) {
           
-          if( ! leftPosTag.contains(":prop")
-              || isJuniorSenior(leftAnalyzedToken, rightAnalyzedToken) ) { 
+//          if( ! leftPosTag.contains(":prop")
+//              || isJuniorSenior(leftAnalyzedToken, rightAnalyzedToken) ) { 
+          	
+          	// discard чорний-чорний as noun:anim
+//          	if( leftAnalyzedToken.getToken().equalsIgnoreCase(rightAnalyzedToken.getToken()) )
+//          		continue;
+
             String leftGenderConj = PosTagHelper.getGenderConj(leftPosTag);
             if( leftGenderConj != null && leftGenderConj.equals(PosTagHelper.getGenderConj(rightPosTag)) ) {
               newAnalyzedTokens.add(new AnalyzedToken(word, leftPosTag + extraNvTag + leftPosTagExtra, leftAnalyzedToken.getLemma() + "-" + rightAnalyzedToken.getLemma()));
             }
-          }
+  //        }
         }
       }
     }
+
+    // remove duplicates
+    newAnalyzedTokens = new ArrayList<>(new LinkedHashSet<>(newAnalyzedTokens));
     
     if( newAnalyzedTokens.isEmpty() ) {
       newAnalyzedTokens = newAnalyzedTokensAnimInanim;
@@ -555,17 +641,36 @@ class CompoundTagger {
     List<AnalyzedToken> newAnalyzedTokens = new ArrayList<>(analyzedTokens.size());
 
     String leftBase = leftWord.substring(0, leftWord.length()-1);
-    if( ! LEFT_O_ADJ.contains(leftWord.toLowerCase(conversionLocale))
-        && tagBothCases(leftWord).isEmpty()            // яскраво для яскраво-барвистий
-        && tagBothCases(oToYj(leftWord)).isEmpty()  // кричущий для кричуще-яскравий
-        && tagBothCases(leftBase).isEmpty()         // паталог для паталого-анатомічний
-        && tagBothCases(leftBase + "а").isEmpty() ) // два для дво-триметровий
+    
+    String extraTag = "";
+    if( ! LEFT_O_ADJ.contains(leftWord.toLowerCase(conversionLocale)) ) {
+
+    List<TaggedWord> taggedWords = tagBothCases(leftWord);            // яскраво для яскраво-барвистий
+    if( taggedWords.isEmpty() ) {
+      taggedWords = tagBothCases(oToYj(leftWord));  // кричущий для кричуще-яскравий
+    }
+    if( taggedWords.isEmpty() ) {
+      taggedWords = tagBothCases(leftBase);         // паталог для паталого-анатомічний
+    }
+    if( taggedWords.isEmpty() ) {
+      taggedWords = tagBothCases(leftBase + "а");   // два для дво-триметровий
+    }
+    if( taggedWords.isEmpty() )
       return null;
+      
+      
+    for(TaggedWord taggedWord: taggedWords) {
+      if( taggedWord.getPosTag().contains(":bad") ) {
+        extraTag = ":bad";
+        break;
+      }
+    }
+    }
     
     for (AnalyzedToken analyzedToken : analyzedTokens) {
       String posTag = analyzedToken.getPOSTag();
       if( posTag.startsWith( IPOSTag.adj.getText() ) ) {
-        newAnalyzedTokens.add(new AnalyzedToken(word, posTag, leftWord + "-" + analyzedToken.getLemma()));
+        newAnalyzedTokens.add(new AnalyzedToken(word, posTag + extraTag, leftWord.toLowerCase() + "-" + analyzedToken.getLemma()));
       }
     }
     

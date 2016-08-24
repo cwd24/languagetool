@@ -22,7 +22,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 
-$Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
+$Id: grammar.xml,v 1.171 2016-08-19 20:00:00 marcoagpinto Exp $
 -->
 <rules lang="pt" xsi:noNamespaceSchemaLocation="../rules.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
@@ -203,6 +203,69 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
     </rule> 	
 	
 	
+	
+	<!-- Concordance error plural - A GENTE + PLURAL VERB > A GENTE + SINGULAR VERB -->
+    <rule id="A_GENTE-SINGULAR_PLURAL-VERB" name="Erro de concordância do plural A GENTE + SINGULAR VERB">
+      <pattern>
+        <token>a</token>
+		<token>gente</token>
+        <marker>
+            <token postag="VMIP1P0"></token>
+         </marker>
+     </pattern>
+     <message>Erro de concordância do plural: <suggestion><match no="3" postag_regexp= "yes" postag="VMIP1P0" postag_replace="VMIP3S0"/></suggestion></message>	 
+     <example correction="vai">A gente <marker>vamos</marker> à praia.</example>   
+    </rule> 		
+	
+	
+
+	<!-- Concordance error plural - PROCURA-SE > PROCURAM-SE -->
+    <rule id="PROCURA_SE-PROCURAM_SE" name="Erro de concordânica do plural PROCURA-SE > PROCURAM-SE">
+      <pattern>
+		<marker>
+			<token>procura-se</token>	  
+		</marker>
+		<token postag_regexp="yes"  postag="NCFP000|NCMP000|AQ0FP0|AQ0MP0"></token> 	
+     </pattern>	 	 
+     <message>Erro de concordância do plural.</message>
+     <suggestion>procuram-se</suggestion>
+     <example correction="procuram-se">Aqui <marker>procura-se</marker> pessoas sérias.</example>	 	 
+    </rule> 
+
+	
+	
+    <!-- Concordance gender - NECESSÁRIO > NECESSÁRIA -->
+    <rule id="NECESSÁRIO_NECESSÁRIA" name="Erro de concordância NECESSÁRIO-NECESSÁRIA">
+      <pattern>
+		<token regexp="yes">é|foi|era|fora|será|seria|seja|fosse|for</token>
+        <marker>
+			<token>necessário</token>	
+        </marker>
+		<token>uma</token>
+		<token postag="NCFS000"><exception postag_regexp="yes" postag="AQ0CS0|PI0FS000|PI0MS000|NCMS000"></exception><exception>uma</exception></token>
+     </pattern>
+	 <message>Erro de género. Usar: <suggestion>necessária</suggestion>.</message>
+     <example correction="necessária">É <marker>necessário</marker> uma festa.</example>
+    </rule> 	
+
+
+
+    <!-- Concordance gender - NECESSÁRIO > NECESSÁRIA + UMA + ADJ + NOUN -->
+    <rule id="NECESSÁRIO_NECESSÁRIA_ADJ_NOUN" name="Erro de concordância NECESSÁRIO-NECESSÁRIA + UMA + ADJ + NOUN">
+      <pattern>
+		<token regexp="yes">é|foi|era|fora|será|seria|seja|fosse|for</token>
+        <marker>
+            <token>necessário</token>
+        </marker>
+		<token>uma</token>
+		<token postag_regexp="yes" postag="AQ0CS0|PI0FS000|PI0MS000|NCFS000"><exception>uma</exception></token>
+		<token postag="NCFS000"><exception postag="NCMS000"></exception><exception>uma</exception></token>
+     </pattern>
+	 <message>Erro de género. Usar: <suggestion>necessária</suggestion>.</message>
+     <example correction="necessária">É <marker>necessário</marker> uma grande festa.</example>
+    </rule> 	
+	
+
 	
     <!-- Concordance gender - UM > UMA -->
     <rule id="UM_UMA" name="Erro de concordância UM-UMA">
@@ -441,19 +504,6 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       </pattern>
       <message>Substituir «a dizer verdade» por <suggestion>a dizer a verdade</suggestion>.</message>
       <example correction="a dizer a verdade">Eles estão <marker>a dizer verdade</marker>.</example>
-    </rule>
-
-
-
-    <!-- A GENTE VAMOS a gente vai -->
-    <rule id="A_GENTE_VAMOS" name="a gente vai">
-      <pattern>
-        <token>a</token>
-        <token>gente</token>
-        <token>vamos</token>
-      </pattern>
-      <message>Substituir «a gente vamos» por <suggestion>a gente vai</suggestion>.</message>
-      <example correction="a gente vai">Hoje <marker>a gente vamos</marker> à praia.</example>
     </rule>
 
 
@@ -1209,6 +1259,20 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
     </rule>
 
 
+	
+    <!-- DA dá -->
+    <rule id="DA" name="dá">
+      <pattern>
+		<marker>
+			<token>da</token>        
+		</marker>	      
+		<token postag="SPS00"><exception>de</exception></token>
+	  </pattern>
+      <message>Substituir «da» por <suggestion>dá</suggestion>.</message>
+      <example correction="dá">Não <marker>da</marker> para acreditar.</example>
+    </rule>	
+	
+
 
     <!-- DAR OS BONS DIAS dar os bons-dias -->
     <rule id="DAR_OS_BONS_DIAS" name="dar os bons-dias">
@@ -1251,21 +1315,8 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <example>Sou um gestor <marker>com determinação</marker>.</example>
 	</rule>
 
-
-
-    <!-- DE ALTO ABAIXO de alto a baixo -->
-    <rule id="DE_ALTO_ABAIXO" name="de alto a baixo">
-      <pattern>
-        <token>de</token>
-        <token>alto</token>
-        <token>abaixo</token>
-      </pattern>
-      <message>Substituir «de alto abaixo» por <suggestion>de alto a baixo</suggestion>.</message>
-      <example correction="de alto a baixo">Ele olhou-me <marker>de alto abaixo</marker>.</example>
-    </rule>
-
-
-
+	
+	
     <!-- DE CALCULO de cálculo -->
     <rule id="DE_CALCULO" name="de cálculo">
       <pattern>
@@ -1293,21 +1344,23 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <example correction="decerto">Isso irá <marker>de certo</marker> lesar os trabalhadores.</example>
     </rule>
 
+	
 
-
-    <!-- DE CIMA ABAIXO de cima a baixo -->
-    <rule id="DE_CIMA_ABAIXO" name="de cima a baixo">
+    <!-- DE CIMA/ALTO ABAIXO de cima/alto a baixo -->
+    <rule id="DE_CIMA-ALTO_ABAIXO" name="de cima/alto a baixo">
       <pattern>
-        <token>de</token>
-        <token>cima</token>
-        <token>abaixo</token>
+		<token>de</token>
+		<token regexp="yes">cima|alto</token>
+		 <marker>
+            <token>abaixo</token>
+         </marker>
       </pattern>
-      <message>Substituir «de cima abaixo» por <suggestion>de cima a baixo</suggestion>.</message>
-      <example correction="de cima a baixo">Ele olhou-me <marker>de cima abaixo</marker>.</example>
+      <message>Substituir «abaixo» por <suggestion>a baixo</suggestion>.</message>
+      <example correction="a baixo">Ela observou o Rui de alto <marker>abaixo</marker>.</example>
     </rule>
-
-
-
+	
+	
+	
     <!-- DE FORMA A QUE para que -->
     <rule id="DE_FORMA_A_QUE" name="para que">
       <pattern>
@@ -1737,6 +1790,21 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <example correction="existem muitas">Na vida <marker>existe muitas</marker> coisas boas.</example>
     </rule>
 
+	
+	
+    <!-- FAZEM n SEGUNDOS/MINUTOS/HORAS/DIAS/SEMANAS/MESES/ANOS > FAZ -->
+    <rule id="FAZEM" name="faz">
+      <pattern>
+		<marker>
+			<token>fazem</token>
+		</marker>
+		<token></token>
+        <token regexp="yes">segundos?|minutos?|horas?|dias?|semanas?|mês|meses|anos?</token>
+      </pattern>
+      <message>Substituir «fazem» por <suggestion>faz</suggestion>.</message>
+      <example correction="faz">Rui, <marker>fazem</marker> duas semanas que não falamos.</example>
+    </rule>
+	
 
 
     <!-- FALARAM-SE DE falou-se de -->
@@ -1877,21 +1945,35 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <example correction="guarda-chuvas">Abram os <marker>guardas-chuvas</marker>.</example>
     </rule>
 
-	
 
-    <!-- HÁ n SEGUNDOS/MINUTOS/HORAS/DIAS/MESES/ANOS ATRÁS (remove "ATRÁS") -->
+
+    <!-- HÁ n SEGUNDOS/MINUTOS/HORAS/DIAS/SEMANAS/MESES/ANOS ATRÁS (remove "ATRÁS") -->
     <rule id="HÁ-ATRÁS" name="há n tempo atrás">
       <pattern>
-		<token>há</token>
-		<token></token>
-        <token regexp="yes">segundos?|minutos?|horas?|dias?|mês|meses|anos?</token>
-		<token>atrás</token>
+        <token skip="-1">há</token>
+        <token regexp="yes">segundos?|minutos?|horas?|dias?|semanas?|mês|meses|anos?</token>
+        <token>atrás</token>
       </pattern>
-	  <message>Com o verbo haver não é necessário usar "atrás": <suggestion>\1 \2 \3</suggestion>.</message>
-	  <example correction="Há n segundos"><marker>Há n segundos atrás</marker>.</example>
+      <message>Com o verbo haver não é necessário usar "atrás": <suggestion><match no="1" include_skipped="all"/> <match no="2"/></suggestion>.</message>
+      <example correction="Há n segundos"><marker>Há n segundos atrás</marker>.</example>
     </rule>
 
-	
+
+
+    <!-- À QUASE há quase -->
+    <rule id="À_QUASE" name="há quase">
+      <pattern>
+		<marker>
+			<token>à</token>		
+		</marker>			
+		<token skip="-1">quase</token>		
+        <token regexp="yes">segundos?|minutos?|horas?|dias?|semanas?|mês|meses|anos?</token>
+      </pattern>
+	  <message>Substituir «à» por <suggestion>há</suggestion>.</message>
+	  <example correction="há">Conheço a Ana <marker>à</marker> quase 30 anos.</example>
+    </rule>	
+
+
 
     <!-- HÁS VEZES às vezes -->
     <rule id="HÁS_VEZES" name="às vezes">
@@ -2334,8 +2416,22 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
 	<!-- O FACTO DA/DAS/DO/DOS *END* -->
 	<!-- ***************************** -->
 	
-
 	
+
+     <!-- O MAS o mais -->
+    <rule id="O_MAS" name="o mais">
+      <pattern>
+		<token>o</token>
+        <marker>
+			<token>mas</token>
+		</marker>	
+		 <token postag_regexp="yes" postag="RG|AQ0MS0|AQ0CS0"></token> 
+     </pattern>
+      <message>Substituir «mas» por <suggestion>mais</suggestion>.</message>
+      <example correction="mais">Quero resultados o <marker>mas</marker> rapidamente possível</example>
+    </rule>	
+
+
 
     <!-- O MESMO DO QUE o mesmo que -->
     <rule id="O_MESMO_DO_QUE" name="o mesmo que">
@@ -2434,6 +2530,23 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
 
 	
 	
+    <!-- O MAIS + ADJ-PLURAL + POSSÍVEIS - o mais adj-plural possível -->
+    <rule id="O_MAIS_ADJ-PLURAL_POSSÍVEIS" name="Erro de concordância do plural - possíveis-possível">
+      <pattern>
+		<token>o</token>	
+		<token>mais</token>	
+		<token postag="AQ0CP0"></token>	
+		<marker>
+			<token>possíveis</token>	  
+		</marker>
+     </pattern>	 	 
+     <message>Erro de concordância do plural.</message>
+     <suggestion>possível</suggestion>
+     <example correction="possível">Faz perguntas o mais abrangentes <marker>possíveis</marker>.</example>	 	 
+    </rule> 	
+	
+	
+	
     <!-- PARA ALÉM DISSO além disso -->
     <rule id="PARA_ALÉM_DISSO" name="além disso">
       <pattern>
@@ -2522,8 +2635,8 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <example correction="aí">Vou por <marker>ai</marker> fora a cantar.</example>
     </rule>
 
-	
 
+	
     <!-- POR CAUSA QUE porque -->
     <rule id="POR_CAUSA_QUE" name="porque">
       <pattern>
@@ -2576,6 +2689,35 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       </pattern>
       <message>Substituir «prazer» por <suggestion>gosto</suggestion>.</message>
       <example correction="gosto">Terei o maior <marker>prazer</marker> em convidá-los para a festa.</example>
+    </rule>
+
+
+
+    <!-- PREÇOS ECONÓMICOS preços baixos -->
+    <rule id="PREÇOS_ECONÓMICOS" name="preços baixos">
+      <pattern>
+		<token>preços</token>
+		<marker>
+            <token>económicos</token>
+        </marker>         
+      </pattern>
+      <message>Substituir «económicos» por <suggestion>baixos</suggestion>.</message>
+      <example correction="baixos">Temos muitos preços <marker>económicos</marker> na loja.</example>
+    </rule>
+
+
+
+    <!-- PREÇOS + ADJ + ECONÓMICOS preços + adj + baixos -->
+    <rule id="PREÇOS_ADJ_ECONÓMICOS" name="preços + adj + baixos">
+      <pattern>
+		<token>preços</token>
+		<token postag="RG"></token> 
+		<marker>
+            <token>económicos</token>
+        </marker>         
+      </pattern>
+      <message>Substituir «económicos» por <suggestion>baixos</suggestion>.</message>
+      <example correction="baixos">Temos preços bastante <marker>económicos</marker> na loja.</example>
     </rule>
 
 
@@ -2724,8 +2866,8 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
 	<rule id="CONFUSÃO_VESTIR_CALÇAR" name="confusão vestir/calçar">
 	  <pattern>
         <token regexp="yes">vestir|vestiu|veste|vestiste</token>
-        <token regexp="yes">os|o|a|as</token>
-        <token regexp="yes">sapato|sapatos|chinelo|chinelos|meia|meias|luva|luvas|bota|botas|peúga|peúgas|ténis|sapatilha|sapatilhas</token>
+        <token regexp="yes">os?|as?|um|uns|umas?</token>
+        <token regexp="yes">sapatos?|chinelos?|meias?|luvas?|botas?|peúgas?|ténis|sapatilhas?</token>
       </pattern>
       <message>Usa o verbo calçar</message>
       <example correction=""><marker>Vestir os sapatos</marker>.</example>
@@ -3053,6 +3195,26 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
 <!-- **************************************************************************** -->
 
 
+
+    <!-- TRADUZIR EM > TRADUZIR PARA -->
+    <rule id="TRADUZIR_EM" name="Traduzir para">
+      <pattern>
+		<token>traduzir</token>
+		<marker>
+			<token>em</token>
+		</marker>       
+        <or>		
+		<token postag="AQ0MS0"></token>	
+		<token>Latim</token>
+		</or>
+     </pattern>
+     <message>Substituir «em» por <suggestion>para</suggestion>.</message>
+     <suggestion>para</suggestion>
+     <example correction="para">Temos de traduzir <marker>em</marker> Inglês.</example>
+    </rule> 	
+
+
+
 </category>
 
 
@@ -3071,6 +3233,99 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <message>Usar vírgula: <suggestion>\1 \2,</suggestion></message>
       <example correction="ou seja,">Pensa primeiro, <marker>ou seja</marker> escolhe acertadamente.</example>
     </rule>
+
+
+
+    <!-- COMMA BEFORE/AFTER WORDS #1 -->
+    <rule id="COMMA_1" name="Vírgula antes #1">
+      <pattern>	  
+		<marker>
+			<token><exception regexp="yes">[,;:–—\(]</exception><exception>o</exception></token>	
+		</marker>
+		<token regexp="yes">mas|porém|contudo|entretanto|todavia</token>
+      </pattern>
+      <message>Usar vírgula: <suggestion>\1,</suggestion></message>
+	  <example correction="chocolate,">Eu adoro <marker>chocolate</marker> mas faz engordar.</example>
+    </rule>
+
+
+	
+    <!-- COMMA BEFORE/AFTER WORDS #2 -->
+    <rule id="COMMA_2" name="Vírgula antes #2">
+      <pattern>	  
+		<marker>
+			<token><exception regexp="yes">[,;:–—\(]</exception></token>
+	    </marker>
+		<token>no</token>
+		<token>entanto</token>	 
+      </pattern>
+      <message>Usar vírgula: <suggestion>\1,</suggestion></message>
+	  <example correction="chocolate,">Eu adoro <marker>chocolate</marker> no entanto faz engordar.</example>
+    </rule>	
+	
+	
+	
+    <!-- COMMA BEFORE/AFTER WORDS #3a -->	
+    <rule id="COMMA_3a" name="Vírgula antes #3a">
+      <pattern> 
+       <marker>
+            <token>é</token>
+            <token>pois</token>
+        </marker>
+        <token><exception regexp="yes">[!.,;:–—\(]</exception></token>
+		<token></token>
+      </pattern>
+      <message>Usar vírgula: <suggestion>\1, \2,</suggestion></message>
+      <example correction="é, pois,">Ela <marker>é pois</marker> do Norte.</example>
+    </rule>  
+	
+	
+	
+    <!-- COMMA BEFORE/AFTER WORDS #3aa -->	
+    <rule id="COMMA_3aa" name="Vírgula antes #3aa">
+      <pattern> 
+       <marker>
+            <token>É</token>
+        </marker>
+        <token>pois</token>
+        <token regexp="yes">[!.]</token>        
+      </pattern>
+      <message>Usar vírgula: <suggestion>\1,</suggestion></message>
+      <example correction="É,">Será verdade? <marker>É</marker> pois!</example>
+    </rule>
+	
+	
+	
+	<!-- COMMA BEFORE/AFTER WORDS #3b -->
+    <rule id="COMMA_3b" name="Vírgula antes #3b">
+      <pattern> 
+       <marker>
+            <token>é</token>
+            <token>,</token>
+            <token>pois</token>
+        </marker>
+        <token><exception regexp="yes">[!.,;:–—\(]</exception></token>
+		<token></token>
+      </pattern>
+      <message>Usar vírgula: <suggestion>\1, \3,</suggestion></message>
+      <example correction="é, pois,">Ela <marker>é, pois</marker> do Norte.</example>
+    </rule>    
+	
+	
+	
+	<!-- COMMA BEFORE/AFTER WORDS #3c -->
+	<rule id="COMMA_3c" name="Vírgula antes #3c">
+      <pattern> 
+       <marker>
+            <token>é</token>
+            <token>pois</token>
+        </marker>
+        <token>,</token>
+		<token></token>
+      </pattern>
+      <message>Usar vírgula: <suggestion>\1, \2</suggestion></message>
+      <example correction="é, pois">Ela <marker>é pois</marker>, do Norte.</example>
+    </rule>	
 	
 	
 </category>
@@ -3078,6 +3333,44 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
 
 
 <category id="REDUNDANCY" name="Redundância">
+
+    <!-- ANTES PREFIRO prefiro -->
+    <rule id="ANTES_PREFIRO" name="prefiro">
+      <pattern>
+        <token>antes</token>
+		<token>prefiro</token>
+      </pattern>
+      <message>Substituir «antes prefiro» por <suggestion>prefiro</suggestion>.</message>
+      <example correction="prefiro">Eu <marker>antes prefiro</marker> a outra solução.</example>
+    </rule>
+
+
+	
+    <!-- CEREJAL DE CEREJEIRAS cerejal -->
+    <rule id="CEREJAL_DE_CEREJEIRAS" name="cerejal">
+      <pattern>
+        <token>cerejal</token>
+        <token>de</token>
+		<token>cerejeiras</token>
+      </pattern>
+      <message>Substituir «cerejal de cerejeiras» por <suggestion>cerejal</suggestion>.</message>
+      <example correction="cerejal">Que grande <marker>cerejal de cerejeiras</marker>.</example>
+    </rule>
+
+
+
+	<!-- Verb EXPORTAR + PARA FORA > Verb exportar -->	
+	<rule id="EXPORTAR_PARA_FORA" name="exportar">
+		<pattern>
+			<token regexp="yes">exportei|exportaste|exportou|exportar|exportaram|exportarem|exportámos|exportamos|exportam|exportarmos</token>
+			<token>para</token>
+			<token>fora</token>
+		</pattern>
+		<message>Substituir «\1 para fora»  por <suggestion>\1</suggestion>.</message>
+ 		<example correction="exportou">O país <marker>exportou para fora</marker> menos este ano.</example>
+ 	</rule>
+
+
 
     <!-- HEMORRAGIA DE SANGUE hemorragia -->
     <rule id="HEMORRAGIA_DE_SANGUE" name="hemorragia">
@@ -3126,7 +3419,6 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
       <message>Redundância. Usar apenas <suggestion>quadrilha</suggestion>.</message>
       <example correction="quadrilha">É uma perigosa <marker>quadrilha de ladrões</marker>.</example>
     </rule>
-
 	
 </category>
 
@@ -3134,6 +3426,20 @@ $Id: grammar.xml,v 1.149 2016-04-06 08:01:00 marcoagpinto Exp $
 
 <category id="CONFUSED_WORDS" name="Confusão Palavras">
 
+	<!-- Confusion CONTANTO > CONTANDO -->
+    <rule id="CONTANTO_CONTANDO" name="Confusão contanto-contando">
+		<pattern>			
+			<marker>
+				<token>contanto</token>	  
+			</marker>			
+			<token>com</token>	  
+		</pattern>	 	 
+		<message>Substituir «contanto» por <suggestion>contando</suggestion>.</message>
+		<example correction="contando">Isto já <marker>contanto</marker> com o jantar.</example>	 	 
+    </rule> 
+
+
+	
 <!-- TRÁS/TRAZ - POSSIBLE REPLACEMENT SUGGESTIONS ****START**** -->
 <!-- ********************************************************** -->
     <!-- Confusion TRAZ > TRÁS -->

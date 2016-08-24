@@ -18,28 +18,25 @@
  */
 package org.languagetool.rules.patterns;
 
+import org.junit.Test;
+import org.languagetool.*;
+import org.languagetool.databroker.ResourceDataBroker;
+import org.languagetool.rules.*;
+import org.languagetool.rules.spelling.SpellingCheckRule;
+import org.languagetool.tagging.disambiguation.rules.DisambiguationPatternRule;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.String;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
-
-import org.languagetool.*;
-import org.languagetool.databroker.ResourceDataBroker;
-import org.languagetool.rules.Category;
-import org.languagetool.rules.IncorrectExample;
-import org.languagetool.rules.Rule;
-import org.languagetool.rules.RuleMatch;
-import org.languagetool.rules.spelling.SpellingCheckRule;
-import org.languagetool.tagging.disambiguation.rules.DisambiguationPatternRule;
+import static org.junit.Assert.*;
 
 /**
  * @author Daniel Naber
  */
-public class PatternRuleTest extends TestCase {
+public class PatternRuleTest {
 
   // A test sentence should only be a single sentence - if that's not the case it can
   // happen that rules are checked as being correct that in reality will never match.
@@ -53,6 +50,7 @@ public class PatternRuleTest extends TestCase {
     // there's no test here - the languages are supposed to extend this class and call runGrammarRulesFromXmlTest() 
   }
 
+  @Test
   public void testSupportsLanguage() {
     FakeLanguage fakeLanguage1 = new FakeLanguage("yy");
     FakeLanguage fakeLanguage2 = new FakeLanguage("zz");
@@ -273,6 +271,7 @@ public class PatternRuleTest extends TestCase {
     for (AbstractPatternRule rule : rules) {
       testCorrectSentences(languageTool, allRulesLanguageTool, lang, rule);
       testBadSentences(languageTool, allRulesLanguageTool, lang, complexRules, rule);
+      testErrorTriggeringSentences(languageTool, lang, rule);
     }
     if (!complexRules.isEmpty()) {
       Set<String> set = complexRules.keySet();
@@ -396,6 +395,17 @@ public class PatternRuleTest extends TestCase {
     }
   }
 
+  private void testErrorTriggeringSentences(JLanguageTool languageTool, Language lang,
+                                            AbstractPatternRule rule) throws IOException {
+    for (ErrorTriggeringExample example : rule.getErrorTriggeringExamples()) {
+      String sentence = cleanXML(example.getExample());
+      List<RuleMatch> matches = getMatches(rule, sentence, languageTool);
+      if (matches.size() == 0) {
+        fail(lang + ": " + rule.getFullId() + ": Example sentence marked with 'triggers_error' didn't actually trigger an error: '" + sentence + "'");
+      }
+    }
+  }
+
   /**
    * returns true if [a, b] has at least one number in common with [x, y]
    */
@@ -446,12 +456,12 @@ public class PatternRuleTest extends TestCase {
 
   private void testCorrectSentences(JLanguageTool languageTool, JLanguageTool allRulesLanguageTool,
                                     Language lang, AbstractPatternRule rule) throws IOException {
-    List<String> goodSentences = rule.getCorrectExamples();
+    List<CorrectExample> goodSentences = rule.getCorrectExamples();
     // necessary for XML Pattern rules containing <or>
     List<AbstractPatternRule> rules = allRulesLanguageTool.getPatternRulesByIdAndSubId(rule.getId(), rule.getSubId());
-    for (String goodSentence : goodSentences) {
+    for (CorrectExample goodSentenceObj : goodSentences) {
       // enable indentation use
-      goodSentence = goodSentence.replaceAll("[\\n\\t]+", "");
+      String goodSentence = goodSentenceObj.getExample().replaceAll("[\\n\\t]+", "");
       goodSentence = cleanXML(goodSentence);
       assertTrue(lang + ": Empty correct example in rule " + rule.getFullId(), goodSentence.trim().length() > 0);
       boolean isMatched = false;

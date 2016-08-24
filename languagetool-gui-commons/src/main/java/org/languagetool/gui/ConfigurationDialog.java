@@ -52,6 +52,8 @@ import java.util.List;
 public class ConfigurationDialog implements ActionListener {
 
   private static final String NO_MOTHER_TONGUE = "---";
+  private static final String ACTION_COMMAND_OK = "OK";
+  private static final String ACTION_COMMAND_CANCEL = "CANCEL";
   private static final int MAX_PORT = 65536;
 
   private final ResourceBundle messages;
@@ -60,14 +62,12 @@ public class ConfigurationDialog implements ActionListener {
   private final Frame owner;
   private final boolean insideOffice;
 
-  private JButton okButton;
-  private JButton cancelButton;
   private JDialog dialog;
-  private JComboBox<String> motherTongueBox;
   private JCheckBox serverCheckbox;
   private JTextField serverPortField;
   private JTree configTree;
   private JCheckBox serverSettingsCheckbox;
+  private final List<JPanel> extraPanels = new ArrayList<>();
 
   public ConfigurationDialog(Frame owner, boolean insideOffice, Configuration config) {
     this.owner = owner;
@@ -75,6 +75,19 @@ public class ConfigurationDialog implements ActionListener {
     this.original = config;
     this.config = original.copy(original);
     messages = JLanguageTool.getMessageBundle();
+  }
+
+  /**
+   * Add extra JPanel to this dialog.
+   * 
+   * If the panel implements {@see SavablePanel}, this dialog will call
+   * {@link SavablePanel#save} after the user clicks OK.
+   * 
+   * @param panel the JPanel to be added to this dialog
+   * @since 3.4
+   */
+  void addExtraPanel(JPanel panel) {
+    extraPanels.add(panel);
   }
 
   private DefaultMutableTreeNode createTree(List<Rule> rules) {
@@ -87,12 +100,15 @@ public class ConfigurationDialog implements ActionListener {
         if (config.getDisabledCategoryNames() != null && config.getDisabledCategoryNames().contains(rule.getCategory().getName())) {
           enabled = false;
         }
+        if (rule.getCategory().isDefaultOff()) {
+          enabled = false;
+        }
         DefaultMutableTreeNode categoryNode = new CategoryNode(rule.getCategory(), enabled);
         root.add(categoryNode);
         parents.put(rule.getCategory().getName(), categoryNode);
       }
       if (!rule.getId().equals(lastRuleId)) {
-        RuleNode ruleNode = new RuleNode(rule, getState(rule));
+        RuleNode ruleNode = new RuleNode(rule, getEnabledState(rule));
         parents.get(rule.getCategory().getName()).add(ruleNode);
       }
       lastRuleId = rule.getId();
@@ -100,16 +116,15 @@ public class ConfigurationDialog implements ActionListener {
     return root;
   }
 
-  private boolean getState(Rule rule) {
+  private boolean getEnabledState(Rule rule) {
     boolean ret = true;
-
     if (config.getDisabledRuleIds().contains(rule.getId())) {
       ret = false;
     }
     if (config.getDisabledCategoryNames().contains(rule.getCategory().getName())) {
       ret = false;
     }
-    if (rule.isDefaultOff() && !config.getEnabledRuleIds().contains(rule.getId())) {
+    if ((rule.isDefaultOff() || rule.getCategory().isDefaultOff()) && !config.getEnabledRuleIds().contains(rule.getId())) {
       ret = false;
     }
     if (rule.isDefaultOff() && rule.getCategory().isDefaultOff()
@@ -177,11 +192,13 @@ public class ConfigurationDialog implements ActionListener {
 
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new GridBagLayout());
-    okButton = new JButton(Tools.getLabel(messages.getString("guiOKButton")));
+    JButton okButton = new JButton(Tools.getLabel(messages.getString("guiOKButton")));
     okButton.setMnemonic(Tools.getMnemonic(messages.getString("guiOKButton")));
+    okButton.setActionCommand(ACTION_COMMAND_OK);
     okButton.addActionListener(this);
-    cancelButton = new JButton(Tools.getLabel(messages.getString("guiCancelButton")));
+    JButton cancelButton = new JButton(Tools.getLabel(messages.getString("guiCancelButton")));
     cancelButton.setMnemonic(Tools.getMnemonic(messages.getString("guiCancelButton")));
+    cancelButton.setActionCommand(ACTION_COMMAND_CANCEL);
     cancelButton.addActionListener(this);
     cons = new GridBagConstraints();
     cons.insets = new Insets(0, 4, 0, 0);
@@ -219,6 +236,14 @@ public class ConfigurationDialog implements ActionListener {
     cons.anchor = GridBagConstraints.WEST;
     contentPane.add(portPanel, cons);
 
+    cons.fill = GridBagConstraints.HORIZONTAL;
+    cons.anchor = GridBagConstraints.WEST;
+    for(JPanel extra : extraPanels) {
+      cons.gridy++;
+      contentPane.add(extra, cons);
+    }
+
+    cons.fill = GridBagConstraints.NONE;
     cons.gridy++;
     cons.anchor = GridBagConstraints.EAST;
     contentPane.add(buttonPanel, cons);
@@ -231,6 +256,11 @@ public class ConfigurationDialog implements ActionListener {
     dialog.setLocation(screenSize.width / 2 - frameSize.width / 2,
         screenSize.height / 2 - frameSize.height / 2);
     dialog.setLocationByPlatform(true);
+    for(JPanel extra : this.extraPanels) {
+      if(extra instanceof SavablePanel) {
+        ((SavablePanel) extra).componentShowing();
+      }
+    }
     dialog.setVisible(true);
   }
 
@@ -320,8 +350,10 @@ public class ConfigurationDialog implements ActionListener {
             }
           } else {
             if (o.isEnabled()) {
+              config.getEnabledRuleIds().add(o.getRule().getId());
               config.getDisabledRuleIds().remove(o.getRule().getId());
             } else {
+              config.getEnabledRuleIds().remove(o.getRule().getId());
               config.getDisabledRuleIds().add(o.getRule().getId());
             }
           }
@@ -452,7 +484,7 @@ public class ConfigurationDialog implements ActionListener {
   private JPanel getMotherTonguePanel(GridBagConstraints cons) {
     JPanel motherTonguePanel = new JPanel();
     motherTonguePanel.add(new JLabel(messages.getString("guiMotherTongue")), cons);
-    motherTongueBox = new JComboBox<>(getPossibleMotherTongues());
+    JComboBox<String> motherTongueBox = new JComboBox<>(getPossibleMotherTongues());
     if (config.getMotherTongue() != null) {
       motherTongueBox.setSelectedItem(config.getMotherTongue().getTranslatedName(messages));
     }
@@ -532,12 +564,17 @@ public class ConfigurationDialog implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == okButton) {
+    if (ACTION_COMMAND_OK.equals(e.getActionCommand())) {
       if (original != null) {
         original.restoreState(config);
       }
+      for(JPanel extra : extraPanels) {
+        if(extra instanceof SavablePanel) {
+          ((SavablePanel) extra).save();
+        }
+      }
       dialog.setVisible(false);
-    } else if (e.getSource() == cancelButton) {
+    } else if (ACTION_COMMAND_CANCEL.equals(e.getActionCommand())) {
       dialog.setVisible(false);
     }
   }

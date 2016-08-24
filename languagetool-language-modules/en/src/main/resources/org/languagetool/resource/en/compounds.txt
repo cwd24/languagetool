@@ -7,7 +7,6 @@
 # uses a hyphen
 # "*" at the end of the line will only suggest hyphenated words.
 
-full-time+
 teen-age+
 ego-centric+
 night-mare+
@@ -74,6 +73,7 @@ T-shirt*
 x-ray*
 head-to-head*
 mom-and-pop*
+president-elect*
 
 #numbers
 

@@ -71,6 +71,10 @@ public class AgreementRule extends GermanRule {
       new PatternTokenBuilder().token("das").build(),
       new PatternTokenBuilder().token("Zufall").build()
     ),
+    Arrays.asList( // "So hatte das Vorteile|Auswirkungen|Konsequenzen..."
+      new PatternTokenBuilder().tokenRegex("(?i:hat(te)?)").build(),
+      new PatternTokenBuilder().token("das").build()
+    ),
     Arrays.asList(
       new PatternTokenBuilder().token("von").build(),
       new PatternTokenBuilder().tokenRegex("(vielen|allen)").build(),
@@ -292,7 +296,7 @@ public class AgreementRule extends GermanRule {
     boolean relevantPronoun = GermanHelper.hasReadingOfType(analyzedToken, POSType.PRONOMEN);
     // avoid false alarms:
     String token = tokens[pos].getToken();
-    if (pos > 0 && tokens[pos-1].getToken().equalsIgnoreCase("vor") && tokens[pos].getToken().equalsIgnoreCase("allem")) {
+    if (pos > 0 && tokens[pos-1].getToken().equalsIgnoreCase("vor") && token.equalsIgnoreCase("allem")) {
       relevantPronoun = false;
     } else if (PRONOUNS_TO_BE_IGNORED.contains(token.toLowerCase())) {
       relevantPronoun = false;

@@ -18,19 +18,21 @@
  */
 package org.languagetool.rules.uk;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.languagetool.JLanguageTool;
 import org.languagetool.TestTools;
 import org.languagetool.language.Ukrainian;
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.rules.UppercaseSentenceStartRule;
 
-public class UppercaseSentenceStartRuleTest extends TestCase {
+import java.io.IOException;
+import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+
+public class UppercaseSentenceStartRuleTest {
+
+  @Test
   public void testUkrainian() throws IOException {
     final Ukrainian ukrainian = new Ukrainian();
     final UppercaseSentenceStartRule rule = new UppercaseSentenceStartRule(TestTools.getEnglishMessages(), ukrainian);
@@ -43,9 +45,9 @@ public class UppercaseSentenceStartRuleTest extends TestCase {
     assertEquals(1, matches[0].getSuggestedReplacements().size());
     assertEquals("Автор", matches[0].getSuggestedReplacements().get(0));
     
-    assertEquals(new ArrayList<RuleMatch>(), lt.check("Це список з декількох рядків:\n\nрядок 1,\n\nрядок 2,\n\nрядок 3."));
-    assertEquals(0, lt.check("Це список з декількох рядків:\n\nрядок 1;\n\nрядок 2;\n\nрядок 3.").size());
-    assertEquals(0, lt.check("Це список з декількох рядків:\n\n 1) рядок 1;\n\n2) рядок 2;\n\n3)рядок 3.").size());
+    assertEquals(new ArrayList<RuleMatch>(), lt.check("Цей список з декількох рядків:\n\nрядок 1,\n\nрядок 2,\n\nрядок 3."));
+    assertEquals(0, lt.check("Цей список з декількох рядків:\n\nрядок 1;\n\nрядок 2;\n\nрядок 3.").size());
+    assertEquals(0, lt.check("Цей список з декількох рядків:\n\n 1) рядок 1;\n\n2) рядок 2;\n\n3)рядок 3.").size());
   }
 
 }

@@ -9,6 +9,7 @@ Gepäck; Gebäck; 100000                             # p=1.000, r=0.293, 56+135,
 im; um; 1000000                                    # p=0.999, r=0.686, 2000, 3grams, 2015-08-19
 Leere|Nichts; Lehre|Ausbildung; 10000000           # p=1.000, r=0.354, 319+999, 3grams, 2016-03-30
 Lied|Musikstück; Lid|Augenlid; 1000000             # p=1.000, r=0.458, 1000+15, 3grams, 2016-03-30
+Mark; Markt; 1000000;                              # p=1.000, r=0.450, 1000+986, 3grams, 2016-08-19
 Meditation|spirituelle Übung; Mediation|Verfahren zur Konfliktlösung; 10000                       # p=1.000, r=0.171, 258, 3grams, 2015-08-19 - note the low recall
 Miene|Gesichtsausdruck; Mine|Bergwerk/Schreibgerät; 10000  # p=1.000, r=0.161, 35+164, 3grams, 2016-03-30
 mir; mit; 100000                                   # p=0.999, r=0.736, 2000, 3grams, 2015-08-19
@@ -52,3 +53,5 @@ Zeile; Ziele; 1000000                              # p=0.999, r=0.484, 1408, 3gr
 #Ställe; Stelle; 10000000                          # p=0.995, r=0.747, 23+998, 3grams, 2016-03-30
 #unternehmen; Unternehmen; 1000                    # p=0.993, r=0.821, 1181, 3grams, 2015-08-18
 #wahr; war; 10000                                  # p=0.956, r=0.723, 1998, 3grams, 2015-08-19; sehr viele FAs: "nahm|nimmt|nehmen|nähmen ... wahr"
+#wen; wenn; 10000000000;                           # p=0.978, r=0.545, 235+999, 3grams, 2016-08-13
+#ei; ein; 10000000000;                             # p=0.995, r=0.394, 389+1000, 3grams, 2016-08-13

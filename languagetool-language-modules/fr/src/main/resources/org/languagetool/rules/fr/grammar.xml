@@ -605,20 +605,60 @@ though, and has since been slightly modified)-->
         <pattern>
           <marker><token regexp="yes">cotes?</token></marker>
           <token>de</token>
-          <token regexp="yes">porcs?|bœuf|boeuf|veaux?</token>
+          <token regexp="yes">porcs?|bœuf|boeuf|veaux?|Bretagne</token>
         </pattern>
         <message>Voulez-vous écrire <suggestion>côte</suggestion> ?</message>
         <example correction="côte">Une <marker>cote</marker> de veau.</example>
       </rule>
       <rule>
         <pattern>
-          <marker><token>Cote</token></marker>
+          <marker><token>cote</token></marker>
           <token>d</token>
           <token regexp="yes">['´‘’′]</token>
-          <token regexp="yes">Azur|Ivoire|Or</token>
+          <token regexp="yes">Albâtre|Azur|Ivoire|Or|Opale|Émeraude</token>
         </pattern>
         <message>Voulez-vous écrire <suggestion>Côte</suggestion> ?</message>
         <example correction="Côte">La <marker>Cote</marker> d’Azur.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token regexp="yes">fractures?|radiographies?</token>
+          <token regexp="yes">des?</token>
+          <marker><token>cotes</token></marker>
+        </pattern>
+        <message>Voulez-vous écrire <suggestion><match no="3" regexp_match="o" regexp_replace="ô"/></suggestion> ?</message>
+        <example correction="côtes">Une fracture des <marker>cotes</marker>.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <marker><token regexp="yes">cotes?</token></marker>
+          <token regexp="yes">(brisée|cassée|fêlée|fracturée|surnuméraire|rocheuse|adriatique|américaine|californienne|atlantiques?|basque|bretonne|landaise|normande|vendéenne|française|belge|espagnole|italienne|portugaise|africaine|méditerranéenne|pacifique|raide|occidentale|fractale)s?|nord|sud|ouest</token>
+        </pattern>
+        <message>Voulez-vous écrire <suggestion><match no="1" regexp_match="o" regexp_replace="ô"/></suggestion> ?</message>
+        <example correction="côtes">Une <marker>cotes</marker> fracturée.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token inflected="yes">avoir</token>
+          <token min="0" max="1" regexp="yes">encore|toujours</token>
+          <token>la</token>
+          <marker><token>côte</token></marker>
+        </pattern>
+        <message>Confusion probable entre <suggestion>cote</suggestion> et « côte ».</message>
+        <example correction="cote">Il a la <marker>côte</marker> auprès des filles.</example>
+        <example correction="cote">Il a encore la <marker>côte</marker> auprès des filles.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token>n</token>
+          <token regexp="yes">['´‘’′]</token>
+          <token inflected="yes">avoir</token>
+          <token regexp="yes">pas|plus</token>
+          <token>la</token>
+          <marker><token>côte</token></marker>
+        </pattern>
+        <message>Confusion probable entre <suggestion>cote</suggestion> et « côte ».</message>
+        <example correction="cote">Il n’a plus la <marker>côte</marker>.</example>
       </rule>
     </rulegroup>
     <rulegroup id="CA_SA" name="ÇA au lieu de SA">
@@ -1398,7 +1438,7 @@ though, and has since been slightly modified)-->
       </rule>
       <rule>
         <pattern>
-          <marker><token>a</token></marker>
+          <marker><token>a<exception scope="previous" regexp="yes">il|on</exception></token></marker>
           <token>l</token>
           <token regexp="yes">[’´'‛′‘]</token>
           <or>
@@ -1409,6 +1449,7 @@ though, and has since been slightly modified)-->
         <message>Voulez-vous écrire <suggestion>à</suggestion> ?</message>
         <example correction="à">Je me lance dans cette aventure <marker>a</marker> l’aveuglette.</example>
         <example correction="à">Je suis déterminé <marker>a</marker> l’aider.</example>
+        <example>Il a l’avenir devant lui.</example>
       </rule>
       <rule>
         <pattern>
@@ -7220,7 +7261,7 @@ though, and has since been slightly modified)-->
           <marker><token regexp="yes">sales?</token></marker>
           <token>d</token>
           <token regexp="yes">['´‘’′]</token>
-          <token regexp="yes">(accouchement|attente|audiance|[eé]chographie|embarquement|exposition|infirmier|hospitalisation|observation|op[ée]ration|urgence)s?</token>
+          <token regexp="yes">(?:accouchement|attente|audiance|eau|[eé]chographie|embarquement|entrainement|escalade|exposition|infirmier|hospitalisation|observation|op[ée]ration|urgence)s?</token>
         </pattern>
         <message>Confusion probable entre « \1 » et <suggestion><match no="1" regexp_match="l" regexp_replace="ll"/></suggestion>.</message>
         <example correction="salle">La <marker>sale</marker> d’attente.</example>
@@ -7229,7 +7270,7 @@ though, and has since been slightly modified)-->
         <pattern>
           <marker><token regexp="yes">sales?</token></marker>
           <token regexp="yes">des?|du</token>
-          <token regexp="yes">(bain|bal|banquet|billard|bloc|cin[ée]ma|classe|colle|commandement|concert|conf[ée]rence|conseil|consultation|cours|culture|danse|d[ée]part|f[êe]te|formation|garde|gym|gymnastique|lecture|machine|malade|mammographie|marché|mariage|musculation|musique|ordinateur|presse|pri[èe]re|prof|professeur|projection|radio|radiographie|r[eé]animation|r[ée]ception|r[ée]daction|rééducation|restaurant|r[ée]union|réveil|s[ée]jour|shoot|soin|spectacle|sport|stockage|th[ée][âa]tre|tir|toilette|torture|trading|travail|vente)s?|fitness|infirmiers|jeux?|repos|urgences</token>
+          <token regexp="yes">(?:bain|bal|banquet|billard|bloc|cin[ée]ma|classe|colle|commandement|concert|conf[ée]rence|conseil|consultation|cours|culture|danse|d[ée]part|f[êe]te|formation|garde|gym|gymnastique|lecture|machine|malade|mammographie|marché|mariage|musculation|musique|ordinateur|presse|pri[èe]re|prof|professeur|projection|radio|radiographie|r[eé]animation|r[ée]ception|r[ée]daction|rééducation|restaurant|r[ée]union|réveil|s[ée]jour|shoot|soin|spectacle|sport|stockage|th[ée][âa]tre|tir|toilette|torture|trading|travail|vente)s?|fitness|infirmiers|jeux?|repos|urgences</token>
         </pattern>
         <message>Confusion probable entre « \1 » et <suggestion><match no="1" regexp_match="l" regexp_replace="ll"/></suggestion>.</message>
         <example correction="salle">La <marker>sale</marker> de classe.</example>
@@ -7239,7 +7280,7 @@ though, and has since been slightly modified)-->
         <pattern>
           <marker><token regexp="yes">sales?</token></marker>
           <token>à</token>
-          <token>manger</token>
+          <token regexp="yes">louer|manger</token>
         </pattern>
         <message>Confusion probable entre « \1 » et <suggestion><match no="1" regexp_match="l" regexp_replace="ll"/></suggestion>.</message>
         <example correction="salle">La <marker>sale</marker> à manger.</example>
@@ -7406,6 +7447,90 @@ though, and has since been slightly modified)-->
         </pattern>
         <message>Confusion probable entre l’adjectif féminin « \2 » et le nom <suggestion><match no="2" regexp_match="re" regexp_replace="r"/></suggestion>.</message>
         <example correction="intérieur">Dans son <marker>intérieure</marker>.</example>
+      </rule>
+    </rulegroup>
+    <rulegroup id="FABRICANT_FABRIQUANT" name="fabricant (nom) et fabriquant (participe présent)">
+      <url>http://www.projet-voltaire.fr/blog/regle-orthographe/%C2%AB-fabricant-%C2%BB-ou-%C2%AB-fabriquant-%C2%BB</url>
+      <rule>
+        <pattern>
+          <token regexp="yes">un|ce|du|[mts]on|leur|[nv]otre</token>
+          <marker><token>fabriquant</token></marker>
+        </pattern>
+        <message>Confusion probable entre <suggestion>fabricant</suggestion> (nom) et « fabriquant » (participe présent).</message>
+        <example correction="fabricant">Un <marker>fabriquant</marker> français.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token regexp="yes">[dc]es|de|nombreux|plusieurs|quelques|certains</token>
+          <marker><token>fabriquants</token></marker>
+        </pattern>
+        <message>Confusion probable entre <suggestion>fabricants</suggestion> (nom) et « fabriquants » (participe présent).</message>
+        <example correction="fabricants">Des <marker>fabriquants</marker> français.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <marker><token regexp="yes">fabriquants?</token></marker>
+          <token>de</token>
+        </pattern>
+        <message>Confusion probable entre <suggestion><match no="1" regexp_match="qu" regexp_replace="c"/></suggestion> (nom) et « \1 » (participe présent).</message>
+        <example correction="fabricants"><marker>fabriquants</marker> de pièces détachées.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token regexp="yes">les?<exception scope="previous">en</exception></token>
+          <marker><token regexp="yes">fabriquants?</token></marker>
+        </pattern>
+        <message>Confusion probable entre <suggestion><match no="2" regexp_match="qu" regexp_replace="c"/></suggestion> (nom) et « \2 » (participe présent).</message>
+        <example correction="fabricant">Le <marker>fabriquant</marker> français.</example>
+        <example>En le <marker>fabricant</marker>.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token regexp="yes">en|[mts]e|la|les</token>
+          <marker><token>fabricant</token></marker>
+        </pattern>
+        <message>Confusion probable entre « fabricant » (nom) et <suggestion>fabriquant</suggestion> (participe présent).</message>
+        <example correction="fabriquant">C’est en <marker>fabricant</marker>, que l’on devient fabricant.</example>
+      </rule>
+    </rulegroup>
+    <rulegroup id="CONVAINCANT_CONVAINQUANT" name="convaincant (adjectif) et convainquant (participe présent)">
+      <url>http://www.projet-voltaire.fr/blog/regle-orthographe/%C2%AB-convaincant-%C2%BB-ou-%C2%AB-convainquant-%C2%BB</url>
+      <rule>
+        <pattern>
+          <token regexp="yes">en|[mts]e|la|les</token>
+          <marker><token>convaincant</token></marker>
+        </pattern>
+        <message>Confusion probable entre « convaincant » (adjectif) et <suggestion>convainquant</suggestion> (participe présent).</message>
+        <example correction="convainquant">Il a réussi en <marker>convaincant</marker> ses collègues.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <token inflected="yes" regexp="yes">être|plôtot|assez|très|plus|moins|peu</token>
+          <marker><token regexp="yes">convainquants?</token></marker>
+        </pattern>
+        <message>Confusion probable entre <suggestion>convaincant</suggestion> (adjectif) et « <match no="2" regexp_match="qu" regexp_replace="c"/> » (participe présent).</message>
+        <example correction="convaincant">Son argument est assez <marker>convainquant</marker>.</example>
+      </rule>
+    </rulegroup>
+    <rulegroup id="COLIS_COLI" name="colis et coli">
+      <rule>
+        <pattern>
+          <token inflected="yes" regexp="yes" skip="3">affranchir|attendre|dédouaner|dédouanement|déposer|égarer|emballage|emballer|envoyer|envoi|(ré)?expédier|(ré)?expédition|(re)?fermer|(dé)?livrer|livraison|(ré?)?ouvrir|(ré?)?ouverture|perdre|pesage|peser|porter|réception|recevoir|transporter|transport|suivre|suivi|dans</token>
+          <marker><token>coli</token></marker>
+        </pattern>
+        <message>Confusion probable entre « coli » (mot rare) et <suggestion>colis</suggestion> (paquet).</message>
+        <example correction="colis">J’ai expédié ton <marker>coli</marker>.</example>
+        <example>Escherichia coli est une bactérie intestinale.</example>
+        <example>Il habite à Coli en Italie.</example>
+        <example>Un coli est un officier de police dans la Chine impérialle.</example>
+      </rule>
+      <rule>
+        <pattern>
+          <marker><token>coli</token></marker>
+          <token regexp="yes">(délivré|égaré|livré|suspect|piégé|neutralisé)s?</token>
+        </pattern>
+        <message>Confusion probable entre « coli » (mot rare) et <suggestion>colis</suggestion> (paquet).</message>
+        <example correction="colis">Un <marker>coli</marker> suspect.</example>
       </rule>
     </rulegroup>
   </category>
@@ -7867,6 +7992,7 @@ though, and has since been slightly modified)-->
         <example>Nous faisons <marker>tous partie</marker> de la même équipe.</example>
         <example>La variété du catalan parlée en Andorre.</example>
         <example>Le CAPES de mathématiques.</example>
+        <example>Aucune destruction n’a été jusqu’à <marker>présent rapportée</marker>,</example>
       </rule>
       <rule name="nom masculin suivi du féminin">
         <antipattern>
@@ -7915,6 +8041,7 @@ though, and has since been slightly modified)-->
         <example>Elle est un petit peu chiante.</example>
         <example>Il se l’est achetée.</example>
         <example>Un nouveau musée.</example>
+        <example>La participation n’est en <marker>rien liée</marker> au projet.</example>
         <!-- <example>L’étoile à neutrons peut <marker>même être</marker> remplacée par un trou noir.</example> -->
       </rule>
       <rule name="féminin suivi du masculin">
@@ -8058,7 +8185,7 @@ though, and has since been slightly modified)-->
           <token>nombre</token>
           <token>d</token>
           <token regexp="yes">[’´'‛′‘]</token>
-          <token regexp="yes">onde|oxydation</token>
+          <token regexp="yes">onde|or|oxydation</token>
         </antipattern>
         <pattern>
           <token regexp="yes">dizaines?|douzaines?|centaines?|milliers?|millions?|nombre|multitude|infinité|série</token>
@@ -8453,18 +8580,18 @@ though, and has since been slightly modified)-->
         <example>Il est sans doute arrivé.</example>
       </rule>
       <rule>
-        <pattern>
+         <pattern>
           <token inflected="yes" regexp="yes">&lt;/[MTS]E&gt;|[mts]e</token>
           <marker>
             <token postag="V.* ppa.*" postag_regexp="yes" regexp="yes">.*é</token>
           </marker>
         </pattern>
-        <message>Le verbe « \2 » devrait être à l’infinitif après « \1 ».</message>
-        <suggestion><match no="2" postag="V.* inf" postag_regexp="yes"/></suggestion>
-        <example correction="préparer">Je veux te <marker>préparé</marker></example>
+        <message>Incohérence entre le verbe « \2 » et « \1 ».</message>
+        <example correction="">Je veux te <marker>préparé</marker></example>
         <example>Je veux te préparer</example>
         <example>Luc est quant à lui condamné.</example>
       </rule>
+
       <rule>
         <pattern>
           <token regexp="yes">afin|avant</token>
@@ -8594,7 +8721,7 @@ though, and has since been slightly modified)-->
         <token>du</token>
         <token>
           <exception postag="[KNJY].*|UNKNOWN" postag_regexp="yes"/>
-          <exception regexp="yes">bien|ou|mieux|moins|plus|tout|très|(?-i)[A-Z].*|:</exception>
+          <exception regexp="yes">bien|fort|ou|même|mieux|moins|peu|plus|tout|très|zéro|(?-i)[A-Z].*|:</exception>
         </token>
       </pattern>
       <message>Incohérence : « \1 » ne peut pas se touver devant « \2 ».</message>
@@ -8603,11 +8730,12 @@ though, and has since been slightly modified)-->
       <example>Du bon jambon.</example>
       <example>Du très bon jambon.</example>
       <example>Il écoute du Chopin.</example>
+      <example>Au voisinage du zéro absolu de température.</example>
     </rule>
     <rulegroup id="N_V" name="pas de verbe après : au, de, du…">
       <rule>
         <antipattern>
-          <token regexp="yes">['´‘’′]|num[eé]ro</token>
+          <token regexp="yes">['´‘’′]|num[eé]ro|sauf</token>
           <token regexp="yes">une?</token>
           <token postag="V.*" postag_regexp="yes"/>
         </antipattern>
@@ -8640,6 +8768,7 @@ though, and has since been slightly modified)-->
         <example>Quelqu’un a pris mon téléphone.</example>
         <example>L’un vit à Tokyo, l’autre vit à Paris.</example>
         <example>L’objectif numéro un a été atteint.</example>
+        <example>Tous sauf un acceptèrent le plan.</example>
       </rule>
       <rule>
         <pattern>
@@ -9352,7 +9481,7 @@ though, and has since been slightly modified)-->
         <example>Le ciel avait l’air <marker>dégagé</marker>.</example>
         <example correction="">Il a l’air <marker>fatiguée</marker>.</example>
         <example correction="">Il a l’air très <marker>fatiguée</marker>.</example>
-        <example>Il a l’air <marker>fatiqué</marker>.</example>
+        <example>Il a l’air <marker>fatigué</marker>.</example>
         <example>Elle a l’air <marker>fatiguée</marker>.</example>
         <example>On a l’air <marker>fatiguée</marker>.</example>
       </rule>
@@ -9386,7 +9515,7 @@ though, and has since been slightly modified)-->
         <example correction="">Il n’a plus l’air <marker>fatiguée</marker>.</example>
         <example correction="">Il n’a plus l’air très <marker>fatiguée</marker>.</example>
         <example correction="">Il n‘a plus l’air très <marker>fatiguée</marker>.</example>
-        <example>Il n’a jamais l’air <marker>fatiqué</marker>.</example>
+        <example>Il n’a jamais l’air <marker>fatigué</marker>.</example>
         <example>Elle n’a jamais l’air <marker>fatiguée</marker>.</example>
         <example>On n’a jamais l’air <marker>fatiguée</marker>.</example>
       </rule>
@@ -9513,7 +9642,6 @@ though, and has since been slightly modified)-->
         <example correction="">Elle n’a pas l’air <marker>contentes</marker>.</example>
         <example correction="">Elle n’a pas l’air très <marker>contentes</marker>.</example>
         <example correction="">Elle n’a pas toujours l’air <marker>contentes</marker>.</example>
-        <example>Elles n’a pas l’air <marker>contentes</marker>.</example>
         <example>Elle n’a pas l’air <marker>contente</marker>.</example>
       </rule>
       <rule>
@@ -11658,7 +11786,7 @@ though, and has since been slightly modified)-->
         <example>Que pouvaient-ils faire ?</example>
       </rule>
     </rulegroup>
-    <rulegroup id="ACCORD_NOM_VERBE">
+    <rulegroup id="ACCORD_NOM_VERBE" name="Accord">
       <rule name="l’ + nom + token + verbe 3e personne singulier">
         <pattern>
           <token postag="SENT_START|C coor| R rel .*" postag_regexp="yes">
@@ -16394,7 +16522,7 @@ though, and has since been slightly modified)-->
         <token regexp="yes">conservateurs?</token>
       </pattern>
       <message>« Chiffre conservateur » est un anglicisme (conservative figure). Employez <suggestion>chiffre prudent</suggestion>, <suggestion>chiffre prudent</suggestion>.</message>
-      <example correction="chiffre prudent|chiffre prudent"><marker>chiffre conservateur</marker></example>
+      <example correction="chiffre prudent"><marker>chiffre conservateur</marker></example>
       <example><marker>chiffre prudent</marker></example>
     </rule>
     <rule id="A_VENIR_A_DATE" name="à venir à date">
@@ -17808,7 +17936,7 @@ though, and has since been slightly modified)-->
         <token>que</token>
       </pattern>
       <message>« En autant que » est un anglicisme (inasmuch as, insofar as). Employez <suggestion>dans la mesure où</suggestion>, <suggestion>pourvu que</suggestion>, <suggestion>pourvu que</suggestion>.</message>
-      <example correction="dans la mesure où|pourvu que|pourvu que"><marker>en autant que</marker></example>
+      <example correction="dans la mesure où|pourvu que"><marker>en autant que</marker></example>
       <example><marker>dans la mesure où</marker></example>
     </rule>
     <rule id="EN_AUTANT_QUE_JE_PEUX" name="en autant que je peux">
@@ -22680,7 +22808,7 @@ though, and has since been slightly modified)-->
         <token regexp="yes">patterns?</token>
       </pattern>
       <message>« Pattern » est un anglicisme. Employez <suggestion>modèle</suggestion>, <suggestion>schéma</suggestion>, <suggestion>structure</suggestion>, <suggestion>déroulement</suggestion>, <suggestion>cheminement</suggestion>, <suggestion>processus</suggestion>, <suggestion>configuration</suggestion>, <suggestion>type</suggestion>, <suggestion>patron</suggestion>, <suggestion>trame</suggestion>, <suggestion>motif</suggestion>, <suggestion>configuration</suggestion>.</message>
-      <example correction="modèle|schéma|structure|déroulement|cheminement|processus|configuration|type|patron|trame|motif|configuration"><marker>pattern</marker></example>
+      <example correction="modèle|schéma|structure|déroulement|cheminement|processus|configuration|type|patron|trame|motif"><marker>pattern</marker></example>
       <example><marker>modèle</marker></example>
     </rule>
     <rule id="DRILL" name="drill">
@@ -23261,7 +23389,7 @@ though, and has since been slightly modified)-->
           <token regexp="yes">covers?-?ups?</token>
         </pattern>
         <message>« Cover-up » est un anglicisme. Employez <suggestion>étouffement</suggestion>, <suggestion>dissimulation</suggestion>, <suggestion>étouffement</suggestion>.</message>
-        <example correction="étouffement|dissimulation|étouffement"><marker>cover-up</marker></example>
+        <example correction="étouffement|dissimulation"><marker>cover-up</marker></example>
         <example><marker>étouffement</marker></example>
       </rule>
       <rule>
@@ -23270,7 +23398,7 @@ though, and has since been slightly modified)-->
           <token regexp="yes">up|ups</token>
         </pattern>
         <message>« Cover-up » est un anglicisme. Employez <suggestion>étouffement</suggestion>, <suggestion>dissimulation</suggestion>, <suggestion>étouffement</suggestion>.</message>
-        <example correction="étouffement|dissimulation|étouffement"><marker>cover up</marker></example>
+        <example correction="étouffement|dissimulation"><marker>cover up</marker></example>
         <example><marker>étouffement</marker></example>
       </rule>
     </rulegroup>
@@ -24122,7 +24250,7 @@ though, and has since been slightly modified)-->
           <token regexp="yes">war-?games?</token>
         </pattern>
         <message>« Wargame » est un anglicisme. Employez <suggestion>jeu de guerre</suggestion>, <suggestion>jeu de simulation de guerre</suggestion>, <suggestion>jeu de simulation de conflit</suggestion>, <suggestion>simulation de guerre</suggestion>, <suggestion>simulation de guerre</suggestion>.</message>
-        <example correction="jeu de guerre|jeu de simulation de guerre|jeu de simulation de conflit|simulation de guerre|simulation de guerre"><marker>wargame</marker></example>
+        <example correction="jeu de guerre|jeu de simulation de guerre|jeu de simulation de conflit|simulation de guerre"><marker>wargame</marker></example>
         <example><marker>jeu de guerre</marker></example>
       </rule>
       <rule>
@@ -24131,7 +24259,7 @@ though, and has since been slightly modified)-->
           <token regexp="yes">games?</token>
         </pattern>
         <message>« Wargame » est un anglicisme. Employez <suggestion>jeu de guerre</suggestion>, <suggestion>jeu de simulation de guerre</suggestion>, <suggestion>jeu de simulation de conflit</suggestion>, <suggestion>simulation de guerre</suggestion>, <suggestion>simulation de guerre</suggestion>.</message>
-        <example correction="jeu de guerre|jeu de simulation de guerre|jeu de simulation de conflit|simulation de guerre|simulation de guerre"><marker>war game</marker></example>
+        <example correction="jeu de guerre|jeu de simulation de guerre|jeu de simulation de conflit|simulation de guerre"><marker>war game</marker></example>
         <example><marker>jeu de guerre</marker></example>
       </rule>
     </rulegroup>
@@ -24904,7 +25032,7 @@ though, and has since been slightly modified)-->
         <token regexp="yes">flats?</token>
       </pattern>
       <message>« Flat » est un anglicisme. Employez <suggestion>crevaison</suggestion>, <suggestion>peinture mate</suggestion>, <suggestion>plat</suggestion> (plongeon), <suggestion>crevé</suggestion>, <suggestion>dégonflé</suggestion>, <suggestion>plat</suggestion>, <suggestion>à plat</suggestion>, <suggestion>mat</suggestion> (couleur), <suggestion>éventé</suggestion> (bière, boisson gazeuse), <suggestion>sans bulles</suggestion> (bière, boisson gazeuse).</message>
-      <example correction="crevaison|peinture mate|plat|crevé|dégonflé|plat|à plat|mat|éventé|sans bulles"><marker>flat</marker></example>
+      <example correction="crevaison|peinture mate|plat|crevé|dégonflé|à plat|mat|éventé|sans bulles"><marker>flat</marker></example>
       <example><marker>crevaison</marker></example>
     </rule>
     <rule id="FLAMING" name="flaming">
@@ -25065,7 +25193,7 @@ though, and has since been slightly modified)-->
         <token regexp="yes">e-commerces?</token>
       </pattern>
       <message>« E-commercel » est un anglicisme. Employez <suggestion>commerce électronique</suggestion>, <suggestion>commerce électronique</suggestion>, <suggestion>commerce en ligne</suggestion>, <suggestion>cybercommerce</suggestion>, <suggestion>commerce virtuel</suggestion>, <suggestion>commerce Internet</suggestion>, <suggestion>commerce sur Internet</suggestion>.</message>
-      <example correction="commerce électronique|commerce électronique|commerce en ligne|cybercommerce|commerce virtuel|commerce Internet|commerce sur Internet"><marker>e-commerce</marker></example>
+      <example correction="commerce électronique|commerce en ligne|cybercommerce|commerce virtuel|commerce Internet|commerce sur Internet"><marker>e-commerce</marker></example>
       <example><marker>commerce électronique</marker></example>
     </rule>
     <rule id="MERCHANDISING" name="merchandising">
@@ -26587,6 +26715,14 @@ though, and has since been slightly modified)-->
         <example correction="va-t-en-guerre">Un <marker>va-t-en guerre</marker>.</example>
         <example>Malbrough s’en va-t-en guerre.</example>
       </rule>
+      <rule>
+        <pattern>
+          <token regexp="yes">afghano|africano|albano|algéro|allemano|américano|andoro|angolo|anglo|anguillo|antartico|arabo|arctico|argentino|armeno|asiatico|atlantico|australo|austro|azéro|bahreïno|banglado|barbado|basco|bélizo|béllarusso|bénino|belgo|bhoutano|birmano|bolivio|bosno|bosniaco|botswano|brésilo|britanno|brunéo|bulgaro|burkanino|burundo|camerouno|canado|chilio|cingalo|colombo|comoro|congolo|(nord-|sud-)?coréo|cyprio|costarico|croato|cubano|dano|djibouto|dominico|écosso|égypto|émirato|équato|érythréo|esto|éthiopo|eurasiatico|européano|fidjio|finno|franco|gabono|gallo|gambo|géorgio|ghanéo|britanno|gréco|grenado|guatémalto|guinéo|guyano|hélleno|helvético|hispano|honduro|hungaro|indo|indonéso|italo|irako|irlando|islando|israélo|ivoiro|jamaïco|japono|jordano|khméro|kazakho|kényo|kirghizo|kiribato|koweïto|lao|lésotho|letto|libéro|libyo|liechtenteino|lituano|luxembourgeo|macédono|malgacho|malaiso|malawito|malo|malto|marianno|maroco|marshallo|mauricio|mauritano|mexico|micronésio|moldavo|monégasco|mongolo|monténégrino|mozambico|namibio|nauro|népalo|nicaraguo|nigéro|nigériano|norvégio|néo-zélando|occidentalo|océanio|omano|orientalo|ougando|ouzbéko|pacifico|pakistano|palestino|panaméo|paraguayo|néerlando|hollando|péruvo|philippino|polono|polynésio|luso|qataro|québéco|centrafricano|domenicano|roumano|russo|rwando|sarhao|sahélo|salomono|salvadoro|samoano|santoméo|saskatchéwano|scandinavo|sénégalo|saoudo|sénégambo|serbo|seychello|sierraléono|singapouro|sino|slovaco|somalo|soudano|srilanko|sudafricano|suédo|suisso|surinamo|swazilando|syro|sovieto|tadjiko|tanzano|tchado|tchécoslovavo|tchéco|thaïlando|thraco|tibéto|timoro|togolo|tokélo|tongano|trinidado|tuniso|turkméno|turco|touvalo|tuvalo|ukraino|uruguayo|vaticano|vénézuélo|vietnamo|yéméno|yougoslavo|zaïro|zambio|zimbabwébo</token>
+          <token regexp="yes" inflected="yes">afghan|africain|alabanais|algérien|allemand|américain|andorrais|anglais|arabe|argentin|aménien|australien|autrichien|belge|béninois|birman|bolivien|bosniaque|brésilien|britannique|bulgare|burkinabé|burundais|byzantin|cambodgien|camerounais|canadien|capverdien|centrafricain|chilien|chinois|chypriote|colombien|comorien|(nord-|sud-)?coréen|croate|cubain|danois|égyptien|équatorien|érythréen|espagnol|estonien|éthiopien|finlandais|flamand|français|gabonais|gambien|géorgien|germanique|ghanéen|guatémaltèque|guinéen|guyanais|haïtien|hellénique|hondurien|hongrois|indien|indonésien|iranien|iraquien|irlandais|islandais|israélien|italien|ivoirien|jamaïcain|jamaïquain|japonais|jordanien|kenyan|koweïtien|kurde|laotien|letton|libanais|libérien|libyen|lituanien|luxembourgeois|macédonien|malais|malgache|malien|maltais|marocain|mauricien|mauritanien|mexicain|moldave|monégasque|mongol|mozambicain|namibien|néerlandais|néo-zélandais|népalais|nicaraguayen|nigerian|nigérien|nippon|norvégien|omanais|ougandais|pakistanais|panaméen|paraguayen|péruvien|philippin|polonais|portugais|provençal|qatari|québécois|roumain|russe|rwandais|salvadorien|sénégalais|seychellois|singapourien|slovaque|slovène|somalien|soudanais|soviétique|sri-lankais|suédois|suisse|surinamien|syrien|tanzanien|tchadien|tchèque|thaïlandais|togolais|tunisien|turc|ukrainien|uruguayen|vénézuélien|vietnamien|yéménite|yougoslave|zaïrois|zambien|zimbabwéen</token>
+        </pattern>
+        <message>Voulez-vous écrire <suggestion>\1-\2</suggestion> ?</message>
+        <example correction="franco-allemandes">Les relations <marker>franco allemandes</marker>.</example>
+      </rule>
     </rulegroup>
     <rule id="QUASI_NOM" name="Quasi + nom">
       <pattern>
@@ -27737,7 +27873,7 @@ though, and has since been slightly modified)-->
         <token regexp="yes">de?</token>
       </pattern>
       <message>« à l’intention de » est une expression fautive (impropriété). Employez <suggestion>à l\4attention de</suggestion>.</message>
-      <url>http://www.academie-francaise.fr/la-langue-francaise/questions-de-langue#3_strong-em--l-attention-de--l-intention-de-em-strong</url>
+      <url>http://www.academie-francaise.fr/questions-de-langue#3_strong-em--l-attention-de--l-intention-de-em-strong</url>
       <example correction="À l’attention de"><marker>À l’intention de</marker></example>
       <example correction="À l’attention de"><marker>À l’aimable intention de</marker></example>
       <example><marker>À l’aimable attention de</marker></example>

@@ -20,6 +20,8 @@ package org.languagetool.tagging.disambiguation.rules.uk;
 
 import java.io.IOException;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.JLanguageTool;
@@ -34,6 +36,8 @@ import org.languagetool.tagging.uk.UkrainianTagger;
 import org.languagetool.tokenizers.SRXSentenceTokenizer;
 import org.languagetool.tokenizers.uk.UkrainianWordTokenizer;
 
+import static org.junit.Assert.assertTrue;
+
 public class UkrainianDisambiguationRuleTest extends DisambiguationRuleTest {
   
   private UkrainianTagger tagger;
@@ -43,7 +47,7 @@ public class UkrainianDisambiguationRuleTest extends DisambiguationRuleTest {
   private DemoDisambiguator demoDisambiguator;
   private Disambiguator chunker;
 
-  @Override
+  @Before
   public void setUp() {
     tagger = new UkrainianTagger();
     tokenizer = new UkrainianWordTokenizer();
@@ -53,6 +57,7 @@ public class UkrainianDisambiguationRuleTest extends DisambiguationRuleTest {
     chunker = new MultiWordChunker("/uk/multiwords.txt", true);
   }
 
+  @Test
   public void testDisambiguator() throws IOException {
 
     TestTools.myAssert("Танцювати до впаду", 
@@ -67,9 +72,9 @@ public class UkrainianDisambiguationRuleTest extends DisambiguationRuleTest {
     TestTools.myAssert("Прийшла Люба додому.", 
       "/[null]SENT_START Прийшла/[прийти]verb:perf:past:f|Прийшла/[прийшлий]adj:f:v_kly|Прийшла/[прийшлий]adj:f:v_naz  /[null]null Люба/[Люба]noun:anim:f:v_naz:prop:fname  /[null]null додому/[додому]adv ./[null]null",
        tokenizer, sentenceTokenizer, tagger, disambiguator);
-      
   }
-  
+
+  @Test
   public void testDisambiguatorForInitials() throws IOException {
     TestTools.myAssert("Є.Бакуліна",
       "/[null]SENT_START"
@@ -142,14 +147,16 @@ public class UkrainianDisambiguationRuleTest extends DisambiguationRuleTest {
 
     // make sure we don't choke on complex test
     TestTools.myAssert("Комендант, преподобний С. С. Мокітімі, був чудовою людиною.",
-      "/[null]SENT_START Комендант/[комендант]noun:anim:m:v_naz ,/[null]null"
+      "/[null]SENT_START Комендант/[Комендант]noun:anim:m:v_naz:prop:lname|Комендант/[комендант]noun:anim:m:v_naz ,/[null]null"
       +"  /[null]null преподобний/[преподобний]adj:m:v_kly|преподобний/[преподобний]adj:m:v_naz|преподобний/[преподобний]adj:m:v_zna:rinanim"
+      +"|преподобний/[преподобний]noun:anim:m:v_kly|преподобний/[преподобний]noun:anim:m:v_naz"
       +"  /[null]null С/[null]null ./[null]null  /[null]null С/[null]null ./[null]null  /[null]null"
       +" Мокітімі/[null]null ,/[null]null  /[null]null"
       +" був/[бути]verb:imperf:past:m  /[null]null чудовою/[чудовий]adj:f:v_oru:compb  /[null]null людиною/[людина]noun:anim:f:v_oru ./[null]null",
         tokenizer, sentenceTokenizer, tagger, disambiguator);
   }
-  
+
+  @Test
   public void testChunker() throws Exception {
     JLanguageTool lt = new JLanguageTool(new Ukrainian());
     AnalyzedSentence analyzedSentence = lt.getAnalyzedSentence("Для  годиться.");
