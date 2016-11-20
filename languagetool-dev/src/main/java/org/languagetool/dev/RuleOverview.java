@@ -18,7 +18,6 @@
  */
 package org.languagetool.dev;
 
-import org.apache.commons.lang.StringUtils;
 import org.languagetool.JLanguageTool;
 import org.languagetool.Language;
 import org.languagetool.LanguageMaintainedState;
@@ -99,12 +98,12 @@ public final class RuleOverview {
         continue;
       }
       System.out.print("<tr>");
-      final String langCode = lang.getShortName();
+      final String langCode = lang.getShortCode();
       final File langSpecificWebsite = new File(webRoot, langCode);
       final List<String> variants = getVariantNames(sortedLanguages, lang);
       String variantsText = "";
       if (variants.size() > 0) {
-        variantsText = "<br/><span class='langVariants'>Variants for: " + StringUtils.join(variants, ", ") + "</span>";
+        variantsText = "<br/><span class='langVariants'>Variants for: " + String.join(", ", variants) + "</span>";
       }
       if (langSpecificWebsite.isDirectory()) {
         System.out.print("<td valign=\"top\"><a href=\"../" + langCode + "/\">" + lang.getName() + "</a>" + variantsText + "</td>");
@@ -229,7 +228,7 @@ public final class RuleOverview {
   private List<Language> getVariants(List<Language> allLanguages, Language lang) {
     List<Language> variants = new ArrayList<>();
     for (Language sortedLanguage : allLanguages) {
-      if (sortedLanguage.isVariant() && lang.getShortName().equals(sortedLanguage.getShortName())) {
+      if (sortedLanguage.isVariant() && lang.getShortCode().equals(sortedLanguage.getShortCode())) {
         variants.add(sortedLanguage);
       }
     }
@@ -272,7 +271,7 @@ public final class RuleOverview {
     int pos = 0;
     int count = 0;
     while (true) {
-      pos = falseFriendRules.indexOf("<pattern lang=\"" + lang.getShortName(), pos + 1);
+      pos = falseFriendRules.indexOf("<pattern lang=\"" + lang.getShortCode(), pos + 1);
       if (pos == -1) {
         break;
       }
@@ -309,7 +308,7 @@ public final class RuleOverview {
   }
 
   private int countConfusionPairs(Language lang) {
-    String path = "/" + lang.getShortName() + "/confusion_sets.txt";
+    String path = "/" + lang.getShortCode() + "/confusion_sets.txt";
     ResourceDataBroker dataBroker = JLanguageTool.getDataBroker();
     if (dataBroker.resourceExists(path)) {
       try (InputStream confusionSetStream = dataBroker.getFromResourceDirAsStream(path)) {

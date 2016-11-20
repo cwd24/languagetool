@@ -1,6 +1,63 @@
 # LanguageTool Change Log
 
-## 3.5 (release planned for 2016-09-29)
+## 3.6 (release planned for 2016-12-28)
+
+#### Catalan
+  * added and improved rules
+
+#### English
+  * added and improved rules
+  * added about 131 confusion pairs like woman/women (works only with ngram data,
+    see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
+  * The American and Canadian English (en-US, en-CA) spelling dictionaries have
+    been updated to the latest version from http://wordlist.aspell.net (2016.06.26)
+  * The Australian English (en-AU) spelling dictionary has been updated to the
+    latest version from http://extensions.libreoffice.org/extension-center/english-dictionaries
+    (2016-03-14 according to that page)
+
+#### French
+  * added and improved rules
+  * upgraded dictionaries to Dicollecte-5.7
+
+#### German
+  * added and improved rules
+  * added about 34 confusion pairs like ihm/im (works only with ngram data,
+    see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
+  * bugfix regarding errors in the last word of a sentence (#273)
+  * The internal part-of-speech dictionary has been updated with the help of
+    Julian von Heyl of http://korrekturen.de - many entries have been fixed and
+    added. Technically, the new data has its own Maven and git project now
+    (https://github.com/languagetool-org/german-pos-dict)
+
+#### Portuguese
+  * added and improved many rules
+
+#### Russian
+  * added/improved several rules
+
+#### HTTP API
+  * The old API has been deactivated, as documented at
+    https://languagetool.org/http-api/migration.php - it
+    now returns a pseudo error pointing to the migration page
+
+#### Java API
+  * `Language.getShortName()` has been deprecated, use `Language.getShortCode()`
+    instead
+  * `Language.getShortNameWithCountryAndVariant()` has been deprecated, use
+    `Language.getShortCodeWithCountryAndVariant()` instead
+  * `Languages.getLanguageForShortName()` has been deprecated, use
+    `Languages.getLanguageForShortCode()` instead
+  
+#### Command-line
+  * Added a `--json` option as an alternative to `--api` (deprecated XML output)
+    See https://languagetool.org/http-api/swagger-ui/#/default
+    for a documentation of the new API.
+
+#### Internal
+  * Apache commons-lang has been updated from 2.6 to commons-lang3 3.5
+
+
+## 3.5 (2016-09-30)
 
 #### Catalan
   * added and improved rules
@@ -8,30 +65,63 @@
 
 #### English
   * added and improved rules
-  * added confusion pair talking/taking (works only with ngram data,
+  * added about 50 confusion pairs like talking/taking (works only with ngram data,
     see http://wiki.languagetool.org/finding-errors-using-n-gram-data) 
-  * added category MISUSED_TERMS_EU_PUBLICATIONS
+  * added category `MISUSED_TERMS_EU_PUBLICATIONS`
+  * updated en_GB spellchecker dictionary from https://github.com/marcoagpinto/aoo-mozilla-en-dict
+
+#### Esperanto
+  * added and improved rules
+
+#### French
+  * added and improved rules
 
 #### German
   * added rules
   * fixed several false alarms
 
-#### Portuguese
+#### Polish
+  * added and improved rules
+
+#### Portuguese (European)
   * added and improved rules
  
-#### Portuguese Brazilian
+#### Portuguese (Brazilian)
   * added rules
 
 #### Russian
-  * added some rules
+  * now possible checking the texts with the signs of stress
+  * added and improved many new grammar and style rules
   * added words suggested by users
+  * improved disambiguation rules
+  * for review, test and improve rules, feedback in bugtracker thanks to Konstantin Ladutenko
+
+#### Spanish
+  * added and improved rules
+
+#### Ukrainian
+  * added ~6k new words
+  * added many new grammar and styling rules
+  * added many new barbarism replacement suggestions
+  * improved dynamic word tagging
 
 #### General
   * Bugfix: avoid repeating the same suggestion
+  * Enhancement: ignore e-mail addresses
 
 #### Java API
   * `Rule.getCorrectExamples()` now returns a list of `CorrectExample`s
     instead of a list of `String`s.
+
+#### GUI (stand-alone version)
+  * speed up for long texts with many errors (#530)
+  * add new menu item for showing/hiding the result area
+
+#### Command-line
+  * Deprecated the `--api` option - we recommend using LanguageTool
+    in server mode (JSON API), which is faster as it has no start up
+    overhead for each call. See https://languagetool.org/http-api/swagger-ui/#/default
+    for a documentation of the new API.
 
 
 ## 3.4 (2016-06-27)

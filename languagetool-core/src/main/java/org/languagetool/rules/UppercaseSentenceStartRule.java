@@ -107,7 +107,7 @@ public class UppercaseSentenceStartRule extends Rule {
     }
 
     String lastToken = tokens[tokens.length - 1].getToken();
-    if (tokens.length >= 2 && WHITESPACE_OR_QUOTE.matcher(lastToken).matches()) {
+    if (WHITESPACE_OR_QUOTE.matcher(lastToken).matches()) {
       // ignore trailing whitespace or quote
       lastToken = tokens[tokens.length - 2].getToken();
     }
@@ -151,7 +151,7 @@ public class UppercaseSentenceStartRule extends Rule {
   @Nullable
   private String dutchSpecialCase(String firstToken,
       String secondToken, AnalyzedTokenReadings[] tokens) {
-    if (!language.getShortName().equals("nl")) {
+    if (!language.getShortCode().equals("nl")) {
       return null;
     }
     if (tokens.length >= 3 && firstToken.equals("'")

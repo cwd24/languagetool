@@ -2,10 +2,53 @@
 # This does not add words to the spell checker, see hunspell/spelling.txt for that.
 # File Encoding: UTF-8
 # Format: three tab-separated fields: fullform baseform postags
+# Need replace to dict
 ёмкостной	ёмкостный	ADJ:Masc:Nom
 он	он	PNN:Masc:Nom:P3
 она	она	PNN:Fem:Nom:P3
 оно	оно	PNN:Neut:Nom:P3
+банту	банту	NN:Masc
+барбекю	барбекю	NN:Neut
+боке	боке	NN:Neut
+дисбактериозa	дисбактериоз	NN:Masc:Sin:R
+дисбактериозам	дисбактериоз	NN:Masc:PL:D
+дисбактериозами	дисбактериоз	NN:Masc:PL:T
+дисбактериозах	дисбактериоз	NN:Masc:PL:P
+дисбактериоз	дисбактериоз	NN:Masc:Sin:Nom
+дисбактериоз	дисбактериоз	NN:Masc:Sin:V
+дисбактериозе	дисбактериоз	NN:Masc:Sin:P
+дисбактериозов	дисбактериоз	NN:Masc:PL:R
+дисбактериозом	дисбактериоз	NN:Masc:Sin:T
+дисбактериозу	дисбактериоз	NN:Masc:Sin:D
+дисбактериозы	дисбактериоз	NN:Masc:PL:Nom
+дисбактериозы	дисбактериоз	NN:Masc:PL:V
+карате	каратэ	NN:Neut
+каратэ	каратэ	NN:Neut
+мате	мате	NN:Masc
+порядка	порядка	ADV
+саке	сакэ	NN:Neut
+сакэ	сакэ	NN:Neut
+телеобъединением	телеобъединение	NN:Neut:Sin:T
+телеобъединение	телеобъединение	NN:Neut:Sin:Nom
+телеобъединение	телеобъединение	NN:Neut:Sin:V
+телеобъединении	телеобъединение	NN:Neut:Sin:P
+телеобъединений	телеобъединение	NN:Neut:PL:R
+телеобъединению	телеобъединение	NN:Neut:Sin:D
+телеобъединениями	телеобъединение	NN:Neut:PL:T
+телеобъединениям	телеобъединение	NN:Neut:PL:D
+телеобъединения	телеобъединение	NN:Neut:PL:Nom
+телеобъединения	телеобъединение	NN:Neut:PL:V
+телеобъединения	телеобъединение	NN:Neut:Sin:R
+телеобъединениях	телеобъединение	NN:Neut:PL:P
+эсперанто	эсперанто	NN:Masc
+кратчайший	краткий	ADJ_Com:Masc:V 
+# Need add to dict with extended postag like PNN:V, PNN:R, PNN:D, PNN:T, PNN:P (TODO) 
+себя	себя	PNN
+себе	себе	PNN
+собою	собою	PNN
+# Need add to dict
+вареная	варёный	ADJ:Fem:Nom
+варённая	варить	PT:Past:Fem:Nom
 высокодобротен	высокодобротный	ADJ_Short:Masc
 высокодобротна	высокодобротный	ADJ_Short:Fem
 высокодобротная	высокодобротный	ADJ:Fem:Nom

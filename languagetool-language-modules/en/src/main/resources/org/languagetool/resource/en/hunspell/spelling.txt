@@ -72,3 +72,9 @@ eukaryote
 eukaryotes
 eukaryotic
 spinless
+modality
+modalities
+chirality
+helicity
+graphene
+Schengen

@@ -18,7 +18,7 @@
  */
 package org.languagetool.rules.patterns;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.languagetool.JLanguageTool;
 import org.languagetool.Language;
 import org.languagetool.Languages;
@@ -87,7 +87,7 @@ class FalseFriendRuleHandler extends XMLRuleHandler {
       inPattern = true;
       String languageStr = attrs.getValue("lang");
       if (Languages.isLanguageSupported(languageStr)) {
-        language = Languages.getLanguageForShortName(languageStr);
+        language = Languages.getLanguageForShortCode(languageStr);
       }
     } else if (qName.equals(TOKEN)) {
       setToken(attrs);
@@ -95,7 +95,7 @@ class FalseFriendRuleHandler extends XMLRuleHandler {
       inTranslation = true;
       String languageStr = attrs.getValue("lang");
       if (Languages.isLanguageSupported(languageStr)) {
-        Language tmpLang = Languages.getLanguageForShortName(languageStr);
+        Language tmpLang = Languages.getLanguageForShortCode(languageStr);
         currentTranslationLanguage = tmpLang;
         if (tmpLang.equalsConsiderVariantsIfSpecified(motherTongue)) {
           translationLanguage = tmpLang;
@@ -132,9 +132,9 @@ class FalseFriendRuleHandler extends XMLRuleHandler {
           formatter.applyPattern(messages.getString("false_friend_hint"));
           String tokensAsString = StringUtils.join(patternTokens, " ").replace('|', '/');
           Object[] messageArguments = {tokensAsString,
-                  messages.getString(textLanguage.getShortName()),
+                  messages.getString(textLanguage.getShortCode()),
                   formatTranslations(translations),
-                  messages.getString(motherTongue.getShortName())};
+                  messages.getString(motherTongue.getShortCode())};
           String description = formatter.format(messageArguments);
           PatternRule rule = new FalseFriendPatternRule(id, language, patternTokens,
                   messages.getString("false_friend_desc") + " "

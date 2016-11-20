@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.languagetool.AnalyzedToken;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.Language;
@@ -356,8 +356,7 @@ public class MatchState {
         int l = 0;
         for (String lPosTag : posTags) {
           l++;
-          lPosTag = pPosRegexMatch.matcher(lPosTag).replaceAll(
-              posTagReplace);
+          lPosTag = pPosRegexMatch.matcher(lPosTag).replaceAll(posTagReplace);
           if (match.setsPos()) {
             lPosTag = synthesizer.getPosTagCorrection(lPosTag);
           }

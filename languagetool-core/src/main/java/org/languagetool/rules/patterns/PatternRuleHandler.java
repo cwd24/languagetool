@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.languagetool.Languages;
 import org.languagetool.rules.*;
 import org.languagetool.tagging.disambiguation.rules.DisambiguationPatternRule;
@@ -100,7 +100,7 @@ public class PatternRuleHandler extends XMLRuleHandler {
         break;
       case "rules":
         String languageStr = attrs.getValue("lang");
-        language = Languages.getLanguageForShortName(languageStr);
+        language = Languages.getLanguageForShortCode(languageStr);
         break;
       case "regexp":
         inRegex = true;

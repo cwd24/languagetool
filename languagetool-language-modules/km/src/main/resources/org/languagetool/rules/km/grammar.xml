@@ -283,11 +283,29 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 វា​មក​<marker>ពីរ​អ្នក</marker>។
             </example>
         </rule>
+        <rule id="DIAL_RU_TE" name="ដែលឬទេ (ដែរឬទេ)">
+            <pattern>
+                <marker>
+                    <token>ដែល</token>
+                    <token>ឬ</token>
+                    <token>ទេ</token>
+                </marker>
+            </pattern>
+            <message>Did you mean
+                <suggestion>ដែរ​ឬ​ទេ</suggestion>
+            </message>
+            <example type="correct">
+                តើ​អ្នក​រក​ឃើញ​កំហុស​<marker>ដែរ​ឬ​ទេ</marker>
+            </example>
+            <example type="incorrect" correction="ដែរ​ឬ​ទេ">
+                តើ​អ្នក​រក​ឃើញ​កំហុស​<marker>ដែល​ឬ​ទេ</marker>
+            </example>
+        </rule>
     </category>
 
     <category id="GRAMMAR" name="Khmer Grammar">
 
-        <rule id="NOUN_POSESIVEPRONOUN" name="Possible incorrect position of noun posessed by pronoun" default="off">
+        <rule id="NOUN_POSESIVEPRONOUN" name="Possible incorrect position of noun possessed by pronoun" default="off">
             <!--We removed this rule for now, it is too greedy-->
             <pattern>
                 <marker>
@@ -296,7 +314,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                 </marker>
                 <token><exception postag="CLS"/></token>
             </pattern>
-            <message>In Khmer the noun posessed precedes the pronoun. Write
+            <message>In Khmer the noun possessed precedes the pronoun. Write
                 <suggestion>\2​\1</suggestion> instead.
             </message>
             <short>Grammatical problem or typo</short>

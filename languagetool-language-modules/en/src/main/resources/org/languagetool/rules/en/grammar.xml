@@ -58,7 +58,7 @@ USA
                 <pattern>
                     <token regexp="yes">I|you|he|she|it|we|they</token>
                     <token regexp="yes">['’]</token>
-                    <token regexp="yes">l</token>
+                    <token>l</token>
                 </pattern>
                 <message>Did you mean <suggestion>\1\2ll</suggestion>?</message>
                 <example correction="I'll">Yes, <marker>I'l</marker>.</example>
@@ -85,7 +85,7 @@ USA
         <rule id="BEAT_REGARDS" name="beat (best) regards">
             <pattern>
                 <marker>
-                    <token>beat</token>
+                    <token regexp="yes">bea?t</token>
                 </marker>
                 <token>regards</token>
             </pattern>
@@ -771,7 +771,7 @@ USA
             <message>Did you mean <suggestion>itself</suggestion>?</message>
             <short>Possible typo</short>
             <example correction="itself">I believe that such advertisements indicate a clear statement about the issue <marker>it self</marker> and they clarify the main cause of the problem.</example>
-            <example>Was it self-defence?</example>
+            <example>Was it self-defense?</example>
         </rule>
         <rule id="VE_GO_TO" name="I've go to (I've got to)">
             <pattern>
@@ -1645,6 +1645,10 @@ USA
             <example correction="cannot">You <marker>can not</marker> use the keyboard to select an item.</example>
         </rule>
         <rule id="CANT" name="cant (can't)">
+            <antipattern>
+                <token>cant</token>
+                <token chunk="B-VP"/>
+            </antipattern>
             <pattern>
                 <marker>
                     <token>cant</token>
@@ -1654,7 +1658,14 @@ USA
             <message>Did you mean <suggestion>can't</suggestion> or <suggestion>cannot</suggestion>?</message>
             <short>Possible typo</short>
             <example correction="can't|cannot">I <marker>cant</marker> view pdf files in Explorer.</example>
+            <example correction="can't|cannot">You <marker>cant</marker> usually view these files in a web browser.</example>
             <example>... despite all the modern cant to the contrary.</example>
+            <example><marker>William Cant</marker> was born in Morpeth, Northumberland in 1753.</example>
+            <example>... and <marker>cant</marker> is the specialty of many politicians.</example>
+            <example type="triggers_error"><marker>Cant</marker>, who was born in Morpeth in 1753, is the ...</example>
+            <example type="triggers_error">Argot used in this sense is synonymous with <marker>cant</marker>.</example>
+            <example type="triggers_error">There is also a prison <marker>cant</marker>, known as soebela or sombela, which is based on...</example>
+            <example type="triggers_error">A <marker>cant</marker>, called Shelta, is spoken by Irish Travellers...</example>
         </rule>
         <rulegroup id="HELL" name="hell/shell (he'll, she'll)">
             <rule>
@@ -2555,6 +2566,11 @@ USA
         </rulegroup>
         <rulegroup id="ANY_BODY" name="any body (anybody)">
             <rule>
+                <antipattern>
+                    <token>any</token>
+                    <token>one</token>
+                    <token chunk="I-NP-singular"/>
+                </antipattern>
                 <pattern>
                     <marker>
                         <token regexp="yes">any|some</token>
@@ -2565,8 +2581,11 @@ USA
                 <message>Did you mean <suggestion>\1\2</suggestion>?</message>
                 <short>Possible typo</short>
                 <example correction="Anyone"><marker>Any one</marker> needs help here?</example>
-                <example>But the Communists never gave sufficient provocation at any one time for the United States to want to risk a limited or an all-out war over Laos.</example>
+                <example>But the Communists never gave sufficient provocation at <marker>any one</marker> time for the United States to want to risk a limited or an all-out war over Laos.</example>
                 <example correction="anyone">Can <marker>any one</marker> point me to the right direction?</example>
+                <example>Smith was the American architect who refused to be classified in <marker>any one</marker> architectural movement.</example>
+                <example>The propositions of field theory do not concern <marker>any one</marker> particular application;</example>
+                <example type="triggers_error">... 960 such combinations, and the chance of drawing <marker>any one</marker> hand at random is 1 / 2,598,960.</example>
             </rule>
             <rule>
                 <pattern>
@@ -2577,6 +2596,10 @@ USA
                 <short>Possible typo</short>
                 <example correction="Nobody"><marker>No body</marker> seems to care.</example>
                 <example correction="nothing">There's <marker>no thing</marker> wrong with this sentence.</example>
+                <example type="triggers_error">These individuals usually have <marker>no body</marker> weakness, because their brain injury is not near ...</example>
+                <example type="triggers_error">If the net force on <marker>some body</marker> is directed always toward some point, the center,...</example>
+                <example type="triggers_error">... by convention rather than formal code: there is <marker>no body</marker> equivalent to L’Académie française.</example>
+                <example type="triggers_error">... and discovers there is <marker>no body</marker> in the grave.</example>
             </rule>
         </rulegroup>
         <rulegroup id="MAY_BE" name="may be (maybe)">
@@ -3863,6 +3886,19 @@ USA
             </pattern>
             <message>Did you mean <suggestion><match no="1"/> <match no="2"/> than</suggestion>?</message>
             <example correction="better companies than">There were <marker>better companies then</marker> GE and Google.</example>
+        </rule>
+        <rule id="COMPARISONS_AS_ADJECTIVE_AS" name="comparison 'as ... as' (no comparative/superlative)">
+            <pattern>
+                <token>as</token>
+                <marker>
+                    <token postag="JJ." postag_regexp="yes"/>
+                </marker>
+                <token>as</token>
+            </pattern>
+            <message>Did you mean <suggestion><match no="2" postag="JJ"/></suggestion>?</message>
+            <url>http://dictionary.cambridge.org/us/grammar/british-grammar/as-as</url>
+            <example correction="good">We must do our job as <marker>best</marker> as we can.</example>
+            <example>She’s not singing as loudly as she can.</example>
         </rule>
         <!-- to .* then by::word=\0 \1 than \3::pivots=then,than::options=then,than -->
         <rule id="TO__THEN_BY" name="to blank then (than) by">
@@ -5226,6 +5262,17 @@ USA
             <short>Possible typo</short>
             <example correction="most of the time">It's true <marker>must of the time</marker>.</example>
         </rule>
+        <rule id="CONFUSION_OF_RIDE_RID" name="to get ride (rid) of">
+            <pattern>
+                <token inflected="yes">get</token>
+                <marker>
+                    <token>ride</token>
+                </marker>
+                <token>of</token>
+            </pattern>
+            <message>Did you mean <suggestion>rid</suggestion> ('get rid of' = 'discard' or 'get free of')?</message>
+            <example correction="rid"> Let's get <marker>ride</marker> of that broken chair.</example>
+        </rule>
         <rule id="FOR_TIME_TO_TIME" name="for time to time (from time to time)">
             <pattern>
                 <token>for</token>
@@ -5287,6 +5334,43 @@ USA
             <example>These musicians are <marker>masters</marker> of their art.</example>
             <example>My <marker>masters</marker> was a difficult degree.</example>
         </rule>
+        <rule id="TOO_CARDINAL_NUMBER" name="too CARDINAL NUMBER">
+            <antipattern>
+                <token>too</token>
+                <token spacebefore="yes" regexp="yes">(:?[1-2]\d)?\d0<exception>1000</exception></token>
+                <token regexp="yes">['’]</token>
+                <token>s</token>
+            </antipattern>
+            <pattern>
+                <token>too</token>
+                <token postag="CD"></token>
+            </pattern>
+            <message>Did you mean <suggestion>to <match no="2"/></suggestion>?</message>
+            <short>Possible typo</short>
+            <example correction="to ten">We are expanding <marker>too ten</marker> new locations.</example>
+            <example correction="to 37">The average time increased from 30 <marker>too 37</marker> seconds.</example>
+            <example correction="To twenty-three"><marker>Too twenty-three</marker> students, we award a special prize this year.</example>
+            <example correction="to 1000">The frequency quickly increases <marker>too 1000</marker>'s of Hertz.</example>
+            <example correction="to 1000">Most rules are applicably only to a few problems. This rule is applicable <marker>too 1000</marker>'s.</example>
+            <example>We are expanding <marker>to ten</marker> new locations.</example>
+            <example>I don't like the style. It's <marker>too 1990</marker>'s for me.</example>
+        </rule>
+        <rule id="TOO_DETERMINER" name="too DETERMINER">
+            <pattern>
+                <token>too</token>
+                <token postag_regexp="yes" postag="DT|PDT"><exception regexp="yes">many|much</exception></token>
+            </pattern>
+            <message>Did you mean <suggestion>to <match no="2"/></suggestion>?</message>
+            <short>Possible typo</short>
+            <example correction="to all">We expanded <marker>too all</marker> proposed new locations.</example>
+            <example correction="to all">We expanded <marker>too all</marker> the proposed new locations.</example>
+            <example correction="to the">Give the bone <marker>too the</marker> dog.</example>
+            <example>We expanded <marker>to all</marker> proposed new locations.</example>
+            <example><marker>Too much</marker> information is as bad as not enough information.</example>
+            <example>LanguageTool users can be annoyed if they get <marker>too many</marker> incorrect warnings.</example>
+            <example type="triggers_error">How I wish that I'd gone with her <marker>too all</marker> those years ago. [Missing comma between 'too' and 'all'.]</example>
+<!-- TODO. --><example>The company is expanding <marker>too dozens</marker> of new locations.</example>
+        </rule>
     </category>
 
     <!-- ====================================================================== -->
@@ -5305,6 +5389,63 @@ USA
             <example correction="A soccer player kicks"><marker>A soccer players kicks</marker> a ball and scores a goal</example>
         </rule>
         -->
+        <rule id="WHO_VERB" name="Who + verb (who know's/knows)">
+            <pattern>
+                <token>who</token>
+                <token postag="VB.*|NN.*" postag_regexp="yes"><exception postag="NNP"/></token>
+                <token regexp='yes'>['´]</token>
+                <token>s</token>
+            </pattern>
+            <message>Did you mean <suggestion>\1 \2s</suggestion>?</message>
+            <example correction="Who cares"><marker>Who care's</marker>?</example>
+            <example correction="Who knows"><marker>Who know's</marker>?</example>
+            <example>I wonder where Tom is and who he's with.</example>
+            <example>I found out who Tom's father is.</example>
+        </rule>
+        <rule id="OBJECTIVE_CASE" name="objective case after with(out)/at/to/...">
+            <pattern>
+            <marker>
+                <token postag_regexp="yes" postag="TO|RP"/>
+                <token regexp="yes">I|he|she|we|they</token>
+            </marker>
+            <token postag="SENT_END"/>
+            </pattern>
+            <message>Did you mean <suggestion>\1 me</suggestion>, <suggestion>\1 her</suggestion>, <suggestion>\1 him</suggestion>, <suggestion>\1 us</suggestion>, or <suggestion>\1 them</suggestion>?</message>
+            <example correction="to me|to her|to him|to us|to them">Give it <marker>to I</marker>.</example>
+            <example correction="with me|with her|with him|with us|with them">Come <marker>with I</marker>.</example>
+            <example>I feel safe <marker>with him</marker>.</example>
+            <example>Look <marker>at her</marker>!</example>
+            <example>I have no time to put my books in order before I go.</example>
+        </rule>
+        <rule id="TOO_ADJECTIVE_TO" name="too ADJECTIVE to">
+            <pattern>
+                <token>to</token>
+                <token postag="JJ"><exception postag_regexp="yes" postag="NN|NN:UN|VB.*"/></token>
+                <token min="0">,</token>
+                <token>to</token>
+            </pattern>
+            <message>Did you mean <suggestion>\1o \2 \4</suggestion>?</message>
+            <example correction="too good to">This is <marker>to good to</marker> be true.</example>
+            <example>She is <marker>too sad to</marker> celebrate.</example>
+            <example>My mother went <marker>to town to</marker> get some bread.</example>
+            <example>It is next to impossible to make him stop smoking.</example>
+        </rule>
+        <rule id="BASE_FORM" name="base form after I/you/we/they">
+            <pattern>
+                <token postag="SENT_START"/>
+                <token regexp='yes'>i|you|we|they</token>
+                <token regexp='yes' min="0" postag="RB">[a-z]+ly</token>
+                <marker><token postag="VBZ"><exception postag="NNS"/><exception>kids</exception><exception>guys</exception></token></marker>
+            </pattern>
+            <message>Possible agreement error -- use base form here: <suggestion><match no="4" postag="VBP"/></suggestion>.</message>
+            <example correction="like">I really <marker>likes</marker> cats.</example>
+            <example correction="do">I <marker>does</marker> not know about it.</example>
+            <example>He secretly <marker>loves</marker> you.</example>
+            <example>They <marker>seem</marker> to like you.</example>
+            <example>We parents sometimes become blind.</example>
+            <example>You kids must be hungry.</example>
+            <example>You guys wait here.</example>
+        </rule>
         <rule id="SINGULAR_VERB_AFTER_THESE_OR_THOSE" name="Singular verb after 'these' or 'those'">
          <pattern>
           <token regexp='yes'>th[eo]se<exception scope="previous">of</exception></token>
@@ -5371,6 +5512,9 @@ USA
         </rule>
         -->
         <rule id="I_MOVING" name="personal pronoun + gerund">
+            <antipattern case_sensitive="yes">
+                <token>IT</token>
+            </antipattern>
             <pattern>
                 <token><exception regexp="yes">am|are|is|t|re|was|were|with|without|of|in|to|much|find</exception><exception postag="VBP|VBD|VB|VBZ|VBG|VBN" postag_regexp="yes"/></token>
                 <token regexp="yes">I|you|he|she|it|we|they</token>
@@ -5648,7 +5792,7 @@ USA
                     <token > not</token>
                     <token>need</token>
                     <marker>
-                        <token postag='VB'><exception regexp='yes'>proof|fake</exception></token>
+                        <token postag='VB'><exception regexp='yes'>proof|fake|help</exception></token>
                     </marker>
                 </pattern>
                 <message>Did you mean <suggestion>to <match no="4"/></suggestion>?</message>
@@ -5661,7 +5805,7 @@ USA
                     <token>t</token>
                     <token>need</token>
                     <marker>
-                        <token postag='VB'><exception regexp='yes'>proof|fake</exception></token>
+                        <token postag='VB'><exception regexp='yes'>proof|fake|help</exception></token>
                     </marker>
                 </pattern>
                 <message>Did you mean <suggestion>to <match no="5"/></suggestion>?</message>
@@ -6129,7 +6273,7 @@ USA
             <pattern>
                 <!-- 't': from "doesn't" etc -->
                 <token><exception regexp="yes">can|could|must|might|shall|does|will|ll|would|should|may|t|did|be|is|were|was|that|about|of|lest|whether|surrounding</exception><exception regexp="yes" inflected="yes">hear|feel|see|insist|call|claim|make|let</exception><exception postag="IN"/></token>
-                <token>it</token>
+                <token regexp="yes" case_sensitive="yes">[Ii]t</token>
                 <token min="0" max="1" postag="RB"/>
                 <marker>
                     <token postag="VBP?" postag_regexp="yes">
@@ -6878,6 +7022,10 @@ USA
         </rule>
         <rulegroup id="A_PLURAL" name="Agreement: 'a' + plural word">
             <rule>
+                <antipattern case_sensitive="yes">
+                    <token>A</token>
+                    <token>Levels</token>
+                </antipattern>
                 <pattern>
                     <token><exception regexp="yes">’|'|division|class|category|zone|formula|type|influenza|hepatitis|series</exception><exception postag="CD"/></token>
                     <marker>
@@ -6904,6 +7052,7 @@ USA
                 <example>"The murderer," wrote Schopenhauer, "who is condemned to death according to the law must, it is true, be now used as a mere means, and with complete right."</example>
                 <example>As a consequence, a LAPS is very similar in structure to an EIS sensor.</example>
                 <example>The batsman averaged almost 40 with the highlight being <marker>an innings</marker> of 125.</example>
+                <example>She attended Sydenham School and left just before taking <marker>A Levels</marker> to go to Drama School.</example>
             </rule>
             <rule>
                 <pattern>
@@ -6954,7 +7103,7 @@ USA
             <example>There was a children's party at the Joneses yesterday.</example>
             <example>A men's retailer opened in Florida.</example>
             <example>I have one hundred and one dollars.</example>
-            <example>I have fifty one dollars.</example>
+            <example>I have fifty-one dollars.</example>
             <example>I throw the balls one by one.</example>
             <example>Formula One teams are the best.</example>
             <example>He was the first person in a half-century to succeed.</example>
@@ -7352,7 +7501,6 @@ USA
             </rule>
             <rule>
                 <pattern>
-                    <token postag="SENT_START"/>
                     <token>We</token>
                     <marker>
                         <token regexp="yes">am|is|was</token>
@@ -7364,7 +7512,6 @@ USA
             </rule>
             <rule>
                 <pattern>
-                    <token postag="SENT_START"/>
                     <token>They</token>
                     <marker>
                         <token regexp="yes">am|is|was</token>
@@ -7615,7 +7762,7 @@ USA
             <rule>
                 <pattern>
                     <token regexp='yes'>in|during</token>
-                    <token regexp='yes'>(1[89]|20)\d0s</token>
+                    <token regexp='yes'>(1\d|20)\d0s</token>
                 </pattern>
                 <message>The article is probably missing here: <suggestion><match no="1"/> the <match no="2"/></suggestion>.</message>
                 <short>Missing article</short>
@@ -8735,7 +8882,7 @@ USA
                     </and>
                 </antipattern>
                 <pattern>
-                    <token><exception scope="previous" regexp="yes">than|what</exception><exception regexp="yes">free|tha[nt]|who|which|whom|a|the</exception></token>
+                    <token><exception scope="previous" regexp="yes">than|what</exception><exception regexp="yes">free|than|who|which|whom|a|the</exception></token>
                     <token skip="1" regexp="yes" postag="MD|VBD" postag_regexp="yes">did|will|could|can|should|would|does|ll</token>
                     <marker>
                         <token postag="VB[DGZ]" postag_regexp="yes">
@@ -8756,6 +8903,7 @@ USA
                 <example correction="come">They will <marker>comes</marker> home.</example>
                 <example correction="walk">He did <marker>walks</marker> to his house.</example>
                 <example correction="come">They will <marker>came</marker> home.</example>
+                <example correction="happen">A catastrophe that did not <marker>happened</marker>...</example>
                 <example>Confederate commanders would need it should troops pass that way in retreat.</example>
                 <example correction="have">I would definitely <marker>has</marker> that.</example>
                 <example>Warnings did go ignored.</example>
@@ -8777,7 +8925,7 @@ USA
             </rule>
             <rule>
                 <pattern>
-                    <token><exception scope="previous" regexp="yes">than|what</exception><exception regexp="yes">free|tha[nt]|whom?|which|a|the</exception></token>
+                    <token><exception scope="previous" regexp="yes">than|what</exception><exception regexp="yes">free|than|whom?|which|a|the</exception></token>
                     <token regexp="yes">did|will|could|can|should|would|does|ll</token>
                     <token>not</token>
                     <token min="0" max="1" postag="RB[RS]?" postag_regexp="yes"/>
@@ -8792,7 +8940,7 @@ USA
             </rule>
             <rule>
                 <pattern>
-                    <token><exception scope="previous" regexp="yes">than|what</exception><exception regexp="yes">free|tha[nt]|who|which|whom|a|the</exception></token>
+                    <token><exception scope="previous" regexp="yes">than|what</exception><exception regexp="yes">free|than|who|which|whom|a|the</exception></token>
                     <token regexp="yes">didn|won|couldn|can|shouldn|wouldn|doesn</token>
                     <token spacebefore="no" regexp="yes">['’]</token>
                     <token>t</token>
@@ -8937,29 +9085,37 @@ USA
                 <pattern>
                     <token skip="1">I<exception scope="previous" regexp="yes">Phase|Am</exception></token>
                     <marker>
-                        <token postag="VBZ"><exception scope="previous" negate_pos="yes" postag_regexp="yes" regexp="yes" postag="RB|PRP"/><exception>is</exception></token>
+                        <token postag="VBZ"><exception scope="previous" negate_pos="yes" postag_regexp="yes" regexp="yes" postag="RB|PRP|MD"/><exception>is</exception><exception scope="previous">need</exception></token>
                     </marker>
                 </pattern>
                 <message>The pronoun '<match no="1"/>' must be used with a non-third-person form of a verb: <suggestion><match no="2" postag="VB"/></suggestion></message>
                 <example correction="work">I <marker>works</marker> here.</example>
+                <example correction="work">I cannot <marker>works</marker> here.</example>
                 <example>We <marker>make</marker> a lot of mistakes.</example>
                 <example>Phase I corresponds to the small-deformation regime.</example>
                 <example>Am I nuts?</example>
                 <example correction="have">I rarely <marker>has</marker> a bad day.</example>
             </rule>
             <rule>
+                <antipattern>
+                    <token>need</token>
+                    <token>is</token>
+                </antipattern>
                 <pattern>
-                    <token skip="1" regexp="yes" postag="PRP">we|they</token>
+                    <token skip="1" regexp="yes" postag="PRP">we|they<exception scope="previous">Are</exception></token>
                     <marker>
-                        <token postag="VBZ"><exception scope="previous" negate_pos="yes" postag_regexp="yes" regexp="yes" postag="RB|PRP|DT"/></token>
+                        <token postag="VBZ"><exception scope="previous" negate_pos="yes" postag_regexp="yes" regexp="yes" postag="RB|PRP|DT|MD"/></token>
                     </marker>
                     <token><exception regexp="yes">['’]</exception></token>
                 </pattern>
                 <message>The pronoun '<match no="1"/>' must be used with a non-third-person form of a verb: <suggestion><match no="2" postag="VB"/></suggestion></message>
                 <example correction="work">They <marker>works</marker> here.</example>
+                <example correction="work">They cannot <marker>works</marker> here.</example>
                 <example correction="work">They always <marker>works</marker> here.</example>
                 <example correction="mean">They all <marker>means</marker> the same.</example>
                 <example>We <marker>make</marker> a lot of mistakes.</example>
+                <example>Are they <marker>friends</marker>?</example>
+                <example>All we need is love.</example>
                 <example>Phase I corresponds to the small-deformation regime.</example>
             </rule>
             <rule>
@@ -8975,10 +9131,16 @@ USA
                 <example correction="don't">We <marker>doesn't</marker> believe so.</example>
             </rule>
             <rule>
+                <antipattern>
+                    <token postag="SENT_START"/>
+                    <token skip="-1">What</token>
+                    <token>you</token>
+                    <token>is</token>
+                </antipattern>
                 <pattern>
                     <token skip="1" postag="PRP">you<exception scope="previous" postag="IN"/><exception scope="next" postag="PRP"/></token>
                     <marker>
-                        <token postag="VBZ"><exception scope="previous" negate_pos="yes" postag_regexp="yes" regexp="yes" postag="RB|PRP|DT"/></token>
+                        <token postag="VBZ"><exception scope="previous" negate_pos="yes" postag_regexp="yes" regexp="yes" postag="RB|PRP|DT"/><exception>guys</exception></token>
                     </marker>
                     <token><exception regexp="yes">['’]</exception></token>
                 </pattern>
@@ -8989,6 +9151,7 @@ USA
                 <example>Be sure the man nearest you is awake.</example>
                 <example>You guys remember that.</example>
                 <example>How many times do I have to tell you he isn't here?</example>
+                <example>What I have told you is true.</example>
             </rule>
             <rule>
                 <pattern>
@@ -10587,6 +10750,274 @@ USA
                 <example>Provided that the dog guards my house; I do not mind it barking loudly.</example>
             </rule>
         </rulegroup>
+        <rule id="EXCEPTION_PREPOSITION_THE_RULE" name="wrong preposition: 'exception PREPOSITION the rule' (exception to the rule)">
+            <pattern>
+                <marker>
+                    <token inflected="yes">exception</token>
+                    <token><exception>to</exception></token>
+                </marker>
+                <token postag="DT"/>
+                <token postag="JJ" min="0" max="1"/>
+                <token regexp="yes">rules?</token>
+            </pattern>
+            <message>Did you mean <suggestion>\1 to</suggestion>?</message>
+            <short>Wrong preposition: exception to</short>
+            <example correction="exception to">Graphite is an <marker>exception of</marker> the rule.</example>
+            <example correction="Exceptions to"><marker>Exceptions regarding</marker> these general rules are in Table 3.</example>
+            <example>Graphite is an <marker>exception to</marker> the rule.</example>
+            <example>Graphite and graphene are <marker>exceptions to</marker> these general rules.</example>
+            <example>... but we make an <marker>exception for</marker> the people who cannot...</example>
+            <example>We make <marker>exceptions under</marker> some circumstances.</example>
+        </rule>
+        <rule id="REGARDING_TO" name="Regarding to (regard to/regarding)">
+            <pattern>
+                <token>regarding</token>
+                <token>to</token>
+            </pattern>
+            <message>The phrase '\1 \2' is not correct. Use <suggestion><match no="1"/></suggestion> or <suggestion>regard <match no="2"/></suggestion>.</message>
+            <url>http://www.collinsdictionary.com/dictionary/english/regarding</url>
+            <short>Grammatical problem</short>
+            <example correction="regarding|regard to">Your action with <marker>regarding to</marker> the decision of the committee is not satisfactory.</example>
+            <example correction="regarding|regard to">The action of your client <marker>regarding to</marker> the decision of the committee is not satisfactory.</example>
+            <example correction="Regarding|Regard to"><marker>Regarding to</marker> the risk behaviors, it is the crucial problem of education...</example>
+            <example>Your action with <marker>regard to</marker> the decision of the committee is not satisfactory.</example>
+            <example>Your action <marker>regarding</marker> the decision of the committee is not satisfactory.</example>
+        </rule>
+        <rule id="ARTICLE_ADJECTIVE_OF" name="ARTICLE ADJECTIVE of">
+            <antipattern><!-- Nominalized adjective: https://en.wikipedia.org/wiki/Nominalized_adjective -->
+                <token>the</token>
+                <token regexp="yes">blind|deaf|disabled|homeless|poor|rich|wealthy</token><!-- Only relatively common nominalizations. -->
+                <token>of</token>
+            </antipattern>
+            <pattern>
+                <token regexp="yes">a|an|the</token>
+                <token postag="JJ" regexp="yes">[a-z]+<exception postag_regexp="yes" postag="NN.*|VBG"/><exception regexp="yes">[0-9]?(1st|2nd|3rd|[0-9]th)</exception><exception regexp="yes">innermost|outermost|northernmost|southernmost|easternmost|westernmost|next</exception></token><!-- The exception for VBG is necessary, because adjectives such as 'draining', 'cooling', and 'functioning' can be used as gerunds [https://en.wikipedia.org/wiki/Gerund]. The exception for ordinal numbers does not ignore incorrect abbreviations such as 21th. Innermost: some dictionaries say that it is an adjective that is used only before a noun. Other dictionaries say that it is a noun and an adjective. Northernmost: SOED says that this is can be a noun.  -->
+                <token>of</token>
+            </pattern>
+            <message>The phrase '\1 \2 \3' is not correct. Use a noun, not an adjective, between '\1' and '\3'.</message>
+            <short>Grammatical problem</short>
+            <example correction="">We are not responsible for <marker>the delusional of</marker> your client.</example>
+            <example correction="">We describe <marker>an unusual of</marker> benign prostatic hyperplasia that demonstrated florid sclerosing...</example>
+            <example correction="">Diamonds are <marker>the only of</marker> these mineral resources currently being developed.</example>
+            <example correction="">That same year, <marker>the mainline of</marker> the transcontinental railroad into Oakland was...</example>
+            <example correction="">...conventional light, medium, and heavy crude, plus <marker>an additional of</marker> pentanes plus used for blending with heavy crude ...</example>
+            <example correction="">Since 2002, <marker>the peninsular of</marker> Actium has been linked with Preveza on the north ...</example>
+            <example>We are not responsible for <marker>the delusions of</marker> your client.</example>
+            <example>Use <marker>the larger of</marker> the two pieces.</example>
+            <example><marker>The earliest of</marker> these is Diodorus Siculus (1st century BC).</example>
+            <example>In a recent survey, <marker>a high of</marker> 37 percent of people say that the ...</example>
+            <example><marker>The blooming of</marker> 3,000 cherry trees marks the 94th anniversary of Japan's gift of ...</example>
+            <example><marker>The English of</marker> a person who learns English as an adult is usually different to the English spoken by a native speaker.</example>
+            <example>The test will be on <marker>the 5th of</marker> November next year.</example>
+            <example><marker>The innermost of</marker> the concentric circles is...</example>
+            <example><marker>The best-known of</marker> these works is that by Plato, who...</example>
+            <example>...by persons other than <marker>the next of</marker> kin.</example>
+            <example><marker>The next of</marker> these problems is discussed in Chapter 5.</example>
+            <example>... limited polar heat convergence and caused <marker>a cooling of</marker> sea surface temperatures by several degrees.</example>
+            <example>The Bronx is <marker>the northernmost of</marker> the five boroughs of New York City.</example>
+            <example>It spans three time zones, <marker>the easternmost of</marker> which is one hour ahead of Eastern Standard Time.</example>
+            <example><marker>The large-scale of</marker> these works is an indication of the...</example><!-- False negative. TODO -->
+            <example>We need <marker>a sample of</marker> water for this test.</example>
+            <example>I'm thirsty. I would like <marker>a large of</marker> water.</example><!-- False negative. TODO. But refer to previous example ('a sample of'). -->
+            <example type="triggers_error">'<marker>The Wretched of</marker> the Earth' is a 1961 book by Frantz Fanon.</example>
+        </rule>
+        <rule id="LOSE_LIVES" name="lose their life (lives)">
+            <pattern>
+                <token inflected="yes" regexp="yes">lose|save|sacrifice|give|risk|end|put|change|affect</token>
+                <token>their</token>
+                <marker>
+                    <token>life</token>
+                </marker>
+            </pattern>
+            <message>Did you mean <suggestion>lives</suggestion>?</message>
+            <example correction="lives">They lost their <marker>life</marker> in the line of duty.</example>
+        </rule>
+        <rulegroup id="MEAN_FOR_TO" name="mean something for (to) somebody">
+            <url>http://www.merriam-webster.com/dictionary/mean%20something%20to%20(someone)</url>
+            <rule>
+                <pattern>
+                    <token inflected="yes">mean</token>
+                    <token min="0" regexp="yes">so|really|a|the</token>
+                    <token regexp="yes">much|lot|little|everything|world|something</token>
+                    <marker>
+                        <token>for</token>
+                    </marker>
+                    <token postag="PRP|NNP" postag_regexp="yes"/>
+                </pattern>
+                <message>Did you mean <suggestion>to</suggestion> ('to mean something to somebody')?</message>
+                <example correction="to">This trophy meant a lot <marker>for</marker> me.</example>
+                <example correction="to">She means so much <marker>for</marker> Tom.</example>
+                <example>Recommended changes included providing means for Congress to collect money from state treasuries.</example>
+            </rule>
+            <rule>
+                <pattern>
+                    <token postag="PRP|NNP" postag_regexp="yes"/>
+                    <token inflected="yes">mean</token>
+                    <marker>
+                        <token>for</token>
+                    </marker>
+                    <token postag="PRP|NNP" postag_regexp="yes"/>
+                </pattern>
+                <message>Did you mean <suggestion>to</suggestion> ('to mean something to somebody')?</message>
+                <example correction="to">Does she know what she means <marker>for</marker> me?</example>
+                <example>Recommended changes included providing means for Congress to collect money from state treasuries.</example>
+            </rule>
+        </rulegroup>
+        <rule id="BEWARE_PREPOSITION" name="beware PREPOSITION">
+            <antipattern>
+               <marker>
+               <token inflected="yes">beware</token><!-- Inflection is probably not necessary. In modern English, usually only imperative and infinitive is used.-->
+               <token>as</token>
+               <token>well</token>
+              </marker>
+            </antipattern>
+            <pattern>
+               <marker>
+               <token inflected="yes">beware</token>
+               <token postag="RP"><exception>of</exception></token>
+              </marker>
+            </pattern>
+            <message>Did you mean: <suggestion>beware of</suggestion>?</message>
+            <short>Wrong preposition: beware of</short>
+            <example correction="Beware of"><marker>Beware about</marker> malware.</example>
+            <example correction="Beware of"><marker>Beware with</marker> regard to malicious websites.</example>
+            <example><marker>Beware of</marker> malware.</example>
+            <example><marker>Beware</marker>! This dog is not friendly.</example>
+            <example>... but <marker>beware</marker> the ever-shrinking attention span of the general public.</example>
+            <example>It's '<marker>buyer beware</marker>' at Vienna's overpriced hotels, but this little charmer is a bargain.</example>
+            <example>Mac users now need to <marker>beware</marker> as well-the most recent of Apple's three major security patches this year ...</example>
+        </rule>
+        <rulegroup id="THE_BEST_WAY" name="missing article before 'BE + ADJECTIVE + way'">
+            <rule>
+                <antipattern>
+                    <token min="0">not</token>
+                    <token regexp="yes">under|one|still|just|by</token>
+                    <token>way</token>
+                </antipattern>
+                <pattern>
+                    <token inflected="yes">be</token>
+                    <token min="0">not</token>
+                    <marker>
+                        <token postag="JJS"/>
+                    </marker>
+                    <token>way</token>
+                </pattern>
+                <message>Please check whether an article is missing: <suggestion>the \3</suggestion>.</message>
+                <example correction="the best">This is <marker>best</marker> way of dealing with errors.</example>
+            </rule>
+            <rule>
+                <antipattern>
+                    <token min="0">not</token>
+                    <token regexp="yes">under|one|still|just|by</token>
+                    <token>way</token>
+                </antipattern>
+                <pattern>
+                    <token inflected="yes">be</token>
+                    <token min="0">not</token>
+                    <marker>
+                        <token postag="JJR?" postag_regexp="yes"/>
+                    </marker>
+                    <token>way</token>
+                </pattern>
+                <message>Please check whether an article is missing: <suggestion>a \3</suggestion>.</message>
+                <example correction="a faster">There must be <marker>faster</marker> way of going to California.</example>
+            </rule>
+        </rulegroup>
+        <rule id="EVERY_EACH_SINGULAR" name="'every/each' + SINGULAR">
+            <antipattern>
+                <token regexp="yes">each|every</token>
+                <token/>
+                <token postag="NN.*" postag_regexp="yes"/>
+            </antipattern>
+            <antipattern>
+                <token regexp="yes">each|every</token>
+                <token/>
+                <token spacebefore="no" regexp="yes">['’]</token>
+            </antipattern>
+            <pattern>
+                <token regexp="yes">each|every</token>
+                <marker>
+                    <token postag="NNS"><exception postag="NN|PRP\$|NN:UN|VBZ" postag_regexp="yes"/></token>
+                </marker>
+            </pattern>
+            <message>The noun should be probably in the singular form: <suggestion><match no="2" postag="NN(:UN)?" postag_regexp="yes"/></suggestion>?</message>
+            <short>Grammatical problem</short>
+            <example correction="employee">The manager wants to speak to every <marker>employees</marker> in his office.</example>
+            <example correction="time">Each <marker>times</marker> I visit France, I rent a car.</example>
+            <example>We saw each other’s faces.</example>
+            <example>In an era in which every players' distance run in training and games can be measured and timed</example>
+            <example>I took part in every sports event in school.</example>
+            <example>Each seeks to prove to the higher court that the result they desired was the just result.</example>
+        </rule>
+        <rule id="EACH_OTHERS" name="each others’ (other’s)">
+            <pattern>
+                <token>each</token>
+                <marker>
+                    <token>others</token>
+                    <token spacebefore="no" regexp="yes">['’]</token>
+                </marker>
+            </pattern>
+            <message>Did you mean <suggestion>other's</suggestion>?</message>
+            <url>https://jakubmarian.com/each-others-vs-each-others-in-english/</url>
+            <short>Grammatical problem</short>
+            <example correction="other's">They checked each <marker>others’</marker> work.</example>
+            <example>We saw each other's faces.</example>
+        </rule>
+        <rule id="SIGN_INTO" name="wrong preposition: sign into (sign in to)">
+            <pattern>
+                <marker>
+                    <token postag_regexp="yes" postag="VB.*" inflected="yes">sign</token>
+                    <token>into</token>
+                </marker>
+                <token><exception regexp="yes">law|effect|creation</exception></token>
+            </pattern>
+            <message>The verb '\1 \2' is not standard English, except in the context of the law ("The bill was signed into law"). Write 
+            <suggestion>\1 in to</suggestion>. For websites and computers, other options are 
+            <suggestion><match no="1" postag_regexp="yes" postag="(VB.*)" postag_replace="$1">log</match> in to</suggestion> or 
+            <suggestion><match no="1" postag_regexp="yes" postag="(VB.*)" postag_replace="$1">log</match> on to</suggestion>.</message>
+            <short>Wrong preposition</short>
+            <example correction="sign in to|log in to|log on to">When you <marker>sign into</marker> your e-mail account...</example>
+            <example correction="signed in to|logged in to|logged on to">A hacker <marker>signed into</marker> my e-mail account!</example>
+            <example correction="signs in to|logs in to|logs on to">Before the manager <marker>signs into</marker> the meeting, he must...</example>
+            <example><marker>Sign into</marker> your e-mail account.</example><!-- TODO. False negative. -->
+            <example>When you <marker>sign in to</marker> your e-mail account...</example>
+            <example>However, the president can refuse to <marker>sign into</marker> law bills passed by parliament.</example>
+            <example>On 11 August 1712, the Peace of Aarau was <marker>signed into</marker> effect.</example>
+            <example>Credit: NPS. President Carter, Senator Kennedy, and Senator Tsongas <marker>signing into</marker> creation Lowell National Historical Park in June of 1978.</example>
+            <example>Carefully put the <marker>sign into</marker> the hole and then pour concrete into the hole.</example>
+        </rule>
+        <rule default="off" id="ARTICLE_UNNECESSARY" name="Articles: unnecessary indefinite article before an uncountable noun"><!-- Many nouns that have only the postag NN:U can also be NN, but they do not have the postag NN. Thus, they cannot be excluded using an exception. The rule gives too many false warnings. -->
+            <antipattern>
+                <token>a</token>
+                <token>little</token>
+            </antipattern>
+            <pattern>
+                <marker>
+                    <token regexp="yes">a|an</token>
+                    <and>
+                        <token postag="NN:U"/>
+                        <token chunk="E-NP-singular"/>
+                    </and>
+                </marker>
+                <token><exception>of</exception></token>
+            </pattern>
+            <message>The indefinite article might be unnecessary before the uncountable noun: <suggestion>\2</suggestion>.</message>
+            <short>Article unnecessary</short>
+            <example correction="oil">I need <marker>a oil</marker> for my car.</example>
+            <example correction="oil">My car needs <marker>an oil</marker>.</example>
+            <example>I need <marker>oil</marker> for my car.</example>
+            <example>I need <marker>the oil</marker> for my car.</example>
+            <example>I need <marker>an oil filter</marker> for my car.</example>
+            <example>Jane ate <marker>a cheese and potato pie</marker> for her lunch.</example>
+            <example>Most reviews tend to estimate <marker>a prevalence of</marker> 12 per 1,000 for autism and...</example>
+            <example>Lincoln said, "The taste is in my mouth <marker>a little</marker>."</example>
+            <example>It took <marker>a little</marker> over three years for all states to ratify.</example>
+            <example type="triggers_error">Furthermore, the nitrogen atom may be replaced by <marker>a phosphorus</marker>, arsenic, or antimony atom, creating a...</example>
+            <example type="triggers_error">Use <marker>an oil</marker> that has a high smoke point.</example>
+            <example type="triggers_error">If a defendant appeals a conviction for <marker>a crime</marker> having multiple levels of offenses...</example>
+            <example type="triggers_error">Such <marker>an acceleration</marker> will cause lateral loads on the walls, resulting ...</example>
+            <example type="triggers_error">In recent years there has been <marker>a backlash</marker> against the external environmental effects of...</example>
+        </rule>
     </category>
 
     <!-- ====================================================================== -->
@@ -10691,6 +11122,34 @@ USA
     <!-- Miscellaneous -->
     <!-- ====================================================================== -->
     <category id="MISC" name="Miscellaneous">
+        <rule id="OVERNIGHT" name="overnight instead of 'over night'">
+            <antipattern>
+                <token inflected="yes" skip="-1" regexp="yes">prefer|choose</token>
+                <token>over</token>
+                <token>night</token>
+            </antipattern>
+            <pattern>
+                <token>over</token>
+                <token>night</token>
+            </pattern>
+            <message>Did you mean the adjective or adverb <suggestion>\1night</suggestion> (i.e., for or during the entire night)?</message>
+            <url>http://www.merriam-webster.com/dictionary/overnight</url>
+            <example correction="overnight">She stayed <marker>over night</marker>.</example>
+            <example correction="overnight">The stock has gone down <marker>over night</marker>.</example>
+            <example>Cover and refrigerate <marker>overnight</marker>.</example>
+            <example>I prefer day over night.</example>
+        </rule>
+        <rule id="DESPITE_OF" name="despite of (despite)">
+            <pattern>
+                 <token>despite<exception scope="previous">in</exception></token>
+                 <token>of</token>
+            </pattern>
+            <message>Did you mean <suggestion>\1</suggestion> (or, alternatively, 'in spite of')?</message>
+            <url>http://www.elearnenglishlanguage.com/blog/english-mistakes/despite-vs-in-spite-of/</url>
+            <example correction="despite">He kept running <marker>despite of</marker> the pain in his chest.</example>
+            <example>She had difficulty communicating in French <marker>despite</marker> all her years of study.</example>
+            <example>She had difficulty communicating in French <marker>in spite of</marker> all her years of study.</example>
+        </rule>
         <rule id="CONTRACTED_FORM_NOT" name="shouldn't not (shouldn't)">
             <pattern>
                 <token regexp="yes">ain|aren|can|couldn|didn|doesn|don|hadn|hasn|haven|isn|mayn|mightn|mustn|needn|oughtn|shan|shouldn|wasn|weren|won|wouldn</token>
@@ -10840,6 +11299,10 @@ USA
         </rule>
         <rulegroup id="DT_DT" name="Two consecutive articles, e.g. 'the a'">
             <rule>
+                <antipattern>
+                    <token regexp="yes" case_sensitive="yes">an|the</token>
+                    <token postag="DT" case_sensitive="yes">A</token>
+                </antipattern>
                 <pattern>
                     <marker>
                         <token regexp="yes">a|an|the</token>
@@ -10851,7 +11314,10 @@ USA
                 <short>Two consecutive articles</short>
                 <example correction="The|A"><marker>The a</marker> thing is this.</example>
                 <example correction="an|a">This is <marker>an a</marker> flower.</example>
+                <example correction="The|A"><marker>The A</marker> Cat Sat On A Mat.</example>
                 <example>The Thames was once a much broader river.</example>
+                <example>The third letter is <marker>the A</marker> for Aqua, not Alpha.</example>
+                <example>In this example, use <marker>an A</marker>, not a B or a C.</example>
             </rule>
             <rule>
                 <pattern>
@@ -11140,7 +11606,7 @@ USA
                 </pattern>
                 <message>The comma is missing here:<suggestion>e.g.,</suggestion>.</message>
                 <short>Punctuation error</short>
-                <example>The are several grammar checkers for English, e.g., LanguageTool.</example>
+                <example>There are several grammar checkers for English, e.g., LanguageTool.</example>
                 <example correction="e.g.,">The are several grammar checkers for English, <marker>e.g.</marker> LanguageTool.</example>
             </rule>
             <rule>
@@ -11152,7 +11618,7 @@ USA
                 </pattern>
                 <message>A comma and a dot are missing here: <suggestion>e.g.,</suggestion>.</message>
                 <short>Punctuation error</short>
-                <example>The are several grammar checkers for English, e.g., LanguageTool.</example>
+                <example>There are several grammar checkers for English, e.g., LanguageTool.</example>
                 <example correction="e.g.,">The are several grammar checkers for English, <marker>eg</marker> LanguageTool.</example>
             </rule>
             <rule>
@@ -11165,7 +11631,7 @@ USA
                 </pattern>
                 <message>A comma and a dot are missing here: <suggestion>e.g.,</suggestion>.</message>
                 <short>Punctuation error</short>
-                <example>The are several grammar checkers for English, e.g., LanguageTool.</example>
+                <example>There are several grammar checkers for English, e.g., LanguageTool.</example>
                 <example correction="e.g.,">The are several grammar checkers for English, <marker>eg.</marker> LanguageTool.</example>
             </rule>
         </rulegroup>
@@ -11247,23 +11713,454 @@ USA
                 <example correction="i.e.">Who's responsible for providing public facilities, <marker>i. e.</marker>, a post office, library, etc. for the Northwest?</example>
             </rule>
         </rulegroup>
-
-        <rulegroup default="off" name="Warn when the serial comma is not used (incomplete)" id="SERIAL_COMMA_ON">
+        <rulegroup default="off" id="COMMA_BEFORE_AND" name="Missing comma before 'and, or, nor, yet, so, but' (inclompete)">
             <rule>
-                <!-- This rule detects the simplest case:
-                   Noun, Noun and Noun -->
+                <antipattern>
+                    <token regexp="yes">I|you|he|she|it|we|they|my|your|his|her|our|their</token>
+                    <token regexp="yes">and|or|nor|but|so|yet</token>
+                    <token regexp="yes">I|you|he|she|it|we|they|my|your|his|her|our|their</token>
+                </antipattern>
+                <antipattern>
+                    <token regexp="yes" skip="-1">and|or|nor|but|so|yet|,<exception postag="VB[DGPNZ]?" postag_regexp="yes" scope="next"/></token>
+                    <token regexp="yes">and|or|nor|but|so|yet</token>
+                </antipattern>
+                <antipattern>
+                    <token/>
+                    <token>so</token>
+                    <token regexp="yes">many|much|often</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="SENT_START" skip="-1"><exception postag="VB[DPZ]?" postag_regexp="yes" scope="next"/></token>
+                    <token regexp="yes">and|or|nor|but|so|yet</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="NNP"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
                 <pattern>
-                    <token postag_regexp="yes" postag="NN.*"/>
-                    <token>,</token>
-                    <marker>
-                        <token postag_regexp="yes" postag="NN.*"/>
-                        <token regexp="yes">and|or</token>
-                    </marker>
-                    <token postag_regexp="yes" postag="NN.*"/>
+                    <marker><token><exception regexp="yes">,|;|\(|-</exception></token>
+                    <token regexp="yes">and|or|nor|but|so|yet</token></marker>
+                    <token regexp="yes" skip="-1">I|you|he|she|it|we|they|my|your|his|her|our|their|a|an|the|these|those|some|many|most<exception scope="next">and</exception><exception scope="next">,</exception></token>
+                    <token postag="VB[DPZ]?" postag_regexp="yes"></token>
                 </pattern>
-                <message>The serial comma is missing: <suggestion>\3, \4</suggestion>.</message>
-                <example>The pen, <marker>pencil, and</marker> book are on the desk.</example>
-                <example correction="pencil, and">The pen, <marker>pencil and</marker> book are on the desk.</example>
+                <message>If the conjunctions 'and', '(n)or, 'so', 'but', or 'yet' separate two independent clauses, a comma must precede them: <suggestion>\1, \2</suggestion></message>
+                <url>https://owl.english.purdue.edu/owl/resource/607/02</url>
+                <example correction="piano, and">She loves playing the <marker>piano and</marker> I hate it.</example>
+                <example correction="Timothy, but">My name is <marker>Timothy but</marker> my friends call me Tim.</example>
+                <example correction="nice, yet">I am really <marker>nice yet</marker> many people do not like me.</example>
+                <example><marker>Me and</marker> my friends went to Italy last year, but my fiancee and her friends decided to go to France.</example>
+                <example>He had met his <marker>uncle and</marker> his aunt, before he flew to Germany.</example>
+                <example>They often argue whether it was <marker>his or</marker> her idea.</example>
+                <example>Following their unsuccessful participation in the League of Peace and Freedom, Russian revolutionary Mikhail <marker>Bakunin and</marker> his collectivist anarchist associates joined the First International.</example>
+                <example>After they had finished their homework, Peter and his friends played soccer.</example>
+            </rule>
+        </rulegroup>
+        <rulegroup default="off" name="Warn when the serial comma is not used (incomplete)" id="SERIAL_COMMA_ON">
+              <rule>
+                <antipattern>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="VBG"/></token>
+                    <token>,</token>
+                    <token postag="VBG"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="VBG"/>
+                </antipattern>
+                <antipattern>
+                    <token>By</token>
+                    <token>the</token>
+                    <token>way</token>
+                    <token>,</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="RB[RS]" postag_regexp="yes"/>
+                    <token>,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="NNP"/>
+                    <token>and</token>
+                    <token postag="NNP" skip="-1"/>
+                    <token >(</token>
+                    <token >editors</token>
+                    <token >)</token>
+                </antipattern>
+                <antipattern>
+                    <token>,</token>
+                    <token skip="-1" regexp="yes">in|at|and</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token>,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="NNP"/></token>
+                    <token>,</token>
+                    <token postag="NNP"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="NNP"/>
+                </antipattern>
+                <antipattern>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="JJ"/></token>
+                    <token>,</token>
+                    <token postag="JJ"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="JJ"/>
+                </antipattern>
+                <antipattern>
+                    <token postag="NN:UN"><exception postag="VB.*" postag_regexp="yes"/><exception scope="previous">,</exception></token>
+                    <token>,</token>
+                    <token postag="VB.*" postag_regexp="yes"><exception postag="NN:UN|NNS" postag_regexp="yes"/></token>
+                    <token regexp="yes">and|or</token>
+                    <token postag="VB.*" postag_regexp="yes"/>
+                </antipattern>
+                <antipattern>
+                    <token postag="NNP"/>
+                    <token regexp="yes">,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="NNPS?" postag_regexp="yes"></exception></token>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token>on</token>
+                    <token>the</token>
+                    <token>other</token>
+                    <token>hand</token>
+                    <token>,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token>,</token>
+                    <token postag="NN.*" postag_regexp="yes" max="-1"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="NN.*" postag_regexp="yes" max="-1"/>
+                    <token>,</token>
+                </antipattern>
+                <antipattern>
+                    <token>,</token>
+                    <token postag="NN.*" postag_regexp="yes" max="-1"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="NN.*" postag_regexp="yes" max="-1"/>
+                    <token min="0">,</token>
+                    <token>for</token>
+                    <token regexp="yes">example|instance</token>
+                </antipattern>
+                <antipattern>
+                    <token regexp="yes">and|or</token>
+                    <token min="0" regexp="yes">the|an?</token>
+                    <token postag="NN.*" postag_regexp="yes" max="-1"/>
+                    <token>,</token>
+                    <token min="0" regexp="yes">the|an?</token>
+                    <token postag="NN.*" postag_regexp="yes" max="-1"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token>,</token>
+                    <token>rain</token>
+                    <token>or</token>
+                    <token>shine</token>
+                </antipattern>
+                 <antipattern>
+                    <token>,</token>
+                    <token>ladies</token>
+                    <token>and</token>
+                    <token>gentlemen</token>
+                </antipattern>
+                 <antipattern>
+                    <token>,</token>
+                    <token>now</token>
+                    <token>and</token>
+                    <token>forever</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="NNS"><exception postag_regexp="yes" postag="NN:UN|NN"/></token>
+                    <token>,</token>
+                    <token regexp="yes">an?</token>
+                    <token postag="NN"/>
+                    <token regexp="yes">and|or</token>
+                    <token regexp="yes">an?</token>
+                    <token postag="NN"/>
+                </antipattern>
+                <antipattern>
+                    <token>for</token>
+                    <token regexp="yes">example|instance</token>
+                    <token min="0">,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="VBG"/>
+                    <token>,</token>
+                    <token regexp="yes" negate="yes">[a-z]+ing</token>
+                    <token regexp="yes">and|or</token>
+                    <token regexp="yes" negate="yes">[a-z]+ing</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="SENT_START"/>
+                    <token regexp="yes">Next|Last</token>
+                    <token/>
+                    <token>,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <antipattern>
+                    <token postag="SENT_START"/>
+                    <token regexp="yes" skip="-1">While|Since|After|With|In|Here|Although|Despite|Contrary|Meanwhile|Who|Which|What|Whenever|Where|When|But|Thanks</token>
+                    <token>,</token>
+                    <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <pattern>
+                      <token postag="NN.*" postag_regexp="yes"><exception regexp="yes">yes|no|today|yesterday|tomorrow</exception><exception scope="previous" regexp="yes">/|:|other|both|and|or|two|must|can|way|be</exception></token>
+                      <token>,</token>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <marker>
+                          <token postag="NN.*" postag_regexp="yes"/>
+                          <token regexp="yes">and|or</token>
+                      </marker>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <token postag="NN.*" postag_regexp="yes"></token>
+                </pattern>
+                <message>Style preference: the serial comma (Oxford comma, Harvard comma) is missing. Use: <suggestion>\4, \5</suggestion></message>
+                <url>https://en.wikipedia.org/wiki/Serial_comma</url>
+                <short>Style: serial comma is missing</short>
+                <example correction="German, and">She speaks Spanish, <marker>German and</marker> French.</example>
+                <example correction="president, and">She took a photograph of her parents, the <marker>president and</marker> the vice president.</example>
+                <example correction="water, or">Would you like tea, coffee, <marker>water or</marker> wine?</example>
+                <example correction="car, or">How will you go to the city? Will you use my car, your <marker>car or</marker> the train?</example>
+                <example correction="performances, and">Art is used in rituals, <marker>performances and</marker> dances as a decoration or symbol.</example>
+                <example correction="dancing, and">He likes singing, <marker>dancing and</marker> playing.</example>
+                <example>She speaks Spanish, <marker>German, and</marker> French.</example>
+                <example>Irina, a <marker>singer and</marker> actress, was born in Poland.</example>
+                <example>They became polarised into two camps, with <marker>Marx and</marker> Bakunin as their respective figureheads.</example>
+                <example>The International Time Bureau began a time scale, <marker>Tm or</marker> AM, in July 1955, using both local caesium clocks and ...</example>
+                <example>Generally who visits their parents the most, <marker>sons or</marker> daughters?</example>
+                <example>While he was growing up, his <marker>father and</marker> Nick Bollettieri trained him in this way.</example>
+                <example>Since being introduced by Portuguese in the 16th century, <marker>maize and</marker> manioc have replaced traditional African...</example>
+                <example>Which do you like better, <marker>summer or</marker> winter?</example>
+                <example>With the rise of space tourism, <marker>NASA and</marker> the Russian Federal Space Agency agreed to use...</example>
+                <example>On the other hand, <marker>consonants and</marker> vowels are written as independent letters.</example>
+                <example>In spite of their various differences, <marker>Joan and</marker> Ann are friends.</example>
+                <example>In addition to buses, <marker>Calgary and Edmonton</marker> operate light rail transit systems.</example>
+                <example>It was Branchus, <marker>son or</marker> lover of Apollo.</example>
+                <example>His father was Hermann Einstein, a <marker>salesman and</marker> engineer.</example>
+                <example>Recorded by Ptolemy, the <marker>geographer and</marker> astronomer from Alexandria</example>
+                <example>... and according to Alberta Economic Development, <marker>Calgary and</marker> Edmonton both host over four million visitors.</example>
+                <example>According to Alberta Economic Development, <marker>Calgary and</marker> Edmonton both host over four million visitors.</example>
+                <example>I like both chips and <marker>eggs and</marker> pie and peas.</example><!-- TODO. False negative -->
+                <example>Gulf Air, Air Arabia, Air India, <marker>PIA and</marker> others also provide services to Afghanistan.</example><!-- TODO. False negative -->
+                <example>Legislative power is vested in the President, the government and parliament.</example><!-- TODO. False negative -->
+                <example>This music focuses on themes in love, <marker>religious and</marker> epic.</example>
+                <example>But in some jurisdictions, the <marker>state or</marker> prosecution may appeal "as of right" from a trial.</example>
+                <example>Likewise, in some jurisdictions, the <marker>state or</marker> prosecution may appeal an issue of law "by leave".</example>
+                <example>Meanwhile, <marker>plains and</marker> foothills are characterized by high solar radiation.</example>
+                <example>Chapter 2: Albedo, a <marker>whitening or</marker> leucosis</example>
+                <example>Barnett, <marker>William and</marker> John Hoopes (editors).</example>
+                <example>Today, <marker>separation and</marker> divorce are not as frowned upon.</example>
+                <example>... breeding site, the males usually arriving first, <marker>calling and</marker> setting up territories.</example>
+                <example type="triggers_error">Carl Jung, <marker>Man and</marker> His Symbols.</example>
+                <example>... his first visit to Paris as a gift to his hosts, <marker>Robert and</marker> Mabel Schirmer.</example>
+                <example>Whenever an army is raised for common defense, <marker>colonels and</marker> military ranks below colonel will be named by the...</example>
+                <example>Which is the capital of the United States, <marker>Washington or</marker> New York?</example>
+                <example>Which would you like to have with your bread, <marker>butter or</marker> cheese?</example>
+                <example>... yields are around 2 t/ha, African under 1 t/ha, <marker>Egypt and</marker> Arabia up to 3.5 to 4 t/ha with irrigation.</example>
+                <example>While air, <marker>water and</marker> food are necessary for life, we cannot so easily categorize the prerequisites of happiness.</example>
+                <example>Since rice, <marker>maize and</marker> manioc have replaced traditional African foods, the ...</example>
+                <example>With cats, <marker>dogs and</marker> rabbits as the most popular pets for children, we find that ...</example>
+                <example>In Art, <marker>Music and</marker> Literature, these themes are common.</example>
+                <example>In addition to buses, <marker>trams and</marker> taxis, popular modes of transport are ...</example>
+                <example>Thanks to television, <marker>boys and</marker> girls are apt to neglect reading books.</example>
+                <example>When I was little, <marker>grandpa and</marker> grandma would come to baby-sit.</example>
+                <example>I like animals, for example, <marker>cats and</marker> dogs.</example>
+                <example>The mermaids, <marker>wood and</marker> house goblins, werewolves, nix, and different kinds of ...</example>
+                <example>There are two doctors in his circle of friends, a <marker>surgeon and</marker> an ophthalmologist.</example>
+                <example>The town in ruins, burning, <marker>people and</marker> children being killed.</example>
+                <example correction="taste, and">Humans have five senses: sight, hearing, touch, <marker>taste and</marker> smell.</example>
+                <example>Massage well into damp hair, <marker>lather and</marker> rinse.</example>
+                <example>Yesterday, <marker>Peter and</marker> I went to the zoo.</example>
+                <example>I saw a wolf, a <marker>fox, and</marker> a rabbit.</example>
+            </rule>
+            <rule>
+                <antipattern>
+                    <token postag="SENT_START"/>
+                    <token>In</token>
+                    <token regexp="yes">theory|principle|practice|essence|general</token>
+                    <token>,</token>
+                    <token postag="NN.*" postag_regexp="yes"/>
+                    <token regexp="yes">and|or</token>
+                </antipattern>
+                <pattern>
+                      <token postag="SENT_START"/>
+                      <token regexp="yes">While|Since|When|After|Although|With|In|Here|Despite|Meanwhile|Whenever|Where|But</token>
+                      <token postag="NN.*" postag_regexp="yes"><exception regexp="yes">\d+</exception></token>
+                      <token>,</token>
+                      <marker>
+                          <token postag="NN.*" postag_regexp="yes"></token>
+                          <token regexp="yes">and|or</token>
+                      </marker>
+                      <token postag="NN.*" postag_regexp="yes"></token>
+                </pattern>
+                <message>Style preference: the serial comma (Oxford comma, Harvard comma) is missing. Use: <suggestion>\5, \6</suggestion></message>
+                <url>https://en.wikipedia.org/wiki/Serial_comma</url>
+                <short>Style: serial comma is missing</short>
+                <example correction="water, and">While air, <marker>water and</marker> food are necessary for life, we cannot so easily categorize the prerequisites of happiness.</example>
+                <example correction="maize, and">Since rice, <marker>maize and</marker> manioc have replaced traditional African foods, the ...</example>
+                <example correction="dogs, and">With cats, <marker>dogs and</marker> rabbits as the most popular pets for children, we find that ...</example>
+                <example correction="Music, and">In Art, <marker>Music and</marker> Literature, these themes are common.</example>
+                <example>She speaks Spanish, <marker>German and</marker> French.</example>
+                <example>She took a photograph of her parents, the <marker>president and</marker> the vice president.</example>
+                <example>Would you like tea, coffee, <marker>water or</marker> wine?</example>
+                <example>How will you go to the city? Will you use my car, your <marker>car or</marker> the train?</example>
+                <example>She speaks Spanish, <marker>German, and</marker> French.</example>
+                <example>Irina, a <marker>singer and</marker> actress, was born in Poland.</example>
+                <example>They became polarised into two camps, with <marker>Marx and</marker> Bakunin as their respective figureheads.</example>
+                <example>The International Time Bureau began a time scale, <marker>Tm or</marker> AM, in July 1955, using both local caesium clocks and ...</example>
+                <example>Generally who visits their parents the most, <marker>sons or</marker> daughters?</example>
+                <example>While he was growing up, his <marker>father and</marker> Nick Bollettieri trained him in this way.</example>
+                <example>Since being introduced by Portuguese in the 16th century, <marker>maize and</marker> manioc have replaced traditional African...</example>
+                <example>Which do you like better, <marker>summer or</marker> winter?</example>
+                <example>With the rise of space tourism, <marker>NASA and</marker> the Russian Federal Space Agency agreed to use...</example>
+                <example>On the other hand, <marker>consonants and</marker> vowels are written as independent letters.</example>
+                <example>In spite of their various differences, <marker>Joan and</marker> Ann are friends.</example>
+                <example>In addition to buses, <marker>Calgary and Edmonton</marker> operate light rail transit systems.</example>
+                <example>It was Branchus, <marker>son or</marker> lover of Apollo.</example>
+                <example>His father was Hermann Einstein, a <marker>salesman and</marker> engineer.</example>
+                <example>Recorded by Ptolemy, the <marker>geographer and</marker> astronomer from Alexandria</example>
+                <example>... and according to Alberta Economic Development, <marker>Calgary and</marker> Edmonton both host over four million visitors.</example>
+                <example>According to Alberta Economic Development, <marker>Calgary and</marker> Edmonton both host over four million visitors.</example>
+                <example>I like both chips and <marker>eggs and</marker> pie and peas.</example><!-- TODO. False negative -->
+                <example>Art, <marker>literature and</marker> film.</example><!-- TODO. False negative -->
+                <example>Gulf Air, Air Arabia, Air India, <marker>PIA and</marker> others also provide services to Afghanistan.</example><!-- TODO. False negative -->
+                <example>Art is used in rituals, <marker>performances and</marker> dances as a decoration or symbol.</example>
+                <example>Legislative power is vested in the President, the government and parliament.</example><!-- TODO. False negative -->
+                <example>This music focuses on themes in love, <marker>religious and</marker> epic.</example>
+                <example>But in some jurisdictions, the <marker>state or</marker> prosecution may appeal "as of right" from a trial.</example>
+                <example>Likewise, in some jurisdictions, the <marker>state or</marker> prosecution may appeal an issue of law "by leave".</example>
+                <example>Meanwhile, <marker>plains and</marker> foothills are characterized by high solar radiation.</example>
+                <example>Chapter 2: Albedo, a <marker>whitening or</marker> leucosis</example>
+                <example>Barnett, <marker>William and</marker> John Hoopes (editors).</example>
+                <example>In 2008, Peter and Jill visited Europe.</example>
+                <example>... breeding site, the males usually arriving first, <marker>calling and</marker> setting up territories.</example>
+                <example>Carl Jung, <marker>Man and</marker> His Symbols.</example>
+                <example>... his first visit to Paris as a gift to his hosts, <marker>Robert and</marker> Mabel Schirmer.</example>
+                <example>Whenever an army is raised for common defense, <marker>colonels and</marker> military ranks below colonel will be named by the...</example>
+                <example>Which is the capital of the United States, <marker>Washington or</marker> New York?</example>
+                <example>Which would you like to have with your bread, <marker>butter or</marker> cheese?</example>
+                <example>... yields are around 2 t/ha, African under 1 t/ha, <marker>Egypt and</marker> Arabia up to 3.5 to 4 t/ha with irrigation.</example>
+                <example>In the temple courts he found men selling cattle, sheep and doves, and others sitting at tables.</example>
+                <example>Which would you like to have with your bread, butter or cheese?</example>
+                <example>In the drought, many people and animals starved to death.</example>
+            </rule>
+            <rule>
+                <antipattern>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="JJ"/></token>
+                    <token>,</token>
+                    <token postag="JJ"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="JJ"/>
+                </antipattern>
+                <pattern>
+                      <token>(</token>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <token postag="NN.*" postag_regexp="yes"></token>
+                      <token>,</token>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <marker>
+                          <token postag="NN.*" postag_regexp="yes"><exception scope="previous">and</exception></token>
+                          <token regexp="yes">and|or</token>
+                      </marker>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <token postag="NN.*" postag_regexp="yes"></token>
+                      <token><exception>,</exception></token>
+                </pattern>
+                <message>Style preference: the serial comma (Oxford comma, Harvard comma) is missing. Use: <suggestion>\6, \7</suggestion></message>
+                <url>https://en.wikipedia.org/wiki/Serial_comma</url>
+                <short>Style: serial comma is missing</short>
+               <example correction="Culture, and">Stocking, George, Jr. (Race, <marker>Culture and</marker> Evolution).</example>
+               <example>Аля (Alia, <marker>male and</marker> feminine)</example>
+            </rule>
+            <rule>
+                <antipattern>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="NNP"/></token>
+                    <token>,</token>
+                    <token postag="NNP"/>
+                    <token regexp="yes">and|or</token>
+                    <token postag="NNP"/>
+                </antipattern>
+                <antipattern>
+                    <token>the</token>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="NNP"/></token>
+                    <token>,</token>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="NNP"/></token>
+                    <token regexp="yes">and|or</token>
+                    <token postag="NN.*" postag_regexp="yes"><exception postag="NNP"/></token>
+                </antipattern>
+                <pattern>
+                      <token>in</token>
+                      <token>addition</token>
+                      <token>to</token>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <token postag="NN.*" postag_regexp="yes"></token>
+                      <token>,</token>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <marker>
+                          <token postag="NN.*" postag_regexp="yes"><exception scope="previous">and</exception></token>
+                          <token regexp="yes">and|or</token>
+                      </marker>
+                      <token regexp="yes" min="0">my|your|his|her|our|their|a|an|the|these|those|some|many|most</token>
+                      <token postag="NN.*" postag_regexp="yes"></token>
+                </pattern>
+                <message>Style preference: the serial comma (Oxford comma, Harvard comma) is missing. Use: <suggestion>\8, \9</suggestion></message>
+                <url>https://en.wikipedia.org/wiki/Serial_comma</url>
+                <short>Style: serial comma is missing</short>
+                <example correction="trams, and">In addition to buses, <marker>trams and</marker> taxis, popular modes of transport are ...</example>
+                <example>In addition to buses, <marker>Calgary and</marker> Edmonton operate light rail transit systems.</example>
+                <example>In addition to the weather, <marker>pilots and</marker> organizers must also consider local airspace restrictions.</example>
+                <example>She speaks Spanish, <marker>German and</marker> French.</example>
+                <example>She took a photograph of her parents, the <marker>president and</marker> the vice president.</example>
+                <example>Would you like tea, coffee, <marker>water or</marker> wine?</example>
+                <example>How will you go to the city? Will you use my car, your <marker>car or</marker> the train?</example>
+                <example>She speaks Spanish, <marker>German, and</marker> French.</example>
+                <example>Irina, a <marker>singer and</marker> actress, was born in Poland.</example>
+                <example>They became polarised into two camps, with <marker>Marx and</marker> Bakunin as their respective figureheads.</example>
+                <example>The International Time Bureau began a time scale, <marker>Tm or</marker> AM, in July 1955, using both local caesium clocks and ...</example>
+                <example>Generally who visits their parents the most, <marker>sons or</marker> daughters?</example>
+                <example>While he was growing up, his <marker>father and</marker> Nick Bollettieri trained him in this way.</example>
+                <example>Since being introduced by Portuguese in the 16th century, <marker>maize and</marker> manioc have replaced traditional African...</example>
+                <example>Which do you like better, <marker>summer or</marker> winter?</example>
+                <example>With the rise of space tourism, <marker>NASA and</marker> the Russian Federal Space Agency agreed to use...</example>
+                <example>On the other hand, <marker>consonants and</marker> vowels are written as independent letters.</example>
+                <example>In spite of their various differences, <marker>Joan and</marker> Ann are friends.</example>
+                <example>In addition to buses, <marker>Calgary and Edmonton</marker> operate light rail transit systems.</example>
+                <example>It was Branchus, <marker>son or</marker> lover of Apollo.</example>
+                <example>His father was Hermann Einstein, a <marker>salesman and</marker> engineer.</example>
+                <example>Recorded by Ptolemy, the <marker>geographer and</marker> astronomer from Alexandria</example>
+                <example>... and according to Alberta Economic Development, <marker>Calgary and</marker> Edmonton both host over four million visitors.</example>
+                <example>According to Alberta Economic Development, <marker>Calgary and</marker> Edmonton both host over four million visitors.</example>
+                <example>I like both chips and <marker>eggs and</marker> pie and peas.</example><!-- TODO. False negative -->
+                <example>Art, <marker>literature and</marker> film.</example><!-- TODO. False negative -->
+                <example>Gulf Air, Air Arabia, Air India, <marker>PIA and</marker> others also provide services to Afghanistan.</example><!-- TODO. False negative -->
+                <example>Art is used in rituals, <marker>performances and</marker> dances as a decoration or symbol.</example>
+                <example>Legislative power is vested in the President, the government and parliament.</example><!-- TODO. False negative -->
+                <example>This music focuses on themes in love, <marker>religious and</marker> epic.</example>
+                <example>But in some jurisdictions, the <marker>state or</marker> prosecution may appeal "as of right" from a trial.</example>
+                <example>Likewise, in some jurisdictions, the <marker>state or</marker> prosecution may appeal an issue of law "by leave".</example>
+                <example>Meanwhile, <marker>plains and</marker> foothills are characterized by high solar radiation.</example>
+                <example>Chapter 2: Albedo, a <marker>whitening or</marker> leucosis</example>
+                <example>Barnett, <marker>William and</marker> John Hoopes (editors).</example>
+                <example>... breeding site, the males usually arriving first, <marker>calling and</marker> setting up territories.</example>
+                <example>Carl Jung, <marker>Man and</marker> His Symbols.</example>
+                <example>... his first visit to Paris as a gift to his hosts, <marker>Robert and</marker> Mabel Schirmer.</example>
+                <example>Whenever an army is raised for common defense, <marker>colonels and</marker> military ranks below colonel will be named by the...</example>
+                <example>Which is the capital of the United States, <marker>Washington or</marker> New York?</example>
+                <example>Which would you like to have with your bread, <marker>butter or</marker> cheese?</example>
+                <example>... yields are around 2 t/ha, African under 1 t/ha, <marker>Egypt and</marker> Arabia up to 3.5 to 4 t/ha with irrigation.</example>
             </rule>
         </rulegroup>
         <rulegroup default="off" name="Warn when the serial comma is used (incomplete)" id="SERIAL_COMMA_OFF">
@@ -11636,6 +12533,68 @@ USA
                 <example correction="from">Are human beings any different <marker>then</marker> animals?</example>
             </rule>
         </rulegroup>
+        <rule id="CONFUSION_OF_HART_HEART" name="confusion of hard/heart">
+            <pattern>
+                <token>at</token>
+                <token>the</token>
+                <marker>
+                    <token regexp="yes">he?ard|hart</token>
+                </marker>
+                <token>of</token>
+            </pattern>
+            <message>Did you mean <suggestion>heart</suggestion>?</message>
+            <example correction="heart">The questions of training and pay lie at the <marker>hard</marker> of the staffing problems.</example>
+        </rule>
+        <rule id="THAT_BEING_SAID" name="confusion: That being sad (said)">
+            <pattern>
+                <token postag="SENT_START"/>
+                <token>That</token>
+                <token>being</token>
+                <token regexp="yes">sa[dt]</token>
+            </pattern>
+            <message>Did you mean <suggestion>That being said</suggestion>?</message>
+            <example correction="That being said"><marker>That being sad</marker> ...</example>
+        </rule>
+        <rule id="SAID_SAD" name="confusion sad/said">
+            <pattern>
+                <token><exception postag="VB.*" postag_regexp="yes"/></token>
+                <token postag="PRP"><exception postag="PRP$"/></token>
+                <token min="0" regexp="yes">has|have</token>
+                <marker><token>sad</token></marker>
+            </pattern>
+            <message>Did you mean <suggestion>said</suggestion>?</message>
+            <example correction="said">She <marker>sad</marker> that she was tired.</example>
+            <example correction="said">This is exactly what you have <marker>sad</marker> yesterday.</example>
+            <example>Are you sad?</example>
+            <example>He brought us sad news.</example>
+        </rule>
+        <rule id="IN_ON_VACATION" name="in (on) vacation">
+            <pattern>
+                <token inflected="yes">be</token>
+                <token regexp="yes" min="0" postag="RB">[a-z]+ly</token>
+                <marker>
+                    <token postag="IN"><exception>on</exception></token>
+                    <token>vacation</token>
+                </marker>
+            </pattern>
+            <message>Did you mean <suggestion>on vacation</suggestion>?</message>
+            <example correction="on vacation">He is probably <marker>in vacation</marker> right now.</example>
+            <example correction="on vacation">I'm <marker>at vacation</marker> at the seaside.</example>
+            <example>Where did you go for vacation?</example>
+        </rule>
+        <rule id="MUST_MOST" name="confusion of must/most">
+            <pattern>
+                <marker>
+                    <token>must</token>
+                    <token>of</token>
+                </marker>
+                <token><exception>course</exception><exception>necessity</exception></token>
+            </pattern>
+            <message>Did you mean <suggestion>most of</suggestion>?</message>
+            <example correction="most of">I do this <marker>must of</marker> the time.</example>
+            <example>There must of course be a relationship between translating and making poems of your own.</example>
+            <example>Policy on Zimbabwe must of necessity be subservient to this greater goal.</example>
+        </rule>
         <rulegroup id="PEACE_PIECE" name="peace (piece)">
             <rule>
                 <pattern>
@@ -12117,6 +13076,10 @@ USA
             </rule>
         </rulegroup>
         <rule id="ADVICE_ADVISE" name="advice (advise)" type="grammar">
+            <antipattern case_sensitive="yes">
+                <token>IT</token>
+                <token>advice</token>
+            </antipattern>
             <pattern>
                 <token postag="PRP"><exception postag="PRP" negate_pos="yes"/><exception scope="previous" inflected="yes" regexp="yes">offer|give</exception></token>
                 <marker>
@@ -12488,7 +13451,7 @@ USA
             <url>https://en.wikipedia.org/wiki/Wikipedia:Lists_of_common_misspellings/Grammar_and_Misc</url>
             <rule>
                 <pattern>
-                    <token regexp="yes">could|can|they</token>
+                    <token regexp="yes">could|can|cannot|(?-i)I|you|we|they|he|she|it</token>
                     <marker>
                         <token>breath</token>
                     </marker>
@@ -12496,7 +13459,11 @@ USA
                 <message>Did you mean <suggestion>breathe</suggestion>? '\2' is a noun.</message>
                 <short>Possible grammatical error</short>
                 <example correction="breathe">I could <marker>breath</marker>.</example>
+                <example correction="breathe">I cannot <marker>breath</marker>.</example>
+                <example correction="breathe">Can you <marker>breath</marker>?</example>
+                <example>If I <marker>breathe</marker> slowly and deeply, I start to relax.</example>
                 <example>They breathe slowly.</example>
+                <example>Do tests for these: i <marker>breath</marker>, ii heartbeat, iii ...</example>
             </rule>
             <rule>
                 <pattern>
@@ -13753,6 +14720,24 @@ USA
             <example correction="Sleights"><marker>Slights</marker> of hand are a clever trick.</example>
             <example><marker>Sleight</marker> of hand is also known as prestidigitation.</example>
         </rule>
+        <rule id="ROUTE_OF_THE_PROBLEM" name="route (root) of the problem">
+            <pattern>
+                <marker>
+                    <token postag_regexp="yes" postag="NN(:UN|S)" regexp="yes">routes?</token>
+                </marker>
+                <token>of</token>
+                <token>the</token>
+                <token regexp="yes">problems?</token>
+            </pattern>
+            <message>Did you mean <suggestion><match no="1" postag_regexp="yes" postag="NN(S)|NN:UN" postag_replace="NN$1">root</match></suggestion> (=source, cause)?</message>
+            <short>Commonly confused word</short>
+            <example correction="root">The <marker>route</marker> of the problems is unknown.</example>
+            <example correction="roots">The <marker>routes</marker> of the problem are not yet known.</example>
+            <example correction="Root">'The <marker>Route</marker> of the Problem' on page 26 gives more information.</example>
+            <example correction="Roots"><marker>Routes</marker> of the Problem on page 31 gives more information.</example>
+            <example>The <marker>root</marker> of the problem is the unnecessary complexity of the rules.</example>
+            <example type="triggers_error">'The Route of the Problem' is a music track (http://runescape.wikia.com/wiki/The_Route_of_the_Problem).</example>
+        </rule>
     </category>
 
     <!-- ====================================================================== -->
@@ -14230,7 +15215,7 @@ USA
                 <token postag="JJ"><exception regexp="yes">big|certain|preparatory|good|modern|christian|agglutinative|unsterile|particular|humanlike|military</exception></token>
                 <token regexp="yes">manner|style|way|fashion|mode</token>
             </pattern>
-            <message>Consider replacing "\1 \2 \3 \4" with adverb for "\3"; eg, "in a hasty manner" with "hastily".</message>
+            <message>Consider replacing "\1 \2 \3 \4" with adverb for "\3"; e.g., "in a hasty manner" with "hastily".</message>
             <short>Possible wordiness</short>
             <example correction="">He came <marker>in a hasty manner</marker>.</example>
             <example>He came hastily.</example>
@@ -15867,6 +16852,13 @@ USA
             <short>Slang</short>
             <example correction="invitation">Is that an <marker>invite</marker>...?</example>
         </rule>
+        <rule id="IRREGARDLESS" name="irregardless (regardless)">
+            <pattern>
+                <token>irregardless</token>
+            </pattern>
+            <message>'Irregardless' is acceptable in casual and nonstandard writing at best. In formal style you should use <suggestion>regardless</suggestion>.</message>
+            <example correction="Regardless"><marker>Irregardless</marker> of what he says, do it!</example>
+        </rule>
         <rule default="off" id="And" name="Sentence starting with 'And' or 'But'">
             <pattern>
                 <token postag='SENT_START'/>
@@ -17069,7 +18061,7 @@ USA
             <example correction="If|In case of"><marker>In the event that</marker> I can't come back by seven, you can eat without me.</example>
             <example><marker>If</marker> I can't come back by seven, you can eat without me.</example>
 
-            <example correction="If|In case of"><marker>In the event of</marker> rain, the race will be canceled.</example>
+            <example correction="If|In case of"><marker>In the event of</marker> rain, the race will be cancelled.</example>
             <example correction="If|In case of"><marker>In the event that</marker> it rains, the race will be canceled.</example>
             <example><marker>If</marker> it rains, the race will be canceled.</example>
         </rule>
@@ -17825,10 +18817,10 @@ USA
             <pattern>
                 <token regexp="yes">really|very|quite|extremely|severely</token>
             </pattern>
-            <message>Intensifier that does not intensify "\1". Use sparingly.</message>
-            <url>http://grammar.ccc.commnet.edu/grammar/concise.htm</url>
+            <message>Usually, the word "\1" is not necessary. Remove it unless it is necessary.</message>
+            <url>http://grammar.ccc.commnet.edu/grammar/concise.htm#intensifiers</url>
             <example correction="">The band is <marker>very</marker> irritating.</example>
-            <example>The band is <marker>mind-jarringly</marker> irritating.</example>
+            <example>The band is irritating.</example>
         </rule>
     </category>
 
@@ -17840,7 +18832,7 @@ USA
             <pattern>
                 <token>#</token>
             </pattern>
-            <message>Replace "#" with <suggestion>No. </suggestion> or <suggestion>number </suggestion> when referring to numbers or rankings.</message>
+            <message>Wikipedia style. Replace "#" with <suggestion>No. </suggestion> or <suggestion>number </suggestion> when referring to numbers or rankings.</message>
             <url>https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style#Number_signs</url>
             <example correction='No. |number '>The <marker>#</marker>3</example>
             <example>No. </example>
@@ -17852,7 +18844,7 @@ USA
                 <token>12</token>
                 <token>pm</token>
             </pattern>
-            <message>Replace "12 pm" with <suggestion>noon</suggestion> for clarity.</message>
+            <message>Wikipedia style. Replace "12 pm" with <suggestion>noon</suggestion> for clarity.</message>
             <url>https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style#Time_of_day</url>
             <example correction='noon'>At <marker>12 pm</marker></example>
             <example>noon</example>
@@ -17863,7 +18855,7 @@ USA
                 <token>12</token>
                 <token>am</token>
             </pattern>
-            <message>Replace "12 am" with <suggestion>midnight</suggestion> for clarity.</message>
+            <message>Wikipedia style. Replace "12 am" with <suggestion>midnight</suggestion> for clarity.</message>
             <url>https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style#Time_of_day</url>
             <example correction='midnight'>At <marker>12 am</marker></example>
             <example>midnight</example>
@@ -17873,7 +18865,7 @@ USA
             <pattern>
                 <token>currently</token>
             </pattern>
-            <message>Replace "currently" with a specific date, as "currently" will change over time.</message>
+            <message>Wikipedia style. Replace "currently" with a specific date, as "currently" will change over time.</message>
             <url>https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style#Current</url>
             <example correction=''><marker>currently</marker></example>
             <example>date</example>
@@ -17886,7 +18878,7 @@ USA
                     <token regexp="yes">['’]</token>
                     <token>t</token>
                 </pattern>
-                <message>Replace "wasn't" with <suggestion>was not</suggestion>.</message>
+                <message>Wikipedia style. Replace "wasn't" with <suggestion>was not</suggestion>.</message>
                 <url>https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style#Contractions</url>
                 <example correction='was not'><marker>wasn't</marker></example>
                 <example>it's</example>
@@ -17897,7 +18889,7 @@ USA
                     <token regexp="yes">['’]</token>
                     <token>s</token>
                 </pattern>
-                <message>Replace "it's" with <suggestion>it is</suggestion></message>
+                <message>Wikipedia style. Replace "it's" with <suggestion>it is</suggestion></message>
                 <url>https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style#Contractions</url>
                 <example correction='it is'><marker>it's</marker></example>
                 <example>it is</example>
@@ -18256,9 +19248,9 @@ USA
             <short>EU English: allow/permit/enable (to)</short>
             <example type="incorrect" correction="">The statistics available do not <marker>allow to</marker> take account of all these situations.</example>
             <example type="incorrect" correction="">… if the function <marker>allows to</marker> assess whether the subsystem fully complies with…</example>
-            <example>These persons are not <marker>allowed to</marker> to do the work:</example>
-            <example>You are <marker>permitted to</marker> to do the work unless you…</example>
-            <example>The statistics available do not <marker>allow us to</marker>take account of all these situations.</example>
+            <example>These persons are not <marker>allowed to</marker> do the work:</example>
+            <example>You are <marker>permitted to</marker> do the work unless you…</example>
+            <example>The statistics available do not <marker>allow us to</marker> take account of all these situations.</example>
         </rule>
         <rule id="EUPUB_ANGLO_SAXON" name="Anglo-Saxon">
             <pattern>
@@ -18923,6 +19915,11 @@ USA
                <token inflected="yes" skip="-1">do</token>
                <token>?</token>
             </antipattern>
+            <antipattern>
+               <token regexp="yes">don|doesn|didn</token>
+               <token spacebefore="no" regexp="yes">['’]</token>
+               <token spacebefore="no">t</token>
+            </antipattern>
             <pattern>
                 <marker>
                     <token inflected="yes">do<exception postag_regexp="yes" postag="NNS?"/></token>
@@ -18940,6 +19937,8 @@ USA
             <example>The statistical adjustments <marker>performed</marker> at national level…</example>
             <example><marker>Do</marker> not test this rule.</example>
             <example><marker>Do</marker> you like chocolate?</example>
+            <example>I <marker>don</marker>'t like chocolate.</example>
+            <example>They <marker>didn</marker>'t go to Paris in the spring.</example>
             <example>The technician <marker>did</marker> not find the cause of the error.</example>
             <example>The <marker>does</marker> and the other animals are very timid.</example>
             <example>How many beds <marker>does</marker> the hospital have?</example>
@@ -19269,7 +20268,7 @@ USA
             <example type="incorrect" correction="manager|line manager|boss|immediate superior|head of unit|director">The applicant's <marker>hierarchical superior</marker> is usually…</example>
 <!--            <example type="incorrect" correction="manager|line manager|boss|immediate superior|head of unit|director">The applicant's <marker>hierarchical superior</marker> must always…</example> Disambiguator incorrectly removes pos NN -->
             <example type="incorrect" correction="managers|line managers|bosses|immediate superiors|heads of units|directors">Some <marker>hierarchical superiors</marker> have a…</example>
-            <example>The applicant's <marker>immmediate superior</marker> must always…</example>
+            <example>The applicant's <marker>immediate superior</marker> must always…</example>
             <example>Some <marker>bosses</marker> have a…</example>
             <example>The <marker>hierarchical superior</marker> tests, are as the name suggests, better than the regular tests.</example>
         </rule>
@@ -19542,7 +20541,7 @@ USA
                 <short>EU English: modification</short>
                 <example type="incorrect" correction="amendment|change">The <marker>modification</marker> to the regulations…</example>
                 <example type="incorrect" correction="Amendments|Changes"><marker>Modifications</marker> to the documents must…</example>
-                <example>The <marker>ammendment</marker> to the regulations…</example>
+                <example>The <marker>amendment</marker> to the regulations…</example>
             </rule>
         </rulegroup>
         <rule id="EUPUB_MODULATION" name="modulation">

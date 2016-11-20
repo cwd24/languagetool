@@ -42,8 +42,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"resource", "CallToPrintStackTrace"})
 class AutomaticConfusionRuleEvaluator {
   
-  private static final String LANGUAGE = "de";
-  private static final boolean CASE_SENSITIVE = true;
+  private static final String LANGUAGE = "en";
+  private static final boolean CASE_SENSITIVE = false;
   private static final int MAX_EXAMPLES = 1000;
   private static final List<Long> EVAL_FACTORS = Arrays.asList(10L, 100L, 1_000L, 10_000L, 100_000L, 1_000_000L, 10_000_000L);
   private static final float MIN_PRECISION = 0.99f;
@@ -51,17 +51,18 @@ class AutomaticConfusionRuleEvaluator {
 
   private final IndexSearcher searcher;
   private final Map<String, List<ConfusionSet>> knownSets;
+  
   private int ignored = 0;
 
-  AutomaticConfusionRuleEvaluator(File indexDir) throws IOException {
-    DirectoryReader reader = DirectoryReader.open(FSDirectory.open(indexDir.toPath()));
+  AutomaticConfusionRuleEvaluator(File luceneIndexDir) throws IOException {
+    DirectoryReader reader = DirectoryReader.open(FSDirectory.open(luceneIndexDir.toPath()));
     searcher = new IndexSearcher(reader);
     InputStream confusionSetStream = JLanguageTool.getDataBroker().getFromResourceDirAsStream("/en/confusion_sets.txt");
     knownSets = new ConfusionSetLoader().loadConfusionSet(confusionSetStream);
   }
 
   private void run(List<String> lines, File indexDir) throws IOException {
-    Language language = Languages.getLanguageForShortName(LANGUAGE);
+    Language language = Languages.getLanguageForShortCode(LANGUAGE);
     LanguageModel lm = new LuceneLanguageModel(indexDir);
     ConfusionRuleEvaluator evaluator = new ConfusionRuleEvaluator(language, lm, CASE_SENSITIVE);
     for (String line : lines) {
@@ -70,6 +71,9 @@ class AutomaticConfusionRuleEvaluator {
         continue;
       }
       String[] parts = line.split(";\\s*");
+      if (parts.length != 2) {
+        throw new IOException("Expected semicolon-separated input: " + line);
+      }
       try {
         int i = 1;
         for (String part : parts) {
@@ -143,7 +147,7 @@ class AutomaticConfusionRuleEvaluator {
 
   private void findExampleSentences(String word, FileWriter fw) throws IOException {
     Term term = new Term(TextIndexCreator.FIELD, CASE_SENSITIVE ? word.toLowerCase() : word);
-    TopDocs topDocs = searcher.search(new TermQuery(term), Integer.MAX_VALUE);
+    TopDocs topDocs = searcher.search(new TermQuery(term), CASE_SENSITIVE ? Integer.MAX_VALUE : MAX_EXAMPLES);
     int count = 0;
     for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
       String sentence = searcher.doc(scoreDoc.doc).get(TextIndexCreator.FIELD);

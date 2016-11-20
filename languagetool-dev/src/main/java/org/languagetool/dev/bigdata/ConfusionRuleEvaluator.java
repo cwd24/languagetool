@@ -18,7 +18,7 @@
  */
 package org.languagetool.dev.bigdata;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.JLanguageTool;
 import org.languagetool.Language;
@@ -50,15 +50,14 @@ import static java.util.stream.Collectors.toList;
 /**
  * Loads sentences with a homophone (e.g. there/their) from Wikipedia or confusion set files
  * and evaluates EnglishConfusionProbabilityRule with them.
- *
+ * 
+ * @see AutomaticConfusionRuleEvaluator
  * @since 3.0
  * @author Daniel Naber 
  */
 class ConfusionRuleEvaluator {
 
-  private static final String TOKEN = "there";
-  private static final String TOKEN_HOMOPHONE = "their";
-  //private static final List<Integer> EVAL_FACTORS = Arrays.asList(100);
+  private static final boolean CASE_SENSITIVE = false;
   private static final List<Long> EVAL_FACTORS = Arrays.asList(10L, 100L, 1_000L, 10_000L, 100_000L, 1_000_000L, 10_000_000L);
   private static final int MAX_SENTENCES = 1000;
 
@@ -152,7 +151,7 @@ class ConfusionRuleEvaluator {
                                                String token, String homophoneToken) {
     Map<Long,EvalResult> results = new HashMap<>();
     int sentences = allTokenSentences.size() + allHomophoneSentences.size();
-    System.out.println("\nEvaluation results for " + TOKEN + "/" + TOKEN_HOMOPHONE
+    System.out.println("\nEvaluation results for " + token + "/" + homophoneToken
             + " with " + sentences + " sentences as of " + new Date() + ":");
     System.out.printf(ENGLISH, "Inputs:       %s\n", inputsOrDir);
     System.out.printf(ENGLISH, "Case sensit.: %s\n", caseSensitive);
@@ -168,7 +167,8 @@ class ConfusionRuleEvaluator {
       results.put(factor, new EvalResult(summary, precision, recall));
       if (verbose) {
         System.out.println();
-        System.out.printf(ENGLISH, "Factor: %d - %d false positives, %d false negatives\n", factor, evalValues.falsePositives, evalValues.falseNegatives);
+        System.out.printf(ENGLISH, "Factor: %d - %d false positives, %d false negatives, %d true positives, %d true negatives\n",
+                          factor, evalValues.falsePositives, evalValues.falseNegatives, evalValues.truePositives, evalValues.trueNegatives);
         //System.out.printf(ENGLISH, "Precision:    %.3f (%d false positives)\n", precision, evalValues.falsePositives);
         //System.out.printf(ENGLISH, "Recall:       %.3f (%d false negatives)\n", recall, evalValues.falseNegatives);
         //double fMeasure = FMeasure.getWeightedFMeasure(precision, recall);
@@ -235,9 +235,9 @@ class ConfusionRuleEvaluator {
   }
 
   public static void main(String[] args) throws IOException {
-    if (args.length < 3 || args.length > 4) {
+    if (args.length < 5 || args.length > 6) {
       System.err.println("Usage: " + ConfusionRuleEvaluator.class.getSimpleName()
-              + " <langCode> <languageModelTopDir> <wikipediaXml|tatoebaFile|plainTextFile|dir>...");
+              + " <token> <homophoneToken> <langCode> <languageModelTopDir> <wikipediaXml|tatoebaFile|plainTextFile|dir>...");
       System.err.println("   <languageModelTopDir> is a directory with sub-directories like 'en' which then again contain '1grams',");
       System.err.println("                      '2grams', and '3grams' sub directories with Lucene indexes");
       System.err.println("                      See http://wiki.languagetool.org/finding-errors-using-n-gram-data");
@@ -248,23 +248,25 @@ class ConfusionRuleEvaluator {
       System.exit(1);
     }
     long startTime = System.currentTimeMillis();
-    String langCode = args[0];
+    String token = args[0];
+    String homophoneToken = args[1];
+    String langCode = args[2];
     Language lang;
     if ("en".equals(langCode)) {
       lang = new EnglishLight();
     } else {
-      lang = Languages.getLanguageForShortName(langCode);
+      lang = Languages.getLanguageForShortCode(langCode);
     }
-    LanguageModel languageModel = new LuceneLanguageModel(new File(args[1], lang.getShortName()));
+    LanguageModel languageModel = new LuceneLanguageModel(new File(args[3], lang.getShortCode()));
     //LanguageModel languageModel = new BerkeleyRawLanguageModel(new File("/media/Data/berkeleylm/google_books_binaries/ger.blm.gz"));
     //LanguageModel languageModel = new BerkeleyLanguageModel(new File("/media/Data/berkeleylm/google_books_binaries/ger.blm.gz"));
     List<String> inputsFiles = new ArrayList<>();
-    inputsFiles.add(args[2]);
-    if (args.length >= 4) {
-      inputsFiles.add(args[3]);
+    inputsFiles.add(args[4]);
+    if (args.length >= 6) {
+      inputsFiles.add(args[5]);
     }
-    ConfusionRuleEvaluator generator = new ConfusionRuleEvaluator(lang, languageModel, false);
-    generator.run(inputsFiles, TOKEN, TOKEN_HOMOPHONE, MAX_SENTENCES, EVAL_FACTORS);
+    ConfusionRuleEvaluator generator = new ConfusionRuleEvaluator(lang, languageModel, CASE_SENSITIVE);
+    generator.run(inputsFiles, token, homophoneToken, MAX_SENTENCES, EVAL_FACTORS);
     long endTime = System.currentTimeMillis();
     System.out.println("\nTime: " + (endTime-startTime)+"ms");
   }

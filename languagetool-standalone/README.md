@@ -4,7 +4,7 @@
 Polish, Chinese, French, Russian, Italian, Dutch
 and [more languages](https://www.languagetool.org/languages/)**
 
-Version 3.5-SNAPSHOT, 2016-xx-yy  
+Version 3.5, 2016-09-30  
 Copyright (C) 2005-2016 the LanguageTool community and Daniel Naber (www.danielnaber.de)  
 Homepage: https://www.languagetool.org
 
@@ -23,12 +23,12 @@ Homepage: https://www.languagetool.org
 
 To integrate LanguageTool into LibreOffice or OpenOffice.org, you can use two methods:
 
-1. Double-click `LanguageTool-3.4.oxt`. The extension should
+1. Double-click `LanguageTool-3.5.oxt`. The extension should
    start installing. Follow the on-screen instructions.
 
 2. If the above method doesn't work, call `Tools > Extension
    Manager > Add...` in LibreOffice/OpenOffice.org and browse for the
-   `LanguageTool-3.4.oxt` file.
+   `LanguageTool-3.5.oxt` file.
 
 Close and restart LibreOffice/OpenOffice.org Writer. Remember to close
 the QuickStarter as well if you use it. Type text with
@@ -133,7 +133,7 @@ http://extensions.libreoffice.org/extension-center/an-drouizig-breton-spellcheck
 
 The Catalan data for part-of-speech tagging were created by Jaume Ortolà
 based on the Freeling 3.0 and Softcatalà 2.5.0 dictionaries, both released
-under the GNU General Public License.
+under the GNU General Public License. See: https://github.com/Softcatala/catalan-dict-tools
  
 #### Chinese
 
@@ -254,8 +254,10 @@ Docio based on Freeling and Apertium dictionaries. Both are licensed under GPL.
  
 #### German
 
+See https://github.com/languagetool-org/german-pos-dict:
 The German data for part-of-speech tagging is taken from Morphy
-(http://www.wolfganglezius.de/doku.php?id=cl:morphy)
+(http://morphy.wolfganglezius.de/) with extensions
+and corrections from Julian von Heyl (https://www.korrekturen.de/flexion/)
 under Creative Commons Attribution-Share Alike 4.0.
 
 #### Greek
@@ -289,7 +291,7 @@ http://code.google.com/p/khmer-dictionary-tools/ - Part of Speech entries and wo
 #### Malayalam
 
 The data has been collected by Jithesh.V.S. of the Centre For Development of Imaging Technology (C-DIT),
-Thiruvananthapuram, Kerala, India (http://www.cdit.org). It comes from public sources like newspapers,
+Thiruvananthapuram, Kerala, India (http://www.cdit.org/index/). It comes from public sources like newspapers,
 magazines, and novels. It is made available here under GPL.
  
 #### Polish
@@ -309,7 +311,7 @@ http://www.aot.ru/download.php file rus-src-morph.tar.gz
 or http://sourceforge.net/p/seman/svn/HEAD/tree/trunk/Dicts/SrcMorph/RusSrc/ file morphs.mrd.
 It was partially converted to fsa format in 2008-2011, 2014 by Yakov Reztsov.
 Frequency information for spell-checking dictionary from www.aot.ru.
-Source frequency information http://sourceforge.net/p/seman/svn/HEAD/tree/trunk/Dicts/SrcBinDict/ file WordData.txt.
+Source frequency information https://sourceforge.net/p/seman/svn/HEAD/tree/trunk/Dicts/SrcBinDict/WordData.txt
 It was converted to use with spell-checking dictionary in 2014 by Yakov Reztsov.
 
 #### Slovak
@@ -322,7 +324,8 @@ LGPL license.
 
 The dictionary was mainly obtained from the Freeling project:
 
-* http://devel.cpl.upc.edu/freeling/svn/latest/freeling/data/es/dicc.src
+* http://devel.cpl.upc.edu/freeling/svn/trunk/data/es/senses30.src
+* http://devel.cpl.upc.edu/freeling/svn/versions/freeling-3.1/data/es/senses30.src
 * http://garraf.epsevg.upc.es/freeling/
 
 It is released under the GNU General Public License.
@@ -355,12 +358,13 @@ Ve. Elanjelian <tamiliam@gmail.com>. It is released under GPLv3 licence.
   that has had many contributors including S. Muguntharaj, Radhakrishnan, Vijay,
   A. Suji, Malathi Selvaraj, Sri Ramadoss, Yagna Kalyanaraman, and Pranava Swaroop.
 * The work also made use the Tamil corpus created by Crubadan 2.0
-  <http://borel.slu.edu/crubadan/stadas.html> for shortlisting nouns and verbs.
+  <http://crubadan.org/> for shortlisting nouns and verbs.
   The corpus data is released under GPLv3, as well.
 * The grammatical rules themselves are based on "thamizhnadaik kaiyEdu" (2004)
  and "thamizhil nAmum thavaRillAmal ezhuthalAm" (2007)
- 
+
 #### Ukrainian
 
-The Ukrainian data for part-of-speech tagging were created by Andriy Rysin
-It's based on spell-uk (http://sourceforge.net/projects/ispell-uk/) which is licensed under GPL/LGPL.
+The Ukrainian data for part-of-speech tagging was created by Andriy Rysin.
+It's based on https://github.com/brown-uk/dict_uk project and is licensed under
+Creative Commons Attribution-ShareAlike 4.0 International license.

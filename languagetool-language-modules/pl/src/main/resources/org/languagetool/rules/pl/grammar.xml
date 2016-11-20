@@ -3551,7 +3551,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                     <pattern>
 								<token postag="SENT_START"></token>
 								<marker>
-										<token postag="prep.*" postag_regexp="yes" regexp="yes" skip="-1"><exception postag="verb:.*(sg|pl).*|verb:imps.*|pcon:imperf.*|pant:perf.*|pred|subst:sg:nom:m1" postag_regexp="yes" scope="next"/>poza|dla|dzięki|mimo|oprócz|wobec|po|w<exception scope="next" regexp="yes">[(:–—\-]</exception><exception scope="next" postag="conj">,</exception></token>
+										<token postag="prep.*" postag_regexp="yes" regexp="yes" skip="-1"><exception postag="verb:.*(sg|pl).*|verb:imps.*|pcon:imperf.*|pant:perf.*|pred|subst:sg:nom:m1" postag_regexp="yes" scope="next"/>poza|dla|dzięki|mimo|oprócz|wobec|po|w|według<exception scope="next" regexp="yes">[(:–—\-]</exception><exception scope="next" postag="conj">,</exception></token>
 										<token>,<exception scope="previous">ciebie</exception><exception postag="conj"/></token>
 										<phraseref idref="NIE_SPOJNIK_PRZECINKOWY_OLD"></phraseref>
 								</marker>
@@ -9311,6 +9311,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
                                     <token>Bóg</token>
                                     <token>żywy</token>
                                 </antipattern>
+                                <antipattern>                                
+                                <token>po</token>
+                                <marker>
+                                <token>temu</token>
+                                </marker>
+                                </antipattern>
 								<pattern>
 										<token postag="prep:acc.*" postag_regexp="yes"><exception>przezeń</exception><exception>temu</exception><exception postag="prep:(?!acc).*" postag_regexp="yes"/></token>
 										<marker>
@@ -9325,6 +9331,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 								<example>Nie przejmował się niezawinionymi przezeń winami.</example>
 								<example>On mówił przez <marker>nos</marker>.</example>
 								<example>Pisze się o literaturze.</example>
+								<example>Ma po temu powody.</example>
                         <example>zagnieżdżenie się zapłodnionej komórki jajowej w błonie śluzowej macicy</example>
                         <example>Przez Bóg żywy!</example>
                         <example>Upił się po przegranym meczu przez New York Islanders.</example>

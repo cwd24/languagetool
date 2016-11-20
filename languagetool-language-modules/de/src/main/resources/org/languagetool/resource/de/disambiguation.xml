@@ -187,6 +187,14 @@ Copyright © 2013 Markus Brenneis, Daniel Naber, Jan Schreiber
         <disambig action="ignore_spelling"/>
     </rule>
 
+    <rule name="en passant" id="EN_PASSANT">
+        <pattern>
+            <token>en</token>
+            <token>passant</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
     <rule name="Côte d'Azur" id="COTE_DAZUR">
         <pattern>
             <token>Côte</token>
@@ -526,6 +534,96 @@ Copyright © 2013 Markus Brenneis, Daniel Naber, Jan Schreiber
             <token>magna</token>
             <token>cum</token>
             <token>laude</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="in medias res" id="IN_MEDIAS_RES">
+        <pattern>
+            <token>in</token>
+            <token>medias</token>
+            <token>res</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Facultas Docendi" id="FACULTAS_DOCENDI">
+        <pattern>
+            <token>Facultas</token>
+            <token>Docendi</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Venia Legendi" id="VENIA_LEGENDI">
+        <pattern>
+            <token>Venia</token>
+            <token>Legendi</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Grand Canyon" id="GRAND_CANYON">
+        <pattern>
+            <token>Grand</token>
+            <token regexp='yes'>Canyon|Prix|Slam</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="horribile dictu" id="HORRIBILE_DICTU">
+        <pattern>
+            <token>horribile</token>
+            <token>dictu</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Diabetes mellitus" id="DIABETES_MELLITUS">
+        <pattern>
+            <token>Diabetes</token>
+            <token regexp="yes">mellitus|renalis|insipidus</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Potz Blitz" id="POTZ_BLITZ">
+        <pattern>
+            <token>potz</token>
+            <token regexp="yes">Blitz|Blut|Donner|Donnerwetter|Marter|Teufel</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Wall Street" id="WALL_STREET">
+        <pattern>
+            <token regexp="yes">Wall|Downing|Baker</token>
+            <token>Street</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="per se" id="PER_SE">
+        <pattern>
+            <token>per</token>
+            <token regexp="yes">procura|rectum|saldo|se</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="Pour le Mérite" id="POUR_LE_MERITE">
+        <pattern>
+            <token>Pour</token>
+            <token>le</token>
+            <token>Mérite</token>
+        </pattern>
+        <disambig action="ignore_spelling"/>
+    </rule>
+
+    <rule name="sui" id="SUI_GENERIS">
+        <pattern>
+            <token>sui</token>
+            <token>generis</token>
         </pattern>
         <disambig action="ignore_spelling"/>
     </rule>

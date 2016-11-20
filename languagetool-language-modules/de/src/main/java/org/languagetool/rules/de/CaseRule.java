@@ -54,7 +54,10 @@ public class CaseRule extends GermanRule {
   // wenn hinter diesen Wörtern ein Verb steht, ist es wohl ein substantiviertes Verb,
   // muss also groß geschrieben werden:
   private static final Set<String> nounIndicators = new HashSet<>();
-  
+
+  private static final String UPPERCASE_MESSAGE = "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben";
+  private static final String LOWERCASE_MESSAGE = "Falls es sich um ein substantiviertes Verb handelt, wird es großgeschrieben.";
+
   // also see case_rule_exception.txt:
   private static final List<List<PatternToken>> ANTI_PATTERNS = Arrays.asList(
     Arrays.asList(
@@ -96,14 +99,27 @@ public class CaseRule extends GermanRule {
       token("Trank")
     ),
     Arrays.asList(
+        token("Sang"),
+        token("und"),
+        token("Klang")
+    ),
+    Arrays.asList(
+        regex("US-amerikanisch(e|er|es|en|em)?")
+    ),
+    Arrays.asList(
       // "... weshalb ihr das wissen wollt."
       pos("VER:INF:NON"),
       pos("VER:MOD:2:PLU:PRÄ")
     ),
     Arrays.asList(
       // "... wie ich das prüfen sollte."
-      pos("VER:INF:SFT"),
+      posRegex("VER:INF.*"),
       posRegex("VER:MOD:.*")
+    ),
+    Arrays.asList(
+        // "... wie ich das prüfen würde."
+        posRegex("VER:INF.*"),
+        posRegex("VER:AUX:.:(SIN|PLU)(:KJ2)?")
     )
   );
 
@@ -158,6 +174,17 @@ public class CaseRule extends GermanRule {
    * workaround to avoid false alarms, these words can be added here.
    */
   private static final Set<String> exceptions = new HashSet<>(Arrays.asList(
+    "Auszubildende",
+    "Auszubildender",
+    "Gelehrte",
+    "Gelehrter",
+    "Vorstehende",
+    "Vorstehender",
+    "Mitwirkende",
+    "Mitwirkender",
+    "Mitwirkenden",
+    "Selbstständige",
+    "Selbstständiger",
     "Genaueres",
     "Äußersten",
     "Dienstreisender",
@@ -196,7 +223,6 @@ public class CaseRule extends GermanRule {
     "Sparten",
     "Heiliger",
     "Reisender",
-    "Hochdeutsch",
     "Pest",
     "Schwinge",
     "Verlies",
@@ -207,7 +233,11 @@ public class CaseRule extends GermanRule {
     "Jenseits",
     "Abends",
     "Abgeordneter",
+    "Abgeordnete",
+    "Abgeordneten",
     "Angestellter",
+    "Angestellte",
+    "Angestellten",
     "Liberaler",
     "Abriss",
     "Ahne",
@@ -215,6 +245,7 @@ public class CaseRule extends GermanRule {
     "Ähnliches",   // je nach Kontext groß (TODO), z.B. "Er hat Ähnliches erlebt" 
     "Allerlei",
     "Anklang",
+    "Verlobter",
     "Anstrich",
     "Armes",
     "Aus",    // "vor dem Aus stehen"
@@ -231,6 +262,7 @@ public class CaseRule extends GermanRule {
     "Durcheinander",
     "Eindrücke",
     "Erwachsener",
+    "Familienangehörige", // "Brüder und solche Familienangehörige, die..."
     "Flöße",
     "Folgendes",   // je nach Kontext groß (TODO)...
     "Fort",
@@ -286,6 +318,7 @@ public class CaseRule extends GermanRule {
     "Nutze",   // zu Nutze
     "Obdachloser",
     "Oder",   // der Fluss
+    "Ohrfeige",
     "Patsche",
     "Pfiffe",
     "Pfiffen",
@@ -311,6 +344,7 @@ public class CaseRule extends GermanRule {
     "Übrigen",   // je nach Kontext groß (TODO), z.B. "im Übrigen" 
     "Unvorhergesehenes",   // je nach Kontext groß (TODO), z.B. "etwas Unvorhergesehenes" 
     "Verantwortlicher",
+    "Verlass",
     "Verwandter",
     "Vielfaches",
     "Vorsitzender",
@@ -404,10 +438,12 @@ public class CaseRule extends GermanRule {
     languages.add("Jiddisch");
     languages.add("Jugoslawisch");
     languages.add("Kantonesisch");
+    languages.add("Katalanisch");
     languages.add("Koreanisch");
     languages.add("Kroatisch");
     languages.add("Lateinisch");
     languages.add("Lettisch");
+    languages.add("Litauisch");
     languages.add("Luxemburgisch");
     languages.add("Mittelhochdeutsch");
     languages.add("Mongolisch");
@@ -442,6 +478,7 @@ public class CaseRule extends GermanRule {
     languages.add("Ungarisch");
     languages.add("Usbekisch");
     languages.add("Vietnamesisch");
+    languages.add("Walisisch");
     languages.add("Weißrussisch");
   }
   
@@ -486,6 +523,7 @@ public class CaseRule extends GermanRule {
     substVerbenExceptions.add("bestätigten");
     substVerbenExceptions.add("bekommen");
     substVerbenExceptions.add("sauer");
+    substVerbenExceptions.add("bedeuten");
   }
 
   private final GermanTagger tagger;
@@ -543,35 +581,32 @@ public class CaseRule extends GermanRule {
       String token = analyzedToken.getToken();
 
       markLowerCaseNounErrors(ruleMatches, tokens, i, analyzedToken);
-
       boolean isBaseform = analyzedToken.getReadingsLength() >= 1 && analyzedToken.hasLemma(token);
       if ((analyzedToken.getAnalyzedToken(0).getPOSTag() == null || GermanHelper.hasReadingOfType(analyzedToken, GermanToken.POSType.VERB))
           && isBaseform) {
-        boolean nextTokenIsPersonalPronoun = false;
+        boolean nextTokenIsPersonalOrReflexivePronoun = false;
         if (i < tokens.length - 1) {
+          AnalyzedTokenReadings nextToken = tokens[i + 1];
           // avoid false alarm for "Das haben wir getan." etc:
-          nextTokenIsPersonalPronoun = tokens[i + 1].hasPartialPosTag("PRO:PER") || tokens[i + 1].getToken().equals("Sie");
-          if (tokens[i + 1].hasLemma("lassen")) {
-            // avoid false alarm for "Ihr sollt mich das wissen lassen."
-            continue;
-          }
-          if (tokens[i + 1].isSentenceEnd()) {
+          nextTokenIsPersonalOrReflexivePronoun = nextToken.hasPartialPosTag("PRO:PER") || nextToken.getToken().equals("sich") || nextToken.getToken().equals("Sie");
+          if (nextToken.isSentenceEnd()) {
             // avoid false alarm for "So sollte das funktionieren." (might also remove true alarms...)
             continue;
           }
-          if (prevTokenIsDas && tokens[i+1].equals("die")) {
-            // avoid false alarm for "Das wissen die meisten."
+          if (prevTokenIsDas && (nextToken.getToken().equals("die") ||  nextToken.getToken().equals("zu"))) {
+            // avoid false alarm for "Das wissen die meisten." / "Um das sagen zu können, ..."
+            continue;
+          }
+          if (prevTokenIsDas && isFollowedByRelativeOrSubordinateClause(i, tokens)) {
+            // avoid false alarm for "Er kann ihr das bieten, was sie verdient."
+            // avoid false alarm for "Du musst/solltest/könntest das wissen, damit du die Prüfung bestehst / weil wir das gestern besprochen haben."
             continue;
           }
         }
         if (isPrevProbablyRelativePronoun(tokens, i)) {
           continue;
         }
-        if (isVerbFollowedByRelativeClause(i, tokens)) {
-          // avoid false alarm for "Er kann ihr das bieten, was sie verdient."
-          continue;
-        }
-        potentiallyAddLowercaseMatch(ruleMatches, tokens[i], prevTokenIsDas, token, nextTokenIsPersonalPronoun);
+        potentiallyAddLowercaseMatch(ruleMatches, tokens[i], prevTokenIsDas, token, nextTokenIsPersonalOrReflexivePronoun);
       }
       prevTokenIsDas = nounIndicators.contains(tokens[i].getToken().toLowerCase());
       if (hasNounReading(analyzedToken)) {  // it's the spell checker's task to check that nouns are uppercase
@@ -583,7 +618,7 @@ public class CaseRule extends GermanRule {
       }
       if (analyzedToken.getAnalyzedToken(0).getPOSTag() == null && lowercaseReadings != null
           && (lowercaseReadings.getAnalyzedToken(0).getPOSTag() == null || analyzedToken.getToken().endsWith("innen"))) {
-        continue;  // unknown word, probably a name etc
+        continue;  // unknown word, probably a name etc.
       }
       potentiallyAddUppercaseMatch(ruleMatches, tokens, i, analyzedToken, token);
     }
@@ -662,17 +697,13 @@ public class CaseRule extends GermanRule {
     return false;
   }
 
-  private void potentiallyAddLowercaseMatch(List<RuleMatch> ruleMatches, AnalyzedTokenReadings tokenReadings, boolean prevTokenIsDas, String token, boolean nextTokenIsPersonalPronoun) {
-    if (prevTokenIsDas && !nextTokenIsPersonalPronoun) {
+  private void potentiallyAddLowercaseMatch(List<RuleMatch> ruleMatches, AnalyzedTokenReadings tokenReadings, boolean prevTokenIsDas, String token, boolean nextTokenIsPersonalOrReflexivePronoun) {
+    if (prevTokenIsDas && !nextTokenIsPersonalOrReflexivePronoun) {
       // e.g. essen -> Essen
       if (Character.isLowerCase(token.charAt(0)) && !substVerbenExceptions.contains(token) && tokenReadings.hasPartialPosTag("VER:INF")
               && !tokenReadings.isIgnoredBySpeller() && !tokenReadings.isImmunized()) {
-        String msg = "Falls es sich um ein substantiviertes Verb handelt, wird es großgeschrieben.";
-        RuleMatch ruleMatch = new RuleMatch(this, tokenReadings.getStartPos(), tokenReadings.getEndPos(), msg);
-        String word = tokenReadings.getToken();
-        String fixedWord = StringTools.uppercaseFirstChar(word);
-        ruleMatch.setSuggestedReplacement(fixedWord);
-        ruleMatches.add(ruleMatch);
+        String fixedWord = StringTools.uppercaseFirstChar(tokenReadings.getToken());
+        addRuleMatch(ruleMatches, LOWERCASE_MESSAGE, tokenReadings, fixedWord);
       }
     }
   }
@@ -696,13 +727,15 @@ public class CaseRule extends GermanRule {
         !isSpecialCase(i, tokens) &&
         !isAdjectiveAsNoun(i, tokens) &&
         !isExceptionPhrase(i, tokens)) {
-      String msg = "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben";
-      RuleMatch ruleMatch = new RuleMatch(this, tokens[i].getStartPos(), tokens[i].getEndPos(), msg);
-      String word = tokens[i].getToken();
-      String fixedWord = Character.toLowerCase(word.charAt(0)) + word.substring(1);
-      ruleMatch.setSuggestedReplacement(fixedWord);
-      ruleMatches.add(ruleMatch);
+      String fixedWord = StringTools.lowercaseFirstChar(tokens[i].getToken());
+      addRuleMatch(ruleMatches, UPPERCASE_MESSAGE, tokens[i], fixedWord);
     }
+  }
+
+  private void addRuleMatch(List<RuleMatch> ruleMatches, String msg, AnalyzedTokenReadings tokenReadings, String fixedWord) {
+    RuleMatch ruleMatch = new RuleMatch(this, tokenReadings.getStartPos(), tokenReadings.getEndPos(), msg);
+    ruleMatch.setSuggestedReplacement(fixedWord);
+    ruleMatches.add(ruleMatch);
   }
 
   // e.g. "a) bla bla"
@@ -784,16 +817,23 @@ public class CaseRule extends GermanRule {
 
   private boolean isAdjectiveAsNoun(int i, AnalyzedTokenReadings[] tokens) {
     AnalyzedTokenReadings prevToken = i > 0 ? tokens[i-1] : null;
-    boolean isUndefQuantifier = prevToken != null && (UNDEFINED_QUANTIFIERS.contains(prevToken.getToken().toLowerCase()));
+    AnalyzedTokenReadings nextReadings = i < tokens.length-1 ? tokens[i+1] : null;
+
+    // ignore "Der Versuch, Neues zu lernen / Gutes zu tun / Spannendes auszuprobieren"
+    boolean isPossiblyFollowedByInfinitive = nextReadings != null && nextReadings.getToken().equals("zu");
+    boolean isFollowedByInfinitive = nextReadings != null && !isPossiblyFollowedByInfinitive && nextReadings.hasPartialPosTag("EIZ");
+
+    boolean isUndefQuantifier = prevToken != null && UNDEFINED_QUANTIFIERS.contains(prevToken.getToken().toLowerCase());
     boolean isPrevDeterminer = prevToken != null && (prevToken.hasPartialPosTag("ART") || prevToken.hasPartialPosTag("PRP") || prevToken.hasPartialPosTag("ZAL"));
-    if (!isPrevDeterminer && !isUndefQuantifier) {
+    if (!isPrevDeterminer && !isUndefQuantifier && !(isPossiblyFollowedByInfinitive || isFollowedByInfinitive)) {
       AnalyzedTokenReadings prevPrevToken = i > 1 && prevToken.hasPartialPosTag("ADJ") ? tokens[i-2] : null;
       // Another check to avoid false alarms for "ein politischer Revolutionär"
       if (prevPrevToken == null || !(prevPrevToken.hasPartialPosTag("ART") || prevPrevToken.hasPartialPosTag("PRP") || prevToken.hasPartialPosTag("ZAL"))) {
         return false;
       }
     }
-    AnalyzedTokenReadings nextReadings = i < tokens.length-1 ? tokens[i+1] : null;
+
+    // ignore "die Ausgewählten" but not "die Ausgewählten Leute":
     for (AnalyzedToken reading : tokens[i].getReadings()) {
       String posTag = reading.getPOSTag();
       // ignore "die Ausgewählten" but not "die Ausgewählten Leute":
@@ -801,6 +841,7 @@ public class CaseRule extends GermanRule {
         return true;
       }
     }
+
     return false;
   }
 
@@ -825,9 +866,9 @@ public class CaseRule extends GermanRule {
     return false;
   }
 
-  private boolean isVerbFollowedByRelativeClause(int i, AnalyzedTokenReadings[] tokens) {
-    if (i < tokens.length - 2 && hasPartialTag(tokens[i], "VER")) {
-      return ",".equals(tokens[i+1].getToken()) && INTERROGATIVE_PARTICLES.contains(tokens[i+2].getToken());
+  private boolean isFollowedByRelativeOrSubordinateClause(int i, AnalyzedTokenReadings[] tokens) {
+    if (i < tokens.length - 2) {
+      return ",".equals(tokens[i+1].getToken()) && (INTERROGATIVE_PARTICLES.contains(tokens[i+2].getToken()) || tokens[i+2].hasPartialPosTag("KON:UNT"));
     }
     return false;
   }
