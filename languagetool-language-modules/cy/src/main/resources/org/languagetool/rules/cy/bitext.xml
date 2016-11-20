@@ -83,6 +83,38 @@
             </pattern>
             <message>Defnyddio <suggestion>còd</suggestion> ar gyfer 'cod'?</message>
         </rule>
+        <rule lang="cy" id="legal_judicial_cyfreithlon" name="legal/judicial -> cyfreithiol">
+            <pattern>
+                <source lang="en">
+                    <or>
+                        <token>legal</token>
+                        <token>judicial</token>
+                    </or>
+                </source>
+                <target>
+                    <marker>
+                        <token>cyfreithlon</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cyfreithiol</suggestion> ar gyfer 'legal/judicial'?</message>
+        </rule>
+        <rule lang="cy" id="lawful_legitimate_cyfreithiol" name="lawful/legitimate -> cyfreithlon">
+            <pattern>
+                <source lang="en">
+                    <or>
+                        <token>lawful</token>
+                        <token>legitimate</token>
+                    </or>
+                </source>
+                <target>
+                    <marker>
+                        <token>cyfreithiol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>cyfreithlon</suggestion> ar gyfer 'lawful/legitimate'?</message>
+        </rule>
         <rule lang="cy" id="qualified_cymwys" name="qualified -> cymwysedig">
             <pattern>
                 <source lang="en">
@@ -95,6 +127,32 @@
                 </target>
             </pattern>
             <message>Defnyddio <suggestion>cymwysedig</suggestion> ar gyfer 'qualified'?</message>
+        </rule>
+        <rule lang="cy" id="effective_effeithlon" name="effective -> effeithiol">
+            <pattern>
+                <source lang="en">
+                    <token>effective</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>effeithlon</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>effeithiol</suggestion> ar gyfer 'effective'?</message>
+        </rule>
+        <rule lang="cy" id="efficient_effeithiol" name="efficient -> effeithlon">
+            <pattern>
+                <source lang="en">
+                    <token>efficient</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>effeithiol</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>effeithlon</suggestion> ar gyfer 'efficient'?</message>
         </rule>
         <rule lang="cy" id="electrical_electronig" name="electrical -> trydanol">
             <pattern>

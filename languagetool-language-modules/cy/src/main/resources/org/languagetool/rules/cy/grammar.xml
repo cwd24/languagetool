@@ -196,6 +196,104 @@ USA
             <message>Defnyddiwch <suggestion>ei gilydd</suggestion> bob amser.</message>
             <example correction="ei gilydd">Siarad ymysg <marker>eu gilydd</marker> yn y wlad</example>
         </rule>
+        <rule id="GWNEUD_DEFNYDD_O" name="defnyddio">
+            <pattern>
+                <marker>
+                    <token>gwneud</token>
+                    <token>defnydd</token>
+                    <token>o</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>defnyddio</suggestion> bob amser.</message>
+            <example correction="Defnyddio"><marker>Gwneud defnydd o</marker>'r ystafell</example>
+        </rule>
+        <rule id="TALU_YMWELIAD_A" name="ymweld â">
+            <pattern>
+                <marker>
+                    <token>talu</token>
+                    <token>ymweliad</token>
+                    <token>â</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>ymweld â</suggestion> bob amser.</message>
+            <example correction="ymweld â">Wrth <marker>talu ymweliad â</marker>'r ystafell</example>
+        </rule>
+        <rule id="RHOI_YSTYRIAETH_I" name="ystyried">
+            <pattern>
+                <marker>
+                    <token>rhoi</token>
+                    <token>ystyriaeth</token>
+                    <token>i</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>ystyried</suggestion> bob amser.</message>
+            <example correction="ystyried">Wrth <marker>rhoi ystyriaeth i</marker> pob cais</example>
+        </rule>
+        <rule id="GWNEUD_PENDERFYNIAD" name="penderfynu">
+            <pattern>
+                <marker>
+                    <token>gwneud</token>
+                    <token>penderfyniad</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>penderfynu</suggestion> bob amser.</message>
+            <example correction="penderfynu">Wrth <marker>gwneud penderfyniad</marker></example>
+        </rule>
+        <rule id="GWNEUD_YMGAIS_I" name="ceisio">
+            <pattern>
+                <marker>
+                    <token>gwneud</token>
+                    <token>ymgais</token>
+                    <token>i</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>ceisio</suggestion> bob amser.</message>
+            <example correction="ceisio">Wrth <marker>gwneud ymgais i</marker></example>
+        </rule>
+        <rule id="CYMRYD_I_YSTYRIAETH" name="ystyried">
+            <pattern>
+                <marker>
+                    <token>cymryd</token>
+                    <token>i</token>
+                    <token>ystyriaeth</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>ystyried</suggestion> bob amser.</message>
+            <example correction="ystyried">Trwy <marker>cymryd i ystyriaeth</marker></example>
+        </rule>
+        <rule id="CYNRYCHIOLI_CAM_YMLAEN" name="gam ymlaen">
+            <pattern>
+                <marker>
+                    <token>cynrychioli</token>
+                    <token>cam</token>
+                    <token>ymlaen</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>gam ymlaen</suggestion> bob amser.</message>
+            <example correction="gam ymlaen">Mae hyn yn <marker>cynrychioli cam ymlaen</marker></example>
+        </rule>
+        <rule id="GWASANAETHU_FEL_RHYBUDD" name="rybudd">
+            <pattern>
+                <marker>
+                    <token>gwasanaethu</token>
+                    <token>fel</token>
+                    <token>rhybudd</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>rybudd</suggestion> bob amser.</message>
+            <example correction="rybudd">Mae hyn yn <marker>gwasanaethu fel rhybudd</marker></example>
+        </rule>
+        <rule id="GWNEUD_YMDRECH_I" name="ymdrechu">
+            <pattern>
+                <marker>
+                    <token>gwneud</token>
+                    <token>ymdrech</token>
+                    <token>i</token>
+                </marker>
+            </pattern>
+            <message>Defnyddiwch <suggestion>ymdrechu</suggestion> bob amser.</message>
+            <example correction="ymdrechu">Wrth <marker>gwneud ymdrech i</marker></example>
+        </rule>
 <!-- COMMA BEFORE WORDS #1 -->
 <rulegroup id="COMMA_1" name="Vírgula antes #1">
   <rule>
