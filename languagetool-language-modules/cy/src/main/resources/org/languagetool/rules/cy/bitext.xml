@@ -222,7 +222,7 @@
             </pattern>
             <message>Defnyddio <suggestion>llwythi</suggestion> ar gyfer 'loads'?</message>
         </rule>
-<!-- XXX false positives
+<!-- TODO false positives
         <rule lang="cy" id="may_gall" name="may -> caiff">
             <pattern>
                 <source lang="en">
@@ -237,6 +237,32 @@
             <message>Defnyddio <suggestion>caiff</suggestion> ar gyfer 'may'?</message>
         </rule>
 -->
+        <rule lang="cy" id="population_poblogaidd" name="population -> poblogaeth">
+            <pattern>
+                <source lang="en">
+                    <token>population</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>poblogaidd</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>poblogaeth</suggestion> ar gyfer 'population'?</message>
+        </rule>
+        <rule lang="cy" id="popular_poblogaeth" name="popular -> poblogaidd">
+            <pattern>
+                <source lang="en">
+                    <token>popular</token>
+                </source>
+                <target>
+                    <marker>
+                        <token>poblogaeth</token>
+                    </marker>
+                </target>
+            </pattern>
+            <message>Defnyddio <suggestion>poblogaidd</suggestion> ar gyfer 'popular'?</message>
+        </rule>
         <rule lang="cy" id="continuous_parhaus" name="continuous -> parhaol">
             <pattern>
                 <source lang="en">
